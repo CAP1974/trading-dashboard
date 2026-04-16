@@ -1,623 +1,1328 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carlos · Trading Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
-  <script src="data.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Controlo Institucional · Trading Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-base: #080c10;
+    --bg-01: #0d1117;
+    --bg-02: #111820;
+    --bg-03: #161d27;
+    --bg-04: #1c2533;
+    --border: rgba(255,255,255,0.07);
+    --border-hi: rgba(255,255,255,0.12);
+    --text-primary: #e2eaf4;
+    --text-secondary: #7a8a9e;
+    --text-muted: #3d4f63;
+    --green: #22c55e;
+    --green-dim: rgba(34,197,94,0.12);
+    --green-border: rgba(34,197,94,0.25);
+    --red: #ef4444;
+    --red-dim: rgba(239,68,68,0.12);
+    --red-border: rgba(239,68,68,0.25);
+    --amber: #f59e0b;
+    --amber-dim: rgba(245,158,11,0.12);
+    --blue: #3b82f6;
+    --blue-dim: rgba(59,130,246,0.12);
+    --blue-border: rgba(59,130,246,0.25);
+    --accent: #00d4ff;
+    --accent-dim: rgba(0,212,255,0.08);
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+  }
 
-    :root {
-      --bg:        #080c10;
-      --s1:        #0d1117;
-      --s2:        #111820;
-      --s3:        #161d28;
-      --border:    #1c2636;
-      --border2:   #263044;
-      --text:      #c9d1d9;
-      --muted:     #6e7f96;
-      --dim:       #3d4f63;
-      --green:     #3fb950;
-      --green2:    rgba(63,185,80,0.14);
-      --red:       #f85149;
-      --red2:      rgba(248,81,73,0.14);
-      --blue:      #58a6ff;
-      --blue2:     rgba(88,166,255,0.12);
-      --yellow:    #e3b341;
-      --yellow2:   rgba(227,179,65,0.14);
-      --font:      'IBM Plex Mono', monospace;
-    }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body { height: 100%; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      font-size: 13px;
-      line-height: 1.5;
-    }
+  body {
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    /* ── TOPBAR ─────────────────────────────────────────────────────── */
-    #topbar {
-      position: sticky; top: 0; z-index: 300;
-      background: var(--s1);
-      border-bottom: 1px solid var(--border);
-      height: 46px;
-      display: flex; align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
-    .tb-left  { display: flex; align-items: center; gap: 10px; }
-    .tb-badge {
-      font-size: 10px; font-weight: 700; letter-spacing: 1px;
-      background: #1f6feb; color: #fff;
-      padding: 2px 9px; border-radius: 10px;
-    }
-    .tb-name  { font-size: 14px; font-weight: 600; }
-    .tb-pair  { font-size: 11px; color: var(--muted); }
-    #utc-clock { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
-    #utc-clock b { color: var(--text); font-weight: 500; }
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--bg-01);
+    border-bottom: 1px solid var(--border);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-primary);
+    text-transform: uppercase;
+  }
+  .logo .accent { color: var(--accent); }
+  .logo .version {
+    font-weight: 300;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-left: 10px;
+    letter-spacing: 0.05em;
+  }
+  .topbar-center {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .market-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-03);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  .market-pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .dot-green { background: var(--green); }
+  .dot-amber { background: var(--amber); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .clock {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
 
-    /* ── DATE TABS ──────────────────────────────────────────────────── */
-    #date-tabs {
-      background: var(--s1);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center;
-      padding: 0 16px; gap: 2px;
-      overflow-x: auto; scrollbar-width: none;
-    }
-    #date-tabs::-webkit-scrollbar { display: none; }
-    .dtab {
-      padding: 9px 16px;
-      font-family: var(--font); font-size: 11px; font-weight: 500;
-      color: var(--muted); background: transparent; border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer; white-space: nowrap;
-      transition: color .15s, border-color .15s;
-    }
-    .dtab:hover { color: var(--text); }
-    .dtab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  /* ── NAV ── */
+  .nav {
+    background: var(--bg-01);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 24px;
+    gap: 2px;
+  }
+  .nav-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav-item:hover { color: var(--text-secondary); }
+  .nav-item.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
 
-    /* ── LAYOUT ─────────────────────────────────────────────────────── */
-    main { max-width: 1480px; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; gap: 18px; }
+  /* ── DATE SWITCHER ── */
+  .date-bar {
+    background: var(--bg-01);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+  }
+  .date-tabs { display: flex; gap: 4px; }
+  .date-tab {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+  }
+  .date-tab.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .date-tab:hover:not(.active) {
+    border-color: var(--border-hi);
+    color: var(--text-secondary);
+  }
+  .date-info {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+  }
 
-    .sec-label {
-      font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 1px; color: var(--dim); margin-bottom: 10px;
-    }
+  /* ── LAYOUT ── */
+  .main { padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; }
 
-    /* ── KPI GRID ───────────────────────────────────────────────────── */
-    #kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 960px)  { #kpi-grid { grid-template-columns: repeat(2,1fr); } }
-    @media (max-width: 480px)  { #kpi-grid { grid-template-columns: 1fr; } }
+  /* ── ALERT ROW ── */
+  .alert-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+  .alert-card {
+    border-radius: 6px;
+    padding: 10px 12px;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+  }
+  .alert-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .alert-card.danger { background: #1a0a0a; border-color: var(--red-border); }
+  .alert-card.danger::before { background: var(--red); }
+  .alert-card.warn { background: #1a1200; border-color: rgba(245,158,11,0.3); }
+  .alert-card.warn::before { background: var(--amber); }
+  .alert-card.ok { background: #091a0e; border-color: var(--green-border); }
+  .alert-card.ok::before { background: var(--green); }
+  .alert-card.info { background: #091020; border-color: var(--blue-border); }
+  .alert-card.info::before { background: var(--blue); }
+  .alert-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .alert-card.danger .alert-label { color: var(--red); }
+  .alert-card.warn .alert-label { color: var(--amber); }
+  .alert-card.ok .alert-label { color: var(--green); }
+  .alert-card.info .alert-label { color: var(--blue); }
+  .alert-msg { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
 
-    .kpi {
-      background: var(--s1); border: 1px solid var(--border);
-      border-radius: 7px; padding: 14px 16px;
-    }
-    .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 5px; }
-    .kpi-val   { font-size: 21px; font-weight: 700; line-height: 1.2; }
-    .kpi-sub   { font-size: 10px; color: var(--dim); margin-top: 3px; }
-    .pos  { color: var(--green); }
-    .neg  { color: var(--red); }
-    .neu  { color: var(--blue); }
-    .warn { color: var(--yellow); }
+  /* ── SECTION LABEL ── */
+  .zone-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .zone-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
 
-    /* ── PANELS ─────────────────────────────────────────────────────── */
-    #panels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 700px) { #panels { grid-template-columns: 1fr; } }
+  /* ── KPI ROW ── */
+  .kpi-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .kpi {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi:hover { border-color: var(--border-hi); }
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .kpi-value {
+    font-family: var(--font-mono);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .kpi-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    margin-top: 3px;
+  }
+  .up { color: var(--green); }
+  .dn { color: var(--red); }
+  .neu { color: var(--text-muted); }
+  .kpi-accent-line {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.3;
+  }
 
-    .panel {
-      background: var(--s1); border: 1px solid var(--border);
-      border-radius: 7px; padding: 16px;
-    }
-    .panel-head {
-      display: flex; align-items: baseline;
-      justify-content: space-between; margin-bottom: 12px;
-    }
-    .panel-title  { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
-    .panel-lucro  { font-size: 18px; font-weight: 700; }
-    .panel-meta   { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
-    .pmeta        { font-size: 11px; color: var(--muted); }
-    .pmeta span   { color: var(--text); }
-    .pmeta.badge  {
-      font-size: 10px; font-weight: 600; padding: 2px 8px;
-      border-radius: 4px; letter-spacing: 0.5px;
-    }
-    .pmeta.aporte  { background: var(--yellow2); color: var(--yellow); }
-    .pmeta.caixa   { background: var(--blue2);   color: var(--blue); }
-    .spark-wrap    { position: relative; height: 72px; }
+  /* ── PANELS ── */
+  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .panel {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+  }
+  .panel-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    background: var(--bg-04);
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .panel-body { padding: 12px 14px; }
 
-    /* ── EVENTOS ─────────────────────────────────────────────────────── */
-    #eventos-panel {
-      background: var(--s1); border: 1px solid var(--border);
-      border-radius: 7px; padding: 16px;
-    }
-    .ev-list  { display: flex; flex-direction: column; gap: 5px; }
-    .ev-row   {
-      display: flex; align-items: center; gap: 10px;
-      padding: 7px 10px; border-radius: 5px;
-      background: var(--s2); font-size: 12px;
-    }
-    .ev-icon  { font-size: 14px; flex-shrink: 0; }
-    .ev-nota  { color: var(--text); line-height: 1.4; }
-    .ev-mkt   { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 3px; flex-shrink: 0; }
-    .ev-mkt.eur { background: var(--blue2);  color: var(--blue); }
-    .ev-mkt.usd { background: var(--green2); color: var(--green); }
-    .no-ev    { color: var(--dim); font-size: 12px; padding: 6px 0; }
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-key { font-size: 11px; color: var(--text-secondary); }
+  .metric-val {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
 
-    /* ── TABLE ───────────────────────────────────────────────────────── */
-    #table-wrap {
-      background: var(--s1); border: 1px solid var(--border);
-      border-radius: 7px; overflow: hidden;
-    }
-    .tbl-head {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 11px 16px; border-bottom: 1px solid var(--border);
-    }
-    .ftabs { display: flex; gap: 4px; }
-    .ftab  {
-      font-family: var(--font); font-size: 11px; font-weight: 500;
-      padding: 4px 12px; border-radius: 4px;
-      border: 1px solid var(--border2);
-      background: transparent; color: var(--muted); cursor: pointer;
-      transition: all .15s;
-    }
-    .ftab:hover  { color: var(--text); border-color: var(--border2); }
-    .ftab.active { background: var(--blue2); color: var(--blue); border-color: var(--blue); }
-    .tbl-count   { font-size: 11px; color: var(--muted); }
+  /* Sparkline container */
+  .sparkline-wrap {
+    height: 52px;
+    position: relative;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
 
-    .tbl-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    thead th {
-      background: var(--s2); border-bottom: 1px solid var(--border);
-      padding: 8px 12px; text-align: left;
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.7px;
-      color: var(--muted); white-space: nowrap;
-    }
-    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--s2); }
-    td { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
+  /* ── POSITIONS TABLE ── */
+  .positions-panel {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .positions-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .positions-tabs { display: flex; gap: 2px; }
+  .pos-tab {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+  }
+  .pos-tab.active {
+    background: var(--accent-dim);
+    border-color: rgba(0,212,255,0.3);
+    color: var(--accent);
+  }
+  .pos-tab:hover:not(.active) {
+    border-color: var(--border-hi);
+    color: var(--text-secondary);
+  }
+  .pos-actions { display: flex; gap: 6px; }
+  .btn-sm {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+  }
+  .btn-sm:hover {
+    border-color: var(--border-hi);
+    color: var(--text-secondary);
+    background: var(--bg-03);
+  }
 
-    .td-name  { font-weight: 600; color: var(--text); }
-    .td-pos   { color: var(--green); }
-    .td-neg   { color: var(--red); }
-    .td-mkt   { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 3px; }
-    .td-mkt.eur { background: var(--blue2);  color: var(--blue); }
-    .td-mkt.usd { background: var(--green2); color: var(--green); }
+  .pos-table { width: 100%; border-collapse: collapse; }
+  .pos-table th {
+    padding: 7px 10px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .pos-table th.right { text-align: right; }
+  .pos-table td {
+    padding: 7px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    white-space: nowrap;
+  }
+  .pos-table td.right { text-align: right; }
+  .pos-table tr:last-child td { border-bottom: none; }
+  .pos-table tbody tr { transition: background 0.1s; }
+  .pos-table tbody tr:hover td { background: rgba(255,255,255,0.025); }
+  .ticker {
+    font-weight: 500;
+    color: var(--accent);
+    font-size: 12px;
+  }
+  .trust-badge {
+    display: inline-block;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .trust-v { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+  .trust-a { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .trust-r { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
 
-    /* trust badges */
-    .trust {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      padding: 2px 7px; border-radius: 3px; letter-spacing: 0.5px;
-    }
-    .trust-v { background: var(--green2); color: var(--green); }
-    .trust-a { background: var(--yellow2); color: var(--yellow); }
-    .trust-r { background: var(--red2);   color: var(--red); }
+  /* ── FLOW ROW ── */
+  .flow-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 6px; }
+  .flow-item {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .flow-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .flow-val {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+  }
 
-    .td-delta-pos { color: var(--green); }
-    .td-delta-neg { color: var(--red); }
-    .td-delta-nil { color: var(--dim); }
-    .no-rows { padding: 24px; text-align: center; color: var(--muted); }
+  /* ── READ GRID ── */
+  .read-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .read-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 8px;
+  }
+  .read-item:last-child, .read-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .read-key { font-size: 11px; color: var(--text-secondary); }
+  .read-val { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
 
-    /* ── FOOTER ──────────────────────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between;
-      flex-wrap: wrap; gap: 8px;
-      font-size: 11px; color: var(--muted);
-    }
-    .ft-totals { display: flex; gap: 20px; flex-wrap: wrap; }
-    .ft-item span { font-weight: 600; }
-  </style>
+  /* ── GOV ── */
+  .gov-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
+  .gov-item {
+    text-align: center;
+    padding: 8px 6px;
+    background: var(--bg-01);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .gov-num {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .gov-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .check-icon { font-size: 14px; }
+
+  /* ── BOTTOM SECTION ── */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .chart-panel {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .chart-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ── RISK MINI PANEL ── */
+  .risk-mini {
+    background: var(--bg-01);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-top: 10px;
+  }
+  .risk-mini-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .risk-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .risk-mini-item { text-align: center; }
+  .risk-mini-val {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .risk-mini-key {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── TOTAL FOOTER ── */
+  .total-footer {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .total-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .total-value {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .total-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .total-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  /* ── DELTA BADGE ── */
+  .delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .delta.up { background: var(--green-dim); color: var(--green); }
+  .delta.dn { background: var(--red-dim); color: var(--red); }
+
+  /* ── SCROLL ── */
+  .table-wrap { overflow-x: auto; }
+  .table-wrap::-webkit-scrollbar { height: 4px; }
+  .table-wrap::-webkit-scrollbar-track { background: var(--bg-01); }
+  .table-wrap::-webkit-scrollbar-thumb { background: var(--bg-04); border-radius: 2px; }
+
+  /* ── HIDDEN ── */
+  .day-content { display: none; }
+  .day-content.active { display: contents; }
+
+  /* ── EVENTOS ── */
+  .evento-card {
+    background: var(--bg-02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 220px;
+    flex: 1;
+  }
+  .evento-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+  .evento-ativo { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--accent); }
+  .evento-nota { font-size: 11px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .evento-mkt { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); background: var(--bg-04); padding: 1px 5px; border-radius: 2px; margin-left: 6px; }
+</style>
 </head>
 <body>
 
-<div id="topbar">
-  <div class="tb-left">
-    <span class="tb-badge">eToro</span>
-    <span class="tb-name">Carlos</span>
-    <span class="tb-pair">EUR · USD</span>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <span class="accent">MRC</span> TRADE
+    <span class="version">· Centro de Controlo Institucional v2.0</span>
   </div>
-  <div id="utc-clock">UTC <b id="clock-val">--:--:--</b></div>
+  <div class="topbar-center">
+    <div class="market-pill">
+      <span class="dot dot-green"></span>EUR · 8MSN
+    </div>
+    <div class="market-pill">
+      <span class="dot dot-amber"></span>USD · OMV
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="clock" id="clock">--:--:-- UTC</div>
+  </div>
 </div>
 
-<nav id="date-tabs"></nav>
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-item active">Vista consolidada</div>
+  <div class="nav-item">Contas</div>
+  <div class="nav-item">Posições</div>
+  <div class="nav-item">Risco</div>
+  <div class="nav-item">Histórico</div>
+  <div class="nav-item">Governança</div>
+</div>
 
-<main>
+<!-- DATE SWITCHER -->
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container">
+    <!-- Gerado dinamicamente por JS com base em data.js -->
+  </div>
+  <div class="date-info" id="date-info">A carregar...</div>
+</div>
 
-  <section>
-    <div class="sec-label" id="kpi-sec-label">Performance</div>
-    <div id="kpi-grid"></div>
-  </section>
+<!-- MAIN -->
+<div class="main">
 
-  <section>
-    <div class="sec-label">Histórico P&L (sparkline 5 dias)</div>
-    <div id="panels">
-      <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">EUR Positions</span>
-          <span class="panel-lucro" id="eur-lucro">—</span>
-        </div>
-        <div class="panel-meta" id="eur-meta"></div>
-        <div class="spark-wrap"><canvas id="chart-eur"></canvas></div>
+  <!-- ALERTAS -->
+  <div>
+    <div class="zone-label">Estado do sistema e alertas</div>
+    <div class="alert-row">
+      <div class="alert-card ok">
+        <div class="alert-label">EUR · Conta activa</div>
+        <div class="alert-msg">Conta 8MSN sincronizada. 7 posições abertas com lucro consolidado.</div>
       </div>
-      <div class="panel">
-        <div class="panel-head">
-          <span class="panel-title">USD Positions</span>
-          <span class="panel-lucro" id="usd-lucro">—</span>
-        </div>
-        <div class="panel-meta" id="usd-meta"></div>
-        <div class="spark-wrap"><canvas id="chart-usd"></canvas></div>
+      <div class="alert-card ok">
+        <div class="alert-label">USD · Conta activa</div>
+        <div class="alert-msg">Conta OMV sincronizada. 7 posições abertas com lucro consolidado.</div>
       </div>
-    </div>
-  </section>
-
-  <section>
-    <div id="eventos-panel">
-      <div class="sec-label" style="margin-bottom:10px">Eventos do dia — <span id="ev-date-lbl"></span></div>
-      <div class="ev-list" id="ev-list"></div>
-    </div>
-  </section>
-
-  <section>
-    <div id="table-wrap">
-      <div class="tbl-head">
-        <div class="ftabs">
-          <button class="ftab active" data-f="both">Ambas</button>
-          <button class="ftab"        data-f="eur">EUR</button>
-          <button class="ftab"        data-f="usd">USD</button>
-        </div>
-        <span class="tbl-count" id="tbl-count"></span>
+      <div class="alert-card info">
+        <div class="alert-label">Mercados abertos</div>
+        <div class="alert-msg">Euronext Paris/Amsterdam, NYSE, NASDAQ operacionais. Sem interrupções.</div>
       </div>
-      <div class="tbl-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Mkt</th>
-              <th>Lucro %</th>
-              <th>Lucro €/$</th>
-              <th>Volume</th>
-              <th>Valor</th>
-              <th>Atual</th>
-              <th>Abertura</th>
-              <th>Trust</th>
-              <th>Δ D-1 %</th>
-              <th>Δ D-1 €/$</th>
-            </tr>
-          </thead>
-          <tbody id="tbl-body"></tbody>
-        </table>
+      <div class="alert-card warn">
+        <div class="alert-label">Atenção · Posições negativas</div>
+        <div class="alert-msg" id="alert-neg">DOF e OMV em EUR com lucro negativo. Monitorizar stop-loss.</div>
       </div>
     </div>
-  </section>
+  </div>
 
-</main>
+  <!-- KPIs -->
+  <div>
+    <div class="zone-label">KPIs consolidados · EUR + USD</div>
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-label">Lucro EUR</div>
+        <div class="kpi-value up" id="kpi-eur-lucro">2,15 €</div>
+        <div class="kpi-sub neu" id="kpi-eur-sub">7 posições abertas</div>
+        <div class="kpi-accent-line" style="background:var(--green);opacity:0.5;"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Lucro USD</div>
+        <div class="kpi-value up" id="kpi-usd-lucro">3,28 $</div>
+        <div class="kpi-sub neu" id="kpi-usd-sub">7 posições abertas</div>
+        <div class="kpi-accent-line" style="background:var(--green);opacity:0.5;"></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Lucro total ~EUR</div>
+        <div class="kpi-value up" id="kpi-total">≈ 5,12 €</div>
+        <div class="kpi-sub up">Consolidado</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Variação EUR dia</div>
+        <div class="kpi-value" id="kpi-eur-delta">—</div>
+        <div class="kpi-sub" id="kpi-eur-delta-sub">vs. dia anterior</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Variação USD dia</div>
+        <div class="kpi-value" id="kpi-usd-delta">—</div>
+        <div class="kpi-sub" id="kpi-usd-delta-sub">vs. dia anterior</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Posições positivas</div>
+        <div class="kpi-value" id="kpi-pos-pos">10 / 14</div>
+        <div class="kpi-sub up">71% em ganho</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Maior ganho</div>
+        <div class="kpi-value up" id="kpi-best">Samsung</div>
+        <div class="kpi-sub up" id="kpi-best-val">+15,92% EUR</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Maior perda</div>
+        <div class="kpi-value dn" id="kpi-worst">Erasca</div>
+        <div class="kpi-sub dn" id="kpi-worst-val">-6,50% USD</div>
+      </div>
+    </div>
+  </div>
 
-<footer>
-  <div class="ft-totals" id="ft-totals"></div>
-  <div id="ft-meta"></div>
-</footer>
+  <!-- PAINÉIS OPERACIONAIS -->
+  <div class="panels">
 
+    <!-- Conta EUR -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Conta EUR · 8MSN</span>
+        <span class="panel-tag">Euronext</span>
+      </div>
+      <div class="panel-body">
+        <div class="sparkline-wrap">
+          <canvas id="eurSparkline" role="img" aria-label="Lucro EUR dia 9 vs dia 10"></canvas>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Lucro líquido</span>
+          <span class="metric-val up" id="m-eur-lucro">2,15 €</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Posições abertas</span>
+          <span class="metric-val">7</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Em ganho / Em perda</span>
+          <span class="metric-val"><span class="up">5</span> / <span class="dn">2</span></span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Melhor posição</span>
+          <span class="metric-val up" id="m-eur-best">Samsung +15,92%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Pior posição</span>
+          <span class="metric-val dn" id="m-eur-worst">DOF -2,84%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Variação vs D-1</span>
+          <span class="metric-val up" id="m-eur-var">+0,31 € (+16,9%)</span>
+        </div>
+        <div class="risk-mini">
+          <div class="risk-mini-title">Painel de risco EUR</div>
+          <div class="risk-mini-grid">
+            <div class="risk-mini-item">
+              <div class="risk-mini-val up">6,28%</div>
+              <div class="risk-mini-key">por posição</div>
+            </div>
+            <div class="risk-mini-item">
+              <div class="risk-mini-val" style="color:var(--amber)">DORO</div>
+              <div class="risk-mini-key">regime</div>
+            </div>
+            <div class="risk-mini-item">
+              <div class="risk-mini-val">50,4%</div>
+              <div class="risk-mini-key">alocação</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conta USD -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Conta USD · OMV</span>
+        <span class="panel-tag">NYSE / NASDAQ</span>
+      </div>
+      <div class="panel-body">
+        <div class="sparkline-wrap">
+          <canvas id="usdSparkline" role="img" aria-label="Lucro USD dia 9 vs dia 10"></canvas>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Lucro líquido</span>
+          <span class="metric-val up" id="m-usd-lucro">3,28 $</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Posições abertas</span>
+          <span class="metric-val">7</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Em ganho / Em perda</span>
+          <span class="metric-val"><span class="up">5</span> / <span class="dn">2</span></span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Melhor posição</span>
+          <span class="metric-val up" id="m-usd-best">SanDisk +18,79%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Pior posição</span>
+          <span class="metric-val dn" id="m-usd-worst">Erasca -6,50%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-key">Variação vs D-1</span>
+          <span class="metric-val up" id="m-usd-var">+0,21 $ (+6,8%)</span>
+        </div>
+        <div class="risk-mini">
+          <div class="risk-mini-title">Painel de risco USD</div>
+          <div class="risk-mini-grid">
+            <div class="risk-mini-item">
+              <div class="risk-mini-val up">5,1%</div>
+              <div class="risk-mini-key">por posição</div>
+            </div>
+            <div class="risk-mini-item">
+              <div class="risk-mini-val" style="color:var(--blue)">MIX</div>
+              <div class="risk-mini-key">regime</div>
+            </div>
+            <div class="risk-mini-item">
+              <div class="risk-mini-val">62,3%</div>
+              <div class="risk-mini-key">alocação</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Governança -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Governança e compliance</span>
+        <span class="panel-tag">Diário</span>
+      </div>
+      <div class="panel-body">
+        <div class="read-grid">
+          <div class="read-item">
+            <span class="read-key">Validação EUR</span>
+            <span class="read-val up">✓ Conforme</span>
+          </div>
+          <div class="read-item">
+            <span class="read-key">Validação USD</span>
+            <span class="read-val up">✓ Conforme</span>
+          </div>
+          <div class="read-item">
+            <span class="read-key">Avaliação diária</span>
+            <span class="read-val up">✓ Sólida</span>
+          </div>
+          <div class="read-item">
+            <span class="read-key">Leitura inst.</span>
+            <span class="read-val up">✓ Válida</span>
+          </div>
+          <div class="read-item">
+            <span class="read-key">Stop-loss activos</span>
+            <span class="read-val">14 / 14</span>
+          </div>
+          <div class="read-item">
+            <span class="read-key">Excepções</span>
+            <span class="read-val up">0</span>
+          </div>
+        </div>
+        <div class="gov-row">
+          <div class="gov-item">
+            <div class="gov-num">2</div>
+            <div class="gov-label">Setup</div>
+          </div>
+          <div class="gov-item">
+            <div class="gov-num">2</div>
+            <div class="gov-label">Pos/Setup</div>
+          </div>
+          <div class="gov-item">
+            <div class="gov-num">3</div>
+            <div class="gov-label">Pos/Risco</div>
+          </div>
+          <div class="gov-item">
+            <div class="gov-num check-icon up">✓</div>
+            <div class="gov-label">Conforme</div>
+          </div>
+          <div class="gov-item">
+            <div class="gov-num check-icon up">✓</div>
+            <div class="gov-label">Válida</div>
+          </div>
+          <div class="gov-item">
+            <div class="gov-num">0</div>
+            <div class="gov-label">Excepções</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--bg-01);border-radius:5px;border:1px solid var(--border);">
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;">Controlo update diário</div>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
+              <span style="color:var(--text-secondary);">Revisão</span><span class="up">✓ Concluída</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
+              <span style="color:var(--text-secondary);">Validação</span><span class="up">✓ Concluída</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
+              <span style="color:var(--text-secondary);">Acção</span><span class="up">✓ Executada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVENTOS DO DIA -->
+  <div id="eventos-section" style="display:none;">
+    <div class="zone-label">Eventos do dia</div>
+    <div id="eventos-container" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+  </div>
+
+  <!-- TABELA DE POSIÇÕES -->
+  <div class="positions-panel">
+    <div class="positions-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="panel-title">Posições abertas</span>
+        <div class="positions-tabs">
+          <button class="pos-tab active" onclick="setAccount('eur')" id="btn-eur">EUR · 8MSN</button>
+          <button class="pos-tab" onclick="setAccount('usd')" id="btn-usd">USD · OMV</button>
+          <button class="pos-tab" onclick="setAccount('all')" id="btn-all">Ambas</button>
+        </div>
+      </div>
+      <div class="pos-actions">
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding-right:8px;" id="pos-count">14 posições activas</span>
+        <button class="btn-sm">↓ Exportar CSV</button>
+        <button class="btn-sm">⚙ Filtrar</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="pos-table">
+        <thead>
+          <tr>
+            <th>Instrumento</th>
+            <th>Mercado</th>
+            <th class="right">Lucro liq. %</th>
+            <th class="right">Lucro liq.</th>
+            <th class="right">Volume</th>
+            <th class="right">Valor (€/$)</th>
+            <th class="right">Preço actual</th>
+            <th class="right">Preço abertura</th>
+            <th>Confiança</th>
+            <th>Variação D-1</th>
+          </tr>
+        </thead>
+        <tbody id="pos-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FLUXO DE CAPITAL -->
+  <div>
+    <div class="zone-label">Fluxo de capital consolidado</div>
+    <div class="flow-grid">
+      <div class="flow-item">
+        <div class="flow-label">Depósitos</div>
+        <div class="flow-val neu">0,00 €</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-label">Levantamentos</div>
+        <div class="flow-val neu">0,00 €</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-label">Capital em risco EUR</div>
+        <div class="flow-val" style="color:var(--amber)">~4,88 €</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-label">Capital em risco USD</div>
+        <div class="flow-val" style="color:var(--amber)">~3,75 $</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-label">P&L realizado EUR</div>
+        <div class="flow-val up" id="fl-eur">+2,15 €</div>
+      </div>
+      <div class="flow-item">
+        <div class="flow-label">P&L realizado USD</div>
+        <div class="flow-val up" id="fl-usd">+3,28 $</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL FOOTER -->
+  <div class="total-footer">
+    <div>
+      <div class="total-label">Conta EUR · 8MSN</div>
+      <div class="total-value up" id="foot-eur">2,15 €</div>
+      <div class="total-sub" id="foot-eur-sub">+16,9% vs dia anterior</div>
+    </div>
+    <div class="total-divider"></div>
+    <div>
+      <div class="total-label">Conta USD · OMV</div>
+      <div class="total-value up" id="foot-usd">3,28 $</div>
+      <div class="total-sub" id="foot-usd-sub">+6,8% vs dia anterior</div>
+    </div>
+    <div class="total-divider"></div>
+    <div>
+      <div class="total-label">Total consolidado ~EUR</div>
+      <div class="total-value up" id="foot-total">≈ 5,12 €</div>
+      <div class="total-sub">EUR + USD convertido</div>
+    </div>
+    <div class="total-divider"></div>
+    <div>
+      <div class="total-label">Data de referência</div>
+      <div class="total-value" style="font-size:15px;color:var(--accent);" id="foot-date">10 / ABR / 2025</div>
+      <div class="total-sub">Fecho de sessão</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="data.js"></script>
 <script>
-(function () {
-  'use strict';
+/* ── CLOCK ── */
+function tick() {
+  const d = new Date();
+  const h = String(d.getUTCHours()).padStart(2,'0');
+  const m = String(d.getUTCMinutes()).padStart(2,'0');
+  const s = String(d.getUTCSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = h+':'+m+':'+s+' UTC';
+}
+tick(); setInterval(tick, 1000);
 
-  /* ── guard ─────────────────────────────────────────────────────── */
-  if (typeof TRADING_DATA === 'undefined') {
-    document.body.innerHTML = '<div style="padding:40px;color:#f85149;font-family:monospace">Erro: data.js não encontrado. Corre <code>npm run pipeline</code>.</div>';
-    return;
+/* ── BRIDGE: adapta TRADING_DATA (de data.js) para DATA usado pelo dashboard ── */
+// TRADING_DATA vem do data.js gerado pelo pipeline
+// Formato: { "2025-04-10": { date, eur: { lucro, positions }, usd: { lucro, positions } } }
+// Aqui convertemos para { "2025-04-10": { eur, usd } } e construímos os date-tabs dinamicamente
+
+const DATA = typeof TRADING_DATA !== 'undefined' ? TRADING_DATA : {};
+const ALL_DATES = typeof DATA_DATES !== 'undefined' ? DATA_DATES : Object.keys(DATA).sort();
+const latestDate = typeof LATEST_DATE !== 'undefined' ? LATEST_DATE : ALL_DATES[ALL_DATES.length - 1];
+
+/* ── STATE ── */
+let currentDay = latestDate;
+let currentAccount = 'all';
+
+function fmt(v, decimals=2, prefix='') {
+  const sign = v > 0 ? '+' : '';
+  return prefix + sign + v.toFixed(decimals);
+}
+function fmtCur(v, sym='€') {
+  const sign = v > 0 ? '+' : (v < 0 ? '' : '');
+  return sign + v.toFixed(2) + ' ' + sym;
+}
+
+function trustClass(t) {
+  if (t==='v') return 'trust-v';
+  if (t==='a') return 'trust-a';
+  return 'trust-r';
+}
+function trustLabel(t) {
+  if (t==='v') return 'Verde';
+  if (t==='a') return 'Amarelo';
+  return 'Vermelho';
+}
+
+function renderTable() {
+  const d = DATA[currentDay];
+  let rows = [];
+  const sym = { EUR:'€', USD:'$' };
+
+  if (currentAccount === 'eur' || currentAccount === 'all') {
+    rows = rows.concat(d.eur.positions.map(p => ({ ...p, sym:'€' })));
+  }
+  if (currentAccount === 'usd' || currentAccount === 'all') {
+    rows = rows.concat(d.usd.positions.map(p => ({ ...p, sym:'$' })));
   }
 
-  const D      = TRADING_DATA;
-  const DATES  = (typeof DATA_DATES  !== 'undefined') ? DATA_DATES  : Object.keys(D).sort().slice(-7);
-  const LATEST = (typeof LATEST_DATE !== 'undefined') ? LATEST_DATE : DATES[DATES.length - 1];
-
-  let activeDate   = LATEST;
-  let activeFilter = 'both';
-
-  /* ── helpers ────────────────────────────────────────────────────── */
-  const f2    = n => (n == null) ? '—' : Number(n).toFixed(2);
-  const sign  = n => (n > 0 ? '+' : '') + f2(n);
-  const cls   = n => n > 0 ? 'pos' : n < 0 ? 'neg' : '';
-  const dayOf = d => D[d] || { eur: { lucro: 0, positions: [] }, usd: { lucro: 0, positions: [] }, eventos: [] };
-
-  function labelDate(d) {
-    if (!d) return '—';
-    const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-    const [, mm, dd] = d.split('-');
-    return `${parseInt(dd)} ${months[parseInt(mm) - 1]}`;
-  }
-
-  /* ── UTC clock ──────────────────────────────────────────────────── */
-  function tick() {
-    const n  = new Date();
-    const hh = String(n.getUTCHours()).padStart(2,'0');
-    const mm = String(n.getUTCMinutes()).padStart(2,'0');
-    const ss = String(n.getUTCSeconds()).padStart(2,'0');
-    document.getElementById('clock-val').textContent = `${hh}:${mm}:${ss}`;
-  }
-  tick(); setInterval(tick, 1000);
-
-  /* ── date tabs ──────────────────────────────────────────────────── */
-  function buildTabs() {
-    const nav = document.getElementById('date-tabs');
-    nav.innerHTML = '';
-    DATES.forEach(d => {
-      const b = document.createElement('button');
-      b.className    = 'dtab' + (d === activeDate ? ' active' : '');
-      b.textContent  = labelDate(d);
-      b.dataset.date = d;
-      b.onclick = () => selectDate(d);
-      nav.appendChild(b);
-    });
-  }
-
-  function selectDate(d) {
-    activeDate = d;
-    document.querySelectorAll('.dtab').forEach(b => b.classList.toggle('active', b.dataset.date === d));
-    renderKPIs(); renderPanelMeta(); renderEventos(); renderTable(); highlightSpark();
-  }
-
-  /* ── KPIs ───────────────────────────────────────────────────────── */
-  function renderKPIs() {
-    const day  = dayOf(activeDate);
-    const eurL = day.eur?.lucro ?? 0;
-    const usdL = day.usd?.lucro ?? 0;
-    const tot  = Math.round((eurL + usdL) * 100) / 100;
-
-    const prevDate = DATES[DATES.indexOf(activeDate) - 1];
-    const prev     = prevDate ? dayOf(prevDate) : null;
-    const dEur     = prev != null ? Math.round((eurL - (prev.eur?.lucro ?? 0)) * 100) / 100 : null;
-    const dUsd     = prev != null ? Math.round((usdL - (prev.usd?.lucro ?? 0)) * 100) / 100 : null;
-
-    const allPos = [...(day.eur?.positions ?? []), ...(day.usd?.positions ?? [])];
-    const wins   = allPos.filter(p => (p.lucro ?? 0) > 0).length;
-    const best   = allPos.length ? Math.max(...allPos.map(p => p.lucro ?? 0)) : null;
-    const worst  = allPos.length ? Math.min(...allPos.map(p => p.lucro ?? 0)) : null;
-
-    document.getElementById('kpi-sec-label').textContent = `Performance — ${labelDate(activeDate)}`;
-
-    const kpis = [
-      { label: 'Lucro EUR',         val: sign(eurL),                                  cl: cls(eurL),         sub: `${day.eur?.positions?.length ?? 0} posições` },
-      { label: 'Lucro USD',         val: sign(usdL),                                  cl: cls(usdL),         sub: `${day.usd?.positions?.length ?? 0} posições` },
-      { label: 'Total ~EUR',        val: sign(tot),                                   cl: cls(tot),          sub: `${allPos.length} posições` },
-      { label: 'Δ EUR vs D-1',      val: dEur != null ? sign(dEur) : '—',             cl: dEur != null ? cls(dEur) : '', sub: prevDate ? labelDate(prevDate) : 'primeiro dia' },
-      { label: 'Δ USD vs D-1',      val: dUsd != null ? sign(dUsd) : '—',             cl: dUsd != null ? cls(dUsd) : '', sub: prevDate ? labelDate(prevDate) : 'primeiro dia' },
-      { label: '+Posições / Total', val: `${wins} / ${allPos.length}`,               cl: wins >= allPos.length / 2 ? 'pos' : 'neg', sub: '' },
-      { label: 'Melhor Posição',    val: best  != null ? sign(best)  : '—',           cl: 'pos', sub: '' },
-      { label: 'Pior Posição',      val: worst != null ? sign(worst) : '—',           cl: 'neg', sub: '' },
-    ];
-
-    const grid = document.getElementById('kpi-grid');
-    grid.innerHTML = '';
-    kpis.forEach(k => {
-      grid.insertAdjacentHTML('beforeend',
-        `<div class="kpi">
-          <div class="kpi-label">${k.label}</div>
-          <div class="kpi-val ${k.cl}">${k.val}</div>
-          ${k.sub ? `<div class="kpi-sub">${k.sub}</div>` : ''}
-        </div>`);
-    });
-  }
-
-  /* ── panel meta ─────────────────────────────────────────────────── */
-  function renderPanelMeta() {
-    const day      = dayOf(activeDate);
-    const prevDate = DATES[DATES.indexOf(activeDate) - 1];
-    const prev     = prevDate ? dayOf(prevDate) : null;
-
-    ['eur', 'usd'].forEach(side => {
-      const s    = day[side] ?? { lucro: 0, positions: [] };
-      const pos  = s.positions ?? [];
-      const wins = pos.filter(p => (p.lucro ?? 0) > 0).length;
-      const loss = pos.filter(p => (p.lucro ?? 0) < 0).length;
-      const best = pos.length ? Math.max(...pos.map(p => p.lucro ?? 0)) : 0;
-      const wrst = pos.length ? Math.min(...pos.map(p => p.lucro ?? 0)) : 0;
-      const prevL = prev ? (prev[side]?.lucro ?? 0) : null;
-      const dL    = prevL != null ? Math.round((s.lucro - prevL) * 100) / 100 : null;
-
-      const lucroEl     = document.getElementById(`${side}-lucro`);
-      lucroEl.textContent = sign(s.lucro);
-      lucroEl.className   = 'panel-lucro ' + cls(s.lucro);
-
-      let html = `
-        <div class="pmeta">+P: <span class="pos">${wins}</span></div>
-        <div class="pmeta">-P: <span class="neg">${loss}</span></div>
-        <div class="pmeta">Melhor: <span class="pos">${sign(best)}</span></div>
-        <div class="pmeta">Pior: <span class="neg">${sign(wrst)}</span></div>
-        ${dL != null ? `<div class="pmeta">Δ D-1: <span class="${cls(dL)}">${sign(dL)}</span></div>` : ''}
-      `;
-      if (s.caixa  != null) html += `<span class="pmeta badge caixa">📦 Caixa: ${s.caixa}${side === 'eur' ? '€' : '$'}</span>`;
-      if (s.aporte != null) html += `<span class="pmeta badge aporte">💰 Aporte: ${s.aporte}$</span>`;
-
-      document.getElementById(`${side}-meta`).innerHTML = html;
-    });
-  }
-
-  /* ── sparklines ──────────────────────────────────────────────────── */
-  let chartEur = null, chartUsd = null;
-
-  function buildSparks() {
-    Chart.defaults.color       = '#6e7f96';
-    Chart.defaults.font.family = "'IBM Plex Mono', monospace";
-    Chart.defaults.font.size   = 10;
-
-    const allDates = Object.keys(D).sort();
-    const labels   = allDates.map(d => labelDate(d));
-    const eurData  = allDates.map(d => D[d]?.eur?.lucro ?? 0);
-    const usdData  = allDates.map(d => D[d]?.usd?.lucro ?? 0);
-
-    function cfg(data, color, bg) {
-      return {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            data, borderColor: color, backgroundColor: bg,
-            borderWidth: 1.5, fill: true, tension: 0.35,
-            pointRadius: allDates.map(() => 3),
-            pointBackgroundColor: allDates.map(() => color),
-            pointBorderWidth: 0,
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, animation: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: c => ' ' + sign(c.parsed.y) } }
-          },
-          scales: {
-            x: { display: false },
-            y: { display: true, grid: { color: '#1c2636' }, ticks: { callback: v => sign(v), maxTicksLimit: 3 } }
-          }
-        }
-      };
+  const tbody = document.getElementById('pos-tbody');
+  tbody.innerHTML = rows.map(p => {
+    const pctClass = p.pct >= 0 ? 'up' : 'dn';
+    const lucroClass = p.lucro >= 0 ? 'up' : 'dn';
+    let deltaHtml = '<span class="neu">—</span>';
+    if (p.delta) {
+      const dc = p.delta.pct >= 0 ? 'up' : 'dn';
+      const arrow = p.delta.pct >= 0 ? '▲' : '▼';
+      deltaHtml = `<span class="${dc}" style="font-family:var(--font-mono);font-size:10px;">${arrow} ${Math.abs(p.delta.pct).toFixed(2)}%</span>`;
     }
+    return `<tr>
+      <td><span class="ticker">${p.name}</span></td>
+      <td><span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${p.mkt}</span></td>
+      <td class="right ${pctClass}">${fmt(p.pct,2)}%</td>
+      <td class="right ${lucroClass}">${fmtCur(p.lucro, p.sym)}</td>
+      <td class="right" style="color:var(--text-secondary);">${p.vol}</td>
+      <td class="right">${p.valor.toFixed(2)} ${p.sym}</td>
+      <td class="right">${p.atual.toLocaleString('pt-PT', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+      <td class="right" style="color:var(--text-muted);">${p.abertura.toLocaleString('pt-PT', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+      <td><span class="trust-badge ${trustClass(p.trust)}">${trustLabel(p.trust)}</span></td>
+      <td>${deltaHtml}</td>
+    </tr>`;
+  }).join('');
 
-    if (chartEur) chartEur.destroy();
-    if (chartUsd) chartUsd.destroy();
-    chartEur = new Chart(document.getElementById('chart-eur'), cfg(eurData, '#58a6ff', 'rgba(88,166,255,0.07)'));
-    chartUsd = new Chart(document.getElementById('chart-usd'), cfg(usdData, '#3fb950', 'rgba(63,185,80,0.07)'));
-    highlightSpark();
+  document.getElementById('pos-count').textContent = rows.length + ' posições activas';
+}
+
+function renderKPIs() {
+  const d = DATA[currentDay];
+  if (!d) return;
+  const eurL = d.eur.lucro;
+  const usdL = d.usd.lucro;
+
+  document.getElementById('kpi-eur-lucro').textContent = fmtCur(eurL,'€');
+  document.getElementById('kpi-eur-lucro').className = 'kpi-value '+(eurL>=0?'up':'dn');
+  document.getElementById('kpi-usd-lucro').textContent = fmtCur(usdL,'$');
+  document.getElementById('kpi-usd-lucro').className = 'kpi-value '+(usdL>=0?'up':'dn');
+  document.getElementById('kpi-total').textContent = '≈ ' + (eurL + usdL * 0.92).toFixed(2) + ' €';
+
+  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  function fmtDateLabel(ds) { const [y,m,dd]=ds.split('-').map(Number); return String(dd).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y; }
+  function fmtDateLong(ds) { const [y,m,dd]=ds.split('-').map(Number); const dt=new Date(y,m-1,dd); return DAYS_PT[dt.getDay()]+' · Fecho de sessão '+String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y; }
+
+  // Dia anterior
+  const dayIdx = ALL_DATES.indexOf(currentDay);
+  const prevDate = dayIdx > 0 ? ALL_DATES[dayIdx-1] : null;
+  const prevData = prevDate ? DATA[prevDate] : null;
+
+  if (prevData) {
+    const eurDelta = eurL - prevData.eur.lucro;
+    const usdDelta = usdL - prevData.usd.lucro;
+    const eurDeltaPct = (eurDelta/prevData.eur.lucro*100);
+    const usdDeltaPct = (usdDelta/prevData.usd.lucro*100);
+    const ec = eurDelta >= 0 ? 'up' : 'dn';
+    const uc = usdDelta >= 0 ? 'up' : 'dn';
+    document.getElementById('kpi-eur-delta').innerHTML = `<span class="${ec}">${fmt(eurDelta,2)}€</span>`;
+    document.getElementById('kpi-eur-delta-sub').innerHTML = `<span class="${ec}">${fmt(eurDeltaPct,1)}% vs ${fmtDateLabel(prevDate)}</span>`;
+    document.getElementById('kpi-usd-delta').innerHTML = `<span class="${uc}">${fmt(usdDelta,2)}$</span>`;
+    document.getElementById('kpi-usd-delta-sub').innerHTML = `<span class="${uc}">${fmt(usdDeltaPct,1)}% vs ${fmtDateLabel(prevDate)}</span>`;
+    const meurVar = document.getElementById('m-eur-var');
+    meurVar.textContent = fmt(eurDelta,2)+'€ ('+fmt(eurDeltaPct,1)+'%)';
+    meurVar.className = 'metric-val '+ec;
+    const musdVar = document.getElementById('m-usd-var');
+    musdVar.textContent = fmt(usdDelta,2)+'$ ('+fmt(usdDeltaPct,1)+'%)';
+    musdVar.className = 'metric-val '+uc;
+    document.getElementById('foot-eur-sub').textContent = fmt(eurDeltaPct,1)+'% vs dia anterior';
+    document.getElementById('foot-usd-sub').textContent = fmt(usdDeltaPct,1)+'% vs dia anterior';
+  } else {
+    ['kpi-eur-delta','kpi-usd-delta'].forEach(id => document.getElementById(id).textContent='—');
+    ['kpi-eur-delta-sub','kpi-usd-delta-sub'].forEach(id => document.getElementById(id).textContent='Primeiro registo');
+    ['m-eur-var','m-usd-var'].forEach(id => { document.getElementById(id).textContent='— (primeiro registo)'; });
+    ['foot-eur-sub','foot-usd-sub'].forEach(id => document.getElementById(id).textContent='Primeiro registo');
   }
 
-  function highlightSpark() {
-    const allDates = Object.keys(D).sort();
-    [{ c: chartEur, col: '#58a6ff' }, { c: chartUsd, col: '#3fb950' }].forEach(({ c, col }) => {
-      if (!c) return;
-      c.data.datasets[0].pointBackgroundColor = allDates.map(d => d === activeDate ? '#ffffff' : col);
-      c.data.datasets[0].pointRadius          = allDates.map(d => d === activeDate ? 5 : 3);
-      c.update('none');
-    });
-  }
+  // best/worst global
+  const eurPos = d.eur.positions;
+  const usdPos = d.usd.positions;
+  const allPos = [...eurPos, ...usdPos];
+  const eurBest  = eurPos.reduce((a,b) => a.pct > b.pct ? a : b);
+  const eurWorst = eurPos.reduce((a,b) => a.pct < b.pct ? a : b);
+  const usdBest  = usdPos.reduce((a,b) => a.pct > b.pct ? a : b);
+  const usdWorst = usdPos.reduce((a,b) => a.pct < b.pct ? a : b);
+  const gBest    = allPos.reduce((a,b) => a.pct > b.pct ? a : b);
+  const gWorst   = allPos.reduce((a,b) => a.pct < b.pct ? a : b);
 
-  /* ── eventos ─────────────────────────────────────────────────────── */
-  const EV_ICON = { saida: '🔴', entrada: '🟢', aporte: '💰', caixa: '📦' };
+  document.getElementById('kpi-best').textContent = gBest.name;
+  document.getElementById('kpi-best-val').textContent = fmt(gBest.pct,2)+'% '+gBest.mkt;
+  document.getElementById('kpi-worst').textContent = gWorst.name;
+  document.getElementById('kpi-worst-val').textContent = fmt(gWorst.pct,2)+'% '+gWorst.mkt;
+  document.getElementById('m-eur-lucro').textContent = fmtCur(eurL,'€');
+  document.getElementById('m-eur-lucro').className = 'metric-val '+(eurL>=0?'up':'dn');
+  document.getElementById('m-eur-best').textContent = eurBest.name+' '+fmt(eurBest.pct,2)+'%';
+  document.getElementById('m-eur-worst').textContent = eurWorst.name+' '+fmt(eurWorst.pct,2)+'%';
+  document.getElementById('m-usd-lucro').textContent = fmtCur(usdL,'$');
 
-  function renderEventos() {
-    const day  = dayOf(activeDate);
-    const evs  = day.eventos ?? [];
-    document.getElementById('ev-date-lbl').textContent = labelDate(activeDate);
-    const list = document.getElementById('ev-list');
-    list.innerHTML = '';
-    if (!evs.length) {
-      list.innerHTML = '<div class="no-ev">Sem eventos registados para este dia.</div>';
-      return;
-    }
-    evs.forEach(e => {
-      const mkt  = (e.mkt || '').toLowerCase();
-      const icon = EV_ICON[e.tipo] ?? '●';
-      list.insertAdjacentHTML('beforeend',
-        `<div class="ev-row">
-          <span class="ev-icon">${icon}</span>
-          ${mkt ? `<span class="ev-mkt ${mkt}">${e.mkt}</span>` : ''}
-          <span class="ev-nota">${e.nota || ''}</span>
-        </div>`);
-    });
-  }
+  // Caixa EUR
+  const eurCaixaRow = document.getElementById('m-eur-caixa-row');
+  if (d.eur.caixa) {
+    eurCaixaRow.style.display = 'flex';
+    document.getElementById('m-eur-caixa').textContent = d.eur.caixa.toFixed(2) + ' €';
+  } else { eurCaixaRow.style.display = 'none'; }
 
-  /* ── table ───────────────────────────────────────────────────────── */
-  const TRUST_MAP = {
-    v: ['trust-v', 'Verde'],
-    a: ['trust-a', 'Neutro'],
-    r: ['trust-r', 'Alerta'],
-  };
+  // Aporte + Caixa USD
+  const usdAporteRow = document.getElementById('m-usd-aporte-row');
+  const usdCaixaRow = document.getElementById('m-usd-caixa-row');
+  if (d.usd.aporte) {
+    usdAporteRow.style.display = 'flex';
+    document.getElementById('m-usd-aporte').textContent = '+' + d.usd.aporte.toFixed(2) + ' $';
+  } else { usdAporteRow.style.display = 'none'; }
+  if (d.usd.caixa) {
+    usdCaixaRow.style.display = 'flex';
+    document.getElementById('m-usd-caixa').textContent = d.usd.caixa.toFixed(2) + ' $';
+  } else { usdCaixaRow.style.display = 'none'; }
+  document.getElementById('m-usd-best').textContent = usdBest.name+' '+fmt(usdBest.pct,2)+'%';
+  document.getElementById('m-usd-worst').textContent = usdWorst.name+' '+fmt(usdWorst.pct,2)+'%';
 
-  function renderTable() {
-    const day     = dayOf(activeDate);
-    const eurRows = (day.eur?.positions ?? []).map(p => ({ ...p, _side: 'eur' }));
-    const usdRows = (day.usd?.positions ?? []).map(p => ({ ...p, _side: 'usd' }));
+  // footer
+  const [y,m,dd] = currentDay.split('-');
+  const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  document.getElementById('foot-eur').textContent = fmtCur(eurL,'€');
+  document.getElementById('foot-usd').textContent = fmtCur(usdL,'$');
+  document.getElementById('foot-total').textContent = '≈ '+(eurL+usdL*0.92).toFixed(2)+' €';
+  document.getElementById('foot-date').textContent = dd+' / '+MONTHS[parseInt(m)-1].toUpperCase()+' / '+y;
+  document.getElementById('fl-eur').textContent = fmtCur(eurL,'€');
+  document.getElementById('fl-usd').textContent = fmtCur(usdL,'$');
 
-    const rows = activeFilter === 'eur'  ? eurRows
-               : activeFilter === 'usd'  ? usdRows
-               : [...eurRows, ...usdRows];
+  const posCount = allPos.filter(p=>p.pct>=0).length;
+  document.getElementById('kpi-pos-pos').textContent = posCount+' / '+allPos.length;
+  document.getElementById('kpi-pos-pos').className = 'kpi-value '+(posCount > allPos.length/2 ? 'up':'dn');
+  document.getElementById('date-info').textContent = fmtDateLong(currentDay);
+}
 
-    document.getElementById('tbl-count').textContent = `${rows.length} posições`;
+/* ── SPARKLINES ── */
+let eurChart, usdChart;
 
-    const tbody = document.getElementById('tbl-body');
-    tbody.innerHTML = '';
+function buildSparklines() {
+  const eurCtx = document.getElementById('eurSparkline').getContext('2d');
+  const usdCtx = document.getElementById('usdSparkline').getContext('2d');
+  const recentDates = ALL_DATES.slice(-7);
+  const labels = recentDates.map(d => { const [y,m,dd]=d.split('-'); return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0'); });
+  const eurVals = recentDates.map(d => DATA[d]?.eur?.lucro ?? null);
+  const usdVals = recentDates.map(d => DATA[d]?.usd?.lucro ?? null);
 
-    if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="11" class="no-rows">Sem posições para este filtro.</td></tr>`;
-      return;
-    }
-
-    rows.forEach(p => {
-      const pct             = p.pct   ?? 0;
-      const lucro           = p.lucro ?? 0;
-      const [tCls, tLbl]    = TRUST_MAP[p.trust] ?? ['trust-a', '—'];
-      const dPct            = p.delta?.pct ?? null;
-      const dVal            = p.delta?.val ?? null;
-      const clsDPct         = dPct == null ? 'td-delta-nil' : dPct > 0 ? 'td-delta-pos' : dPct < 0 ? 'td-delta-neg' : 'td-delta-nil';
-      const clsDVal         = dVal == null ? 'td-delta-nil' : dVal > 0 ? 'td-delta-pos' : dVal < 0 ? 'td-delta-neg' : 'td-delta-nil';
-
-      tbody.insertAdjacentHTML('beforeend',
-        `<tr>
-          <td class="td-name">${p.name ?? '—'}</td>
-          <td><span class="td-mkt ${p._side}">${(p.mkt ?? p._side).toUpperCase()}</span></td>
-          <td class="${pct   > 0 ? 'td-pos' : pct   < 0 ? 'td-neg' : ''}">${sign(pct)}%</td>
-          <td class="${lucro > 0 ? 'td-pos' : lucro < 0 ? 'td-neg' : ''}">${sign(lucro)}</td>
-          <td style="color:var(--muted)">${p.vol  ?? '—'}</td>
-          <td style="color:var(--muted)">${f2(p.valor ?? null)}</td>
-          <td>${p.atual    ?? '—'}</td>
-          <td>${p.abertura ?? '—'}</td>
-          <td><span class="trust ${tCls}">${tLbl}</span></td>
-          <td class="${clsDPct}">${dPct != null ? sign(dPct) + '%' : '—'}</td>
-          <td class="${clsDVal}">${dVal != null ? sign(dVal)       : '—'}</td>
-        </tr>`);
-    });
-  }
-
-  /* ── filter tabs ─────────────────────────────────────────────────── */
-  document.querySelectorAll('.ftab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.f;
-      document.querySelectorAll('.ftab').forEach(b => b.classList.toggle('active', b === btn));
-      renderTable();
-    });
+  const sparkOpts = (colorKey, data) => ({
+    type: 'bar',
+    data: { labels, datasets: [{ data,
+      backgroundColor: data.map(v => v===null?'transparent':v>=0?'rgba(34,197,94,0.6)':'rgba(239,68,68,0.6)'),
+      borderColor: data.map(v => v===null?'transparent':v>=0?'#22c55e':'#ef4444'),
+      borderWidth:1, borderRadius:3 }] },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:(ctx)=>' '+(ctx.parsed.y||0).toFixed(2)+' '+(colorKey==='green'?'€':'$') } } },
+      scales:{ x:{grid:{display:false},ticks:{color:'#3d4f63',font:{family:'IBM Plex Mono',size:9}}}, y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4f63',font:{family:'IBM Plex Mono',size:9},callback:v=>v.toFixed(2)}} } }
   });
 
-  /* ── footer ──────────────────────────────────────────────────────── */
-  function buildFooter() {
-    const days = Object.values(D);
-    const tEur = days.reduce((s, d) => s + (d.eur?.lucro ?? 0), 0);
-    const tUsd = days.reduce((s, d) => s + (d.usd?.lucro ?? 0), 0);
-    const tAll = tEur + tUsd;
-    const nPos = days.reduce((s, d) => s + (d.eur?.positions?.length ?? 0) + (d.usd?.positions?.length ?? 0), 0);
+  if (eurChart) eurChart.destroy();
+  if (usdChart) usdChart.destroy();
+  eurChart = new Chart(eurCtx, sparkOpts('green', eurVals));
+  usdChart = new Chart(usdCtx, sparkOpts('blue', usdVals));
+}
 
-    document.getElementById('ft-totals').innerHTML = `
-      <span class="ft-item">EUR acum.: <span class="${cls(tEur)}">${sign(Math.round(tEur*100)/100)}</span></span>
-      <span class="ft-item">USD acum.: <span class="${cls(tUsd)}">${sign(Math.round(tUsd*100)/100)}</span></span>
-      <span class="ft-item">Consolidado: <span class="${cls(tAll)}">${sign(Math.round(tAll*100)/100)}</span></span>
-      <span class="ft-item" style="color:var(--dim)">${days.length} dias · ${nPos} posições totais</span>
-    `;
+/* ── BUILD DATE TABS ── */
+function buildDateTabs() {
+  const container = document.getElementById('date-tabs-container');
+  const visible = ALL_DATES.slice(-7);
+  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  container.innerHTML = visible.map(date => {
+    const [y,m,dd] = date.split('-').map(Number);
+    const label = String(dd).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y;
+    const tabId = 'tab-'+date.replace(/-/g,'_');
+    return `<button class="date-tab${date===currentDay?' active':''}" onclick="setDay('${date}')" id="${tabId}">${label}</button>`;
+  }).join('');
+}
 
-    const lastDate = Object.keys(D).sort().pop() ?? '—';
-    document.getElementById('ft-meta').textContent = `Carlos · eToro · ${lastDate}`;
-  }
-
-  /* ── init ────────────────────────────────────────────────────────── */
-  buildTabs();
+/* ── CONTROLS ── */
+function setDay(date) {
+  currentDay = date;
+  buildDateTabs();
   renderKPIs();
-  renderPanelMeta();
-  buildSparks();
-  renderEventos();
   renderTable();
-  buildFooter();
+  renderEventos();
+}
 
-})();
+function setAccount(acct) {
+  currentAccount = acct;
+  ['eur','usd','all'].forEach(a => {
+    document.getElementById('btn-'+a).classList.toggle('active', a===acct);
+  });
+  renderTable();
+}
+
+/* ── INIT ── */
+window.addEventListener('load', () => {
+  if (!ALL_DATES.length) {
+    document.getElementById('date-info').textContent = 'Sem dados. Corre: npm run pipeline -- --eur <img> --usd <img>';
+    return;
+  }
+  buildDateTabs();
+  buildSparklines();
+  renderKPIs();
+  renderTable();
+  renderEventos();
+});
+
+
+/* ── RENDER EVENTOS ── */
+function renderEventos() {
+  const d = DATA[currentDay];
+  const section = document.getElementById('eventos-section');
+  const container = document.getElementById('eventos-container');
+  if (!d || !d.eventos || d.eventos.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = 'block';
+  const icons = { saida: '🔴', entrada: '🟢', aporte: '💰', caixa: '📦' };
+  container.innerHTML = d.eventos.map(ev => {
+    const icon = icons[ev.tipo] || '📋';
+    const ativo = ev.ativo ? `<span class="evento-ativo">${ev.ativo}</span><span class="evento-mkt">${ev.mkt}</span>` : `<span class="evento-mkt">${ev.mkt}</span>`;
+    return `<div class="evento-card">
+      <span class="evento-icon">${icon}</span>
+      <div>
+        <div>${ativo}</div>
+        <div class="evento-nota">${ev.nota}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* Nav visual only */
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
 </script>
 </body>
 </html>
