@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "trader": "Carlos",
+    "updated": "2026-04-15T18:00:00.000Z"
+  },
+  "days": {
+    "2026-04-09": {
+      "date": "2026-04-09",
+      "eur": [
+        { "id": "E0901", "asset": "EUR/USD", "direction": "buy",  "amount": 500, "open_rate": 1.0892, "close_rate": 1.0918, "pnl": 23.80,  "pnl_pct":  4.76, "status": "closed", "open_time": "09:15", "close_time": "11:42" },
+        { "id": "E0902", "asset": "EUR/GBP", "direction": "sell", "amount": 300, "open_rate": 0.8524, "close_rate": 0.8510, "pnl": 11.20,  "pnl_pct":  3.73, "status": "closed", "open_time": "10:30", "close_time": "14:15" },
+        { "id": "E0903", "asset": "EUR/USD", "direction": "sell", "amount": 400, "open_rate": 1.0935, "close_rate": 1.0952, "pnl": -19.50, "pnl_pct": -4.88, "status": "closed", "open_time": "13:00", "close_time": "15:30" }
+      ],
+      "usd": [
+        { "id": "U0901", "asset": "USD/JPY",  "direction": "buy",  "amount": 600, "open_rate": 151.82, "close_rate": 152.14, "pnl": 31.50, "pnl_pct": 5.25, "status": "closed", "open_time": "08:45", "close_time": "12:00" },
+        { "id": "U0902", "asset": "GBP/USD", "direction": "sell", "amount": 400, "open_rate": 1.2854,  "close_rate": 1.2841,  "pnl": 12.80, "pnl_pct": 3.20, "status": "closed", "open_time": "14:00", "close_time": "16:30" }
+      ],
+      "events": [
+        { "time": "08:45", "type": "open",  "description": "Abriu USD/JPY Buy $600" },
+        { "time": "09:15", "type": "open",  "description": "Abriu EUR/USD Buy €500" },
+        { "time": "10:30", "type": "open",  "description": "Abriu EUR/GBP Sell €300" },
+        { "time": "11:42", "type": "close", "description": "Fechou EUR/USD +€23.80 (+4.76%)" },
+        { "time": "12:00", "type": "close", "description": "Fechou USD/JPY +$31.50 (+5.25%)" },
+        { "time": "14:15", "type": "close", "description": "Fechou EUR/GBP +€11.20 (+3.73%)" },
+        { "time": "15:30", "type": "close", "description": "Fechou EUR/USD -€19.50 (-4.88%)" },
+        { "time": "16:30", "type": "close", "description": "Fechou GBP/USD +$12.80 (+3.20%)" }
+      ],
+      "summary": {
+        "eur": { "total_pnl": 15.50,  "positions": 3, "positive": 2, "negative": 1, "best": 23.80,  "worst": -19.50 },
+        "usd": { "total_pnl": 44.30,  "positions": 2, "positive": 2, "negative": 0, "best": 31.50,  "worst":  12.80 },
+        "total_pnl": 59.80
+      }
+    },
+    "2026-04-10": {
+      "date": "2026-04-10",
+      "eur": [
+        { "id": "E1001", "asset": "EUR/USD", "direction": "buy",  "amount": 600, "open_rate": 1.0905, "close_rate": 1.0888, "pnl": -24.60, "pnl_pct": -4.10, "status": "closed", "open_time": "09:00", "close_time": "10:45" },
+        { "id": "E1002", "asset": "EUR/CHF", "direction": "buy",  "amount": 400, "open_rate": 0.9342, "close_rate": 0.9371, "pnl":  34.10, "pnl_pct":  8.53, "status": "closed", "open_time": "11:15", "close_time": "15:00" },
+        { "id": "E1003", "asset": "EUR/USD", "direction": "sell", "amount": 500, "open_rate": 1.0912, "close_rate": 1.0897, "pnl":  18.75, "pnl_pct":  3.75, "status": "closed", "open_time": "13:30", "close_time": "16:00" }
+      ],
+      "usd": [
+        { "id": "U1001", "asset": "USD/CAD", "direction": "sell", "amount": 500, "open_rate": 1.3854, "close_rate": 1.3821, "pnl":  27.50, "pnl_pct": 5.50, "status": "closed", "open_time": "09:30", "close_time": "13:15" },
+        { "id": "U1002", "asset": "USD/JPY", "direction": "buy",  "amount": 300, "open_rate": 151.95, "close_rate": 151.72, "pnl": -18.20, "pnl_pct":-6.07, "status": "closed", "open_time": "14:00", "close_time": "16:45" }
+      ],
+      "events": [
+        { "time": "09:00", "type": "open",  "description": "Abriu EUR/USD Buy €600" },
+        { "time": "09:30", "type": "open",  "description": "Abriu USD/CAD Sell $500" },
+        { "time": "10:45", "type": "close", "description": "Fechou EUR/USD -€24.60 (-4.10%)" },
+        { "time": "11:15", "type": "open",  "description": "Abriu EUR/CHF Buy €400" },
+        { "time": "13:15", "type": "close", "description": "Fechou USD/CAD +$27.50 (+5.50%)" },
+        { "time": "14:00", "type": "open",  "description": "Abriu USD/JPY Buy $300" },
+        { "time": "15:00", "type": "close", "description": "Fechou EUR/CHF +€34.10 (+8.53%)" },
+        { "time": "16:00", "type": "close", "description": "Fechou EUR/USD +€18.75 (+3.75%)" },
+        { "time": "16:45", "type": "close", "description": "Fechou USD/JPY -$18.20 (-6.07%)" }
+      ],
+      "summary": {
+        "eur": { "total_pnl":  28.25, "positions": 3, "positive": 2, "negative": 1, "best":  34.10, "worst": -24.60 },
+        "usd": { "total_pnl":   9.30, "positions": 2, "positive": 1, "negative": 1, "best":  27.50, "worst": -18.20 },
+        "total_pnl": 37.55
+      }
+    },
+    "2026-04-13": {
+      "date": "2026-04-13",
+      "eur": [
+        { "id": "E1301", "asset": "EUR/USD", "direction": "sell", "amount": 700, "open_rate": 1.0945, "close_rate": 1.0912, "pnl":  53.20, "pnl_pct":  7.60, "status": "closed", "open_time": "09:10", "close_time": "12:30" },
+        { "id": "E1302", "asset": "EUR/GBP", "direction": "buy",  "amount": 400, "open_rate": 0.8531, "close_rate": 0.8518, "pnl": -15.40, "pnl_pct": -3.85, "status": "closed", "open_time": "13:00", "close_time": "15:45" }
+      ],
+      "usd": [
+        { "id": "U1301", "asset": "GBP/USD", "direction": "buy",  "amount": 500, "open_rate": 1.2871, "close_rate": 1.2906, "pnl":  34.50, "pnl_pct":  6.90, "status": "closed", "open_time": "09:45", "close_time": "13:30" },
+        { "id": "U1302", "asset": "USD/CHF", "direction": "sell", "amount": 400, "open_rate": 0.9012, "close_rate": 0.8998, "pnl":  19.80, "pnl_pct":  4.95, "status": "closed", "open_time": "14:15", "close_time": "16:00" },
+        { "id": "U1303", "asset": "USD/JPY", "direction": "sell", "amount": 300, "open_rate": 152.10, "close_rate": 152.45, "pnl": -22.10, "pnl_pct": -7.37, "status": "closed", "open_time": "10:00", "close_time": "11:15" }
+      ],
+      "events": [
+        { "time": "09:10", "type": "open",   "description": "Abriu EUR/USD Sell €700" },
+        { "time": "09:45", "type": "open",   "description": "Abriu GBP/USD Buy $500" },
+        { "time": "10:00", "type": "open",   "description": "Abriu USD/JPY Sell $300" },
+        { "time": "11:15", "type": "close",  "description": "Fechou USD/JPY -$22.10 (-7.37%)" },
+        { "time": "12:30", "type": "close",  "description": "Fechou EUR/USD +€53.20 (+7.60%)" },
+        { "time": "13:00", "type": "open",   "description": "Abriu EUR/GBP Buy €400" },
+        { "time": "13:30", "type": "close",  "description": "Fechou GBP/USD +$34.50 (+6.90%)" },
+        { "time": "14:15", "type": "open",   "description": "Abriu USD/CHF Sell $400" },
+        { "time": "15:45", "type": "close",  "description": "Fechou EUR/GBP -€15.40 (-3.85%)" },
+        { "time": "16:00", "type": "close",  "description": "Fechou USD/CHF +$19.80 (+4.95%)" }
+      ],
+      "summary": {
+        "eur": { "total_pnl":  37.80, "positions": 2, "positive": 1, "negative": 1, "best":  53.20, "worst": -15.40 },
+        "usd": { "total_pnl":  32.20, "positions": 3, "positive": 2, "negative": 1, "best":  34.50, "worst": -22.10 },
+        "total_pnl": 70.00
+      }
+    },
+    "2026-04-14": {
+      "date": "2026-04-14",
+      "eur": [
+        { "id": "E1401", "asset": "EUR/USD", "direction": "buy",  "amount": 800, "open_rate": 1.0868, "close_rate": 1.0901, "pnl":  48.90, "pnl_pct":  6.11, "status": "closed", "open_time": "09:05", "close_time": "14:20" },
+        { "id": "E1402", "asset": "EUR/JPY", "direction": "buy",  "amount": 500, "open_rate": 163.21, "close_rate": 162.88, "pnl": -24.00, "pnl_pct": -4.80, "status": "closed", "open_time": "10:30", "close_time": "12:00" },
+        { "id": "E1403", "asset": "EUR/USD", "direction": "sell", "amount": 400, "open_rate": 1.0910, "close_rate": 1.0893, "pnl":  21.25, "pnl_pct":  5.31, "status": "closed", "open_time": "14:45", "close_time": "16:15" }
+      ],
+      "usd": [
+        { "id": "U1401", "asset": "USD/JPY",  "direction": "buy",  "amount": 600, "open_rate": 151.65, "close_rate": 152.02, "pnl":  37.80, "pnl_pct":  6.30, "status": "closed", "open_time": "09:30", "close_time": "13:45" },
+        { "id": "U1402", "asset": "AUD/USD", "direction": "sell", "amount": 350, "open_rate": 0.6354,  "close_rate": 0.6341,  "pnl":  14.20, "pnl_pct":  4.06, "status": "closed", "open_time": "11:00", "close_time": "15:30" }
+      ],
+      "events": [
+        { "time": "09:05", "type": "open",  "description": "Abriu EUR/USD Buy €800" },
+        { "time": "09:30", "type": "open",  "description": "Abriu USD/JPY Buy $600" },
+        { "time": "10:30", "type": "open",  "description": "Abriu EUR/JPY Buy €500" },
+        { "time": "11:00", "type": "open",  "description": "Abriu AUD/USD Sell $350" },
+        { "time": "12:00", "type": "close", "description": "Fechou EUR/JPY -€24.00 (-4.80%)" },
+        { "time": "13:45", "type": "close", "description": "Fechou USD/JPY +$37.80 (+6.30%)" },
+        { "time": "14:20", "type": "close", "description": "Fechou EUR/USD +€48.90 (+6.11%)" },
+        { "time": "14:45", "type": "open",  "description": "Abriu EUR/USD Sell €400" },
+        { "time": "15:30", "type": "close", "description": "Fechou AUD/USD +$14.20 (+4.06%)" },
+        { "time": "16:15", "type": "close", "description": "Fechou EUR/USD +€21.25 (+5.31%)" }
+      ],
+      "summary": {
+        "eur": { "total_pnl":  46.15, "positions": 3, "positive": 2, "negative": 1, "best": 48.90, "worst": -24.00 },
+        "usd": { "total_pnl":  52.00, "positions": 2, "positive": 2, "negative": 0, "best": 37.80, "worst":  14.20 },
+        "total_pnl": 98.15
+      }
+    },
+    "2026-04-15": {
+      "date": "2026-04-15",
+      "eur": [
+        { "id": "E1501", "asset": "EUR/USD", "direction": "buy",  "amount": 600, "open_rate": 1.0879, "close_rate": 1.0862, "pnl": -21.40, "pnl_pct": -3.57, "status": "closed", "open_time": "09:20", "close_time": "11:00" },
+        { "id": "E1502", "asset": "EUR/GBP", "direction": "sell", "amount": 500, "open_rate": 0.8545, "close_rate": 0.8528, "pnl":  27.50, "pnl_pct":  5.50, "status": "closed", "open_time": "11:30", "close_time": "14:45" },
+        { "id": "E1503", "asset": "EUR/USD", "direction": "buy",  "amount": 700, "open_rate": 1.0855, "close_rate": null,    "pnl":   8.40, "pnl_pct":  1.20, "status": "open",   "open_time": "15:10", "close_time": null }
+      ],
+      "usd": [
+        { "id": "U1501", "asset": "GBP/USD", "direction": "buy",  "amount": 500, "open_rate": 1.2891, "close_rate": 1.2924,  "pnl":  32.10, "pnl_pct":  6.42, "status": "closed", "open_time": "09:00", "close_time": "12:30" },
+        { "id": "U1502", "asset": "USD/JPY", "direction": "sell", "amount": 400, "open_rate": 152.31, "close_rate": 152.08,  "pnl":  18.40, "pnl_pct":  4.60, "status": "closed", "open_time": "13:00", "close_time": "15:45" },
+        { "id": "U1503", "asset": "USD/CHF", "direction": "buy",  "amount": 300, "open_rate": 0.8995, "close_rate": null,     "pnl":  -4.20, "pnl_pct": -1.40, "status": "open",   "open_time": "16:00", "close_time": null }
+      ],
+      "events": [
+        { "time": "09:00", "type": "open",   "description": "Abriu GBP/USD Buy $500" },
+        { "time": "09:20", "type": "open",   "description": "Abriu EUR/USD Buy €600" },
+        { "time": "11:00", "type": "close",  "description": "Fechou EUR/USD -€21.40 (-3.57%)" },
+        { "time": "11:30", "type": "open",   "description": "Abriu EUR/GBP Sell €500" },
+        { "time": "12:30", "type": "close",  "description": "Fechou GBP/USD +$32.10 (+6.42%)" },
+        { "time": "13:00", "type": "open",   "description": "Abriu USD/JPY Sell $400" },
+        { "time": "14:45", "type": "close",  "description": "Fechou EUR/GBP +€27.50 (+5.50%)" },
+        { "time": "15:10", "type": "open",   "description": "Abriu EUR/USD Buy €700 (aberta)" },
+        { "time": "15:45", "type": "close",  "description": "Fechou USD/JPY +$18.40 (+4.60%)" },
+        { "time": "16:00", "type": "open",   "description": "Abriu USD/CHF Buy $300 (aberta)" }
+      ],
+      "summary": {
+        "eur": { "total_pnl":  14.50, "positions": 3, "positive": 2, "negative": 1, "best": 27.50, "worst": -21.40 },
+        "usd": { "total_pnl":  46.30, "positions": 3, "positive": 2, "negative": 1, "best": 32.10, "worst":  -4.20 },
+        "total_pnl": 60.80
+      }
+    }
+  }
+}

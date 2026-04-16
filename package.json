@@ -1,0 +1,15 @@
+{
+  "name": "trading-dashboard",
+  "version": "2.0.0",
+  "description": "Carlos — EUR/USD eToro dashboard via Claude Vision → GitHub Pages",
+  "private": true,
+  "scripts": {
+    "extract":  "node scripts/extract.js",
+    "deploy":   "node scripts/deploy.js",
+    "pipeline": "node scripts/pipeline.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0"
+  },
+  "engines": { "node": ">=18.0.0" }
+}

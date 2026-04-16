@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carlos · Trading Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="data.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0c0f;
+      --surface:   #10141a;
+      --surface2:  #161c24;
+      --border:    #1e2630;
+      --border2:   #2a3444;
+      --text:      #cdd9e5;
+      --muted:     #768390;
+      --dim:       #444c56;
+      --green:     #3fb950;
+      --green-dim: rgba(63,185,80,0.12);
+      --red:       #f85149;
+      --red-dim:   rgba(248,81,73,0.12);
+      --blue:      #58a6ff;
+      --blue-dim:  rgba(88,166,255,0.10);
+      --yellow:    #e3b341;
+      --font:      'IBM Plex Mono', monospace;
+    }
+
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    /* ── topbar ── */
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 44px;
+    }
+    .tb-left { display: flex; align-items: center; gap: 10px; }
+    .tb-badge {
+      background: #1f6feb;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .tb-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .tb-pair  { font-size: 11px; color: var(--muted); }
+    #utc-clock {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+    #utc-clock span { color: var(--text); }
+
+    /* ── date tabs ── */
+    #date-tabs {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #date-tabs::-webkit-scrollbar { display: none; }
+    .dtab {
+      padding: 8px 16px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color .15s, border-color .15s;
+      letter-spacing: 0.3px;
+    }
+    .dtab:hover { color: var(--text); }
+    .dtab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+    /* ── main layout ── */
+    main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── section header ── */
+    .sec-head {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+
+    /* ── KPI grid ── */
+    #kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px)  { #kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { #kpi-grid { grid-template-columns: 1fr; } }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+    .kpi-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .kpi-value {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .kpi-sub { font-size: 10px; color: var(--dim); margin-top: 4px; }
+    .pos   { color: var(--green); }
+    .neg   { color: var(--red); }
+    .neu   { color: var(--blue); }
+    .warn  { color: var(--yellow); }
+
+    /* ── panels (sparklines) ── */
+    #panels {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 700px) { #panels { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+    }
+    .panel-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+    .panel-total {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .panel-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .panel-stat { font-size: 11px; color: var(--muted); }
+    .panel-stat span { color: var(--text); }
+    .sparkline-wrap { position: relative; height: 80px; }
+
+    /* ── events ── */
+    #events-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+    }
+    .events-list { display: flex; flex-direction: column; gap: 6px; }
+    .event-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 6px 8px;
+      border-radius: 4px;
+      background: var(--surface2);
+      font-size: 11px;
+    }
+    .event-time { color: var(--dim); min-width: 44px; flex-shrink: 0; }
+    .event-dot  {
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 3px;
+    }
+    .event-dot.open  { background: var(--blue); }
+    .event-dot.close { background: var(--green); }
+    .event-dot.loss  { background: var(--red); }
+    .event-dot.deposit { background: var(--yellow); }
+    .event-desc { color: var(--text); }
+    .no-events  { color: var(--muted); font-size: 11px; padding: 8px 0; }
+
+    /* ── table section ── */
+    #table-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-tabs { display: flex; gap: 4px; }
+    .ftab {
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .ftab:hover { color: var(--text); border-color: var(--text); }
+    .ftab.active { background: var(--blue-dim); color: var(--blue); border-color: var(--blue); }
+    .table-count { font-size: 11px; color: var(--muted); }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface2); }
+    td { padding: 8px 12px; font-size: 12px; white-space: nowrap; }
+    .td-asset { font-weight: 600; color: var(--text); }
+    .td-buy    { color: var(--green); font-weight: 600; }
+    .td-sell   { color: var(--red);   font-weight: 600; }
+    .td-pnl-pos{ color: var(--green); }
+    .td-pnl-neg{ color: var(--red); }
+    .td-open   { color: var(--yellow); font-size: 10px; }
+    .td-closed { color: var(--dim);    font-size: 10px; }
+    .td-ccy    { font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 600; }
+    .td-ccy.eur { background: rgba(88,166,255,0.12); color: var(--blue); }
+    .td-ccy.usd { background: rgba(63,185,80,0.12);  color: var(--green); }
+    .td-notes { color: var(--muted); font-size: 11px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+    .no-rows { padding: 24px; text-align: center; color: var(--muted); }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .footer-totals { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-total { }
+    .footer-total span { font-weight: 600; }
+    .footer-total span.pos { color: var(--green); }
+    .footer-total span.neg { color: var(--red); }
+  </style>
+</head>
+<body>
+
+<!-- topbar -->
+<div id="topbar">
+  <div class="tb-left">
+    <span class="tb-badge">eToro</span>
+    <span class="tb-title">Carlos</span>
+    <span class="tb-pair">EUR · USD</span>
+  </div>
+  <div id="utc-clock">UTC <span id="clock-time">--:--:--</span></div>
+</div>
+
+<!-- date tabs -->
+<nav id="date-tabs"></nav>
+
+<main>
+
+  <!-- KPIs -->
+  <section>
+    <div class="sec-head">Performance — <span id="kpi-date-label"></span></div>
+    <div id="kpi-grid"></div>
+  </section>
+
+  <!-- Sparkline panels -->
+  <section>
+    <div class="sec-head">Histórico P&amp;L</div>
+    <div id="panels">
+      <div class="panel" id="eur-panel">
+        <div class="panel-head">
+          <span class="panel-title">EUR Positions</span>
+          <span class="panel-total" id="eur-total">—</span>
+        </div>
+        <div class="panel-stats" id="eur-stats"></div>
+        <div class="sparkline-wrap"><canvas id="chart-eur"></canvas></div>
+      </div>
+      <div class="panel" id="usd-panel">
+        <div class="panel-head">
+          <span class="panel-title">USD Positions</span>
+          <span class="panel-total" id="usd-total">—</span>
+        </div>
+        <div class="panel-stats" id="usd-stats"></div>
+        <div class="sparkline-wrap"><canvas id="chart-usd"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events -->
+  <section>
+    <div id="events-panel">
+      <div class="sec-head" style="margin-bottom:12px">Eventos do dia — <span id="events-date"></span></div>
+      <div class="events-list" id="events-list"></div>
+    </div>
+  </section>
+
+  <!-- Positions table -->
+  <section id="table-section">
+    <div class="table-head">
+      <div class="filter-tabs">
+        <button class="ftab active" data-f="both">Ambas</button>
+        <button class="ftab"        data-f="eur">EUR</button>
+        <button class="ftab"        data-f="usd">USD</button>
+      </div>
+      <span class="table-count" id="table-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Instrumento</th>
+            <th>Dir</th>
+            <th>Montante</th>
+            <th>Entrada</th>
+            <th>Saída</th>
+            <th>P&amp;L</th>
+            <th>%</th>
+            <th>Estado</th>
+            <th>Abertura</th>
+            <th>Fecho</th>
+          </tr>
+        </thead>
+        <tbody id="positions-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-totals" id="footer-totals"></div>
+  <div id="footer-meta"></div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Guards ───────────────────────────────────────────────────────────────
+  if (typeof TRADING_DATA === 'undefined') {
+    document.body.innerHTML = '<div style="padding:40px;color:#f85149;font-family:monospace">Erro: data.js não encontrado. Corre <code>npm run pipeline</code> para gerar os dados.</div>';
+    return;
+  }
+
+  const D       = TRADING_DATA;
+  const DATES   = typeof DATA_DATES  !== 'undefined' ? DATA_DATES  : Object.keys(D.days).sort().slice(-7);
+  const LATEST  = typeof LATEST_DATE !== 'undefined' ? LATEST_DATE : DATES[DATES.length - 1];
+
+  let activeDate   = LATEST;
+  let activeFilter = 'both';
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const fmt2   = n  => n == null ? '—' : Number(n).toFixed(2);
+  const fmtPnl = n  => n == null ? '—' : (n >= 0 ? '+' : '') + fmt2(n);
+  const fmtPct = n  => n == null ? '—' : (n >= 0 ? '+' : '') + fmt2(n) + '%';
+  const clsPnl = n  => n > 0 ? 'pos' : n < 0 ? 'neg' : '';
+  const dayData = d => D.days[d] || { eur: [], usd: [], events: [], summary: { eur: {}, usd: {}, total_pnl: 0 } };
+
+  function labelDate(d) {
+    if (!d) return '—';
+    const [, mm, dd] = d.split('-');
+    const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return `${parseInt(dd)} ${months[parseInt(mm)-1]}`;
+  }
+
+  // ── UTC clock ────────────────────────────────────────────────────────────
+  function tickClock() {
+    const now = new Date();
+    const hh  = String(now.getUTCHours()).padStart(2,'0');
+    const mm  = String(now.getUTCMinutes()).padStart(2,'0');
+    const ss  = String(now.getUTCSeconds()).padStart(2,'0');
+    document.getElementById('clock-time').textContent = `${hh}:${mm}:${ss}`;
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // ── Date tabs ────────────────────────────────────────────────────────────
+  function buildDateTabs() {
+    const nav = document.getElementById('date-tabs');
+    nav.innerHTML = '';
+    for (const d of DATES) {
+      const btn = document.createElement('button');
+      btn.className = 'dtab' + (d === activeDate ? ' active' : '');
+      btn.textContent = labelDate(d);
+      btn.dataset.date = d;
+      btn.addEventListener('click', () => selectDate(d));
+      nav.appendChild(btn);
+    }
+  }
+
+  function selectDate(d) {
+    activeDate = d;
+    document.querySelectorAll('.dtab').forEach(b => b.classList.toggle('active', b.dataset.date === d));
+    updateKPIs();
+    updateEvents();
+    updateTable();
+    updatePanelStats();
+    updateSparklineHighlight();
+  }
+
+  // ── KPIs ─────────────────────────────────────────────────────────────────
+  function updateKPIs() {
+    const dd     = dayData(activeDate);
+    const s      = dd.summary || {};
+    const eurS   = s.eur || {};
+    const usdS   = s.usd || {};
+    const total  = s.total_pnl || 0;
+
+    // day variation vs previous day
+    const prevDate = DATES[DATES.indexOf(activeDate) - 1];
+    const prevPnl  = prevDate ? (dayData(prevDate).summary?.total_pnl || 0) : null;
+    const delta    = prevPnl != null ? total - prevPnl : null;
+
+    document.getElementById('kpi-date-label').textContent = labelDate(activeDate);
+
+    const allPos = [...(dd.eur||[]), ...(dd.usd||[])];
+    const posCount = allPos.filter(p => (p.pnl||0) > 0).length;
+    const allBest  = allPos.length ? Math.max(...allPos.map(p=>p.pnl||0)) : 0;
+    const allWorst = allPos.length ? Math.min(...allPos.map(p=>p.pnl||0)) : 0;
+
+    const kpis = [
+      { label: 'EUR P&L',     value: fmtPnl(eurS.total_pnl), cls: clsPnl(eurS.total_pnl), sub: `${eurS.positions||0} posições` },
+      { label: 'USD P&L',     value: fmtPnl(usdS.total_pnl), cls: clsPnl(usdS.total_pnl), sub: `${usdS.positions||0} posições` },
+      { label: 'Total dia',   value: fmtPnl(total),           cls: clsPnl(total),           sub: `${allPos.length} total` },
+      { label: 'Δ vs dia ant',value: delta != null ? fmtPnl(delta) : '—', cls: delta != null ? clsPnl(delta) : '', sub: prevDate ? labelDate(prevDate) : 'primeiro dia' },
+      { label: '+Posições',   value: posCount,                cls: posCount > 0 ? 'pos' : '', sub: `de ${allPos.length}` },
+      { label: 'Total pos.',  value: allPos.length,           cls: 'neu', sub: `EUR ${eurS.positions||0} · USD ${usdS.positions||0}` },
+      { label: 'Melhor',      value: allPos.length ? fmtPnl(allBest)  : '—', cls: 'pos', sub: '' },
+      { label: 'Pior',        value: allPos.length ? fmtPnl(allWorst) : '—', cls: 'neg', sub: '' },
+    ];
+
+    const grid = document.getElementById('kpi-grid');
+    grid.innerHTML = '';
+    for (const k of kpis) {
+      grid.insertAdjacentHTML('beforeend',
+        `<div class="kpi">
+          <div class="kpi-label">${k.label}</div>
+          <div class="kpi-value ${k.cls}">${k.value}</div>
+          ${k.sub ? `<div class="kpi-sub">${k.sub}</div>` : ''}
+        </div>`);
+    }
+  }
+
+  // ── Panel stats ───────────────────────────────────────────────────────────
+  function updatePanelStats() {
+    const dd   = dayData(activeDate);
+    const eurS = dd.summary?.eur || {};
+    const usdS = dd.summary?.usd || {};
+
+    const eurTotal = document.getElementById('eur-total');
+    const usdTotal = document.getElementById('usd-total');
+    eurTotal.textContent = fmtPnl(eurS.total_pnl);
+    eurTotal.className   = 'panel-total ' + clsPnl(eurS.total_pnl||0);
+    usdTotal.textContent = fmtPnl(usdS.total_pnl);
+    usdTotal.className   = 'panel-total ' + clsPnl(usdS.total_pnl||0);
+
+    function statsHtml(s) {
+      return `<div class="panel-stat">Pos: <span>${s.positions||0}</span></div>
+              <div class="panel-stat">+P: <span class="pos">${s.positive||0}</span></div>
+              <div class="panel-stat">-P: <span class="neg">${s.negative||0}</span></div>
+              <div class="panel-stat">Melhor: <span class="pos">${fmtPnl(s.best||0)}</span></div>
+              <div class="panel-stat">Pior: <span class="neg">${fmtPnl(s.worst||0)}</span></div>`;
+    }
+    document.getElementById('eur-stats').innerHTML = statsHtml(eurS);
+    document.getElementById('usd-stats').innerHTML = statsHtml(usdS);
+  }
+
+  // ── Sparklines ───────────────────────────────────────────────────────────
+  let chartEur = null, chartUsd = null;
+
+  function buildSparklines() {
+    Chart.defaults.color          = '#768390';
+    Chart.defaults.font.family    = "'IBM Plex Mono', monospace";
+    Chart.defaults.font.size      = 10;
+
+    const gridColor  = 'rgba(30,38,48,0.8)';
+    const allDates   = Object.keys(D.days).sort();
+
+    const eurPnls = allDates.map(d => D.days[d]?.summary?.eur?.total_pnl ?? 0);
+    const usdPnls = allDates.map(d => D.days[d]?.summary?.usd?.total_pnl ?? 0);
+    const labels  = allDates.map(d => labelDate(d));
+
+    function makeSparkConfig(data, color, colorDim) {
+      return {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            data,
+            borderColor: color,
+            backgroundColor: colorDim,
+            borderWidth: 1.5,
+            pointRadius: data.map(() => 3),
+            pointBackgroundColor: data.map((v,i) =>
+              allDates[i] === activeDate ? '#fff' : color),
+            pointBorderColor: color,
+            pointBorderWidth: data.map((v,i) => allDates[i] === activeDate ? 2 : 0),
+            fill: true,
+            tension: 0.35,
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ' ' + fmtPnl(ctx.parsed.y),
+                title: ctx => ctx[0].label,
+              }
+            }
+          },
+          scales: {
+            x: { display: false },
+            y: {
+              display: true,
+              grid: { color: gridColor },
+              ticks: { callback: v => fmtPnl(v), maxTicksLimit: 3 },
+            }
+          }
+        }
+      };
+    }
+
+    chartEur = new Chart(
+      document.getElementById('chart-eur'),
+      makeSparkConfig(eurPnls, '#58a6ff', 'rgba(88,166,255,0.08)')
+    );
+    chartUsd = new Chart(
+      document.getElementById('chart-usd'),
+      makeSparkConfig(usdPnls, '#3fb950', 'rgba(63,185,80,0.08)')
+    );
+  }
+
+  function updateSparklineHighlight() {
+    const allDates = Object.keys(D.days).sort();
+    for (const chart of [chartEur, chartUsd]) {
+      if (!chart) continue;
+      chart.data.datasets[0].pointBackgroundColor =
+        allDates.map((d, i) => d === activeDate ? '#fff' : chart.data.datasets[0].borderColor);
+      chart.data.datasets[0].pointBorderWidth =
+        allDates.map(d => d === activeDate ? 2 : 0);
+      chart.update('none');
+    }
+  }
+
+  // ── Events ───────────────────────────────────────────────────────────────
+  function updateEvents() {
+    const dd = dayData(activeDate);
+    document.getElementById('events-date').textContent = labelDate(activeDate);
+    const list = document.getElementById('events-list');
+    list.innerHTML = '';
+    const events = dd.events || [];
+    if (!events.length) {
+      list.innerHTML = '<div class="no-events">Sem eventos registados para este dia.</div>';
+      return;
+    }
+    for (const e of events) {
+      const type = e.type || 'open';
+      list.insertAdjacentHTML('beforeend',
+        `<div class="event-row">
+          <span class="event-time">${e.time || ''}</span>
+          <span class="event-dot ${type}"></span>
+          <span class="event-desc">${e.description || ''}</span>
+        </div>`);
+    }
+  }
+
+  // ── Positions table ───────────────────────────────────────────────────────
+  function updateTable() {
+    const dd = dayData(activeDate);
+    const eurRows = (dd.eur || []).map(p => ({ ...p, _ccy: 'eur' }));
+    const usdRows = (dd.usd || []).map(p => ({ ...p, _ccy: 'usd' }));
+
+    let rows;
+    if      (activeFilter === 'eur')  rows = eurRows;
+    else if (activeFilter === 'usd')  rows = usdRows;
+    else                              rows = [...eurRows, ...usdRows];
+
+    document.getElementById('table-count').textContent = `${rows.length} posições`;
+
+    const tbody = document.getElementById('positions-tbody');
+    tbody.innerHTML = '';
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="12" class="no-rows">Sem posições para o filtro seleccionado.</td></tr>`;
+      return;
+    }
+
+    for (const p of rows) {
+      const pnlCls = (p.pnl||0) > 0 ? 'td-pnl-pos' : (p.pnl||0) < 0 ? 'td-pnl-neg' : '';
+      const dirCls = p.direction === 'buy' ? 'td-buy' : 'td-sell';
+      const dirLbl = p.direction === 'buy' ? '▲ BUY'  : '▼ SELL';
+      const stCls  = p.status === 'open' ? 'td-open' : 'td-closed';
+      const stLbl  = p.status === 'open' ? '● aberta' : '○ fechada';
+
+      tbody.insertAdjacentHTML('beforeend',
+        `<tr>
+          <td><span class="td-ccy ${p._ccy}">${p._ccy.toUpperCase()}</span></td>
+          <td style="color:var(--dim)">${p.id || '—'}</td>
+          <td class="td-asset">${p.asset || '—'}</td>
+          <td class="${dirCls}">${dirLbl}</td>
+          <td>${fmt2(p.amount)}</td>
+          <td>${p.open_rate ?? '—'}</td>
+          <td>${p.close_rate ?? '—'}</td>
+          <td class="${pnlCls}">${fmtPnl(p.pnl)}</td>
+          <td class="${pnlCls}">${fmtPct(p.pnl_pct)}</td>
+          <td class="${stCls}">${stLbl}</td>
+          <td style="color:var(--muted)">${p.open_time  || '—'}</td>
+          <td style="color:var(--muted)">${p.close_time || '—'}</td>
+        </tr>`);
+    }
+  }
+
+  // ── Filter tabs ───────────────────────────────────────────────────────────
+  document.querySelectorAll('.ftab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.f;
+      document.querySelectorAll('.ftab').forEach(b => b.classList.toggle('active', b === btn));
+      updateTable();
+    });
+  });
+
+  // ── Footer ────────────────────────────────────────────────────────────────
+  function buildFooter() {
+    const allDays   = Object.values(D.days);
+    const totEur    = allDays.reduce((s,d) => s + (d.summary?.eur?.total_pnl||0), 0);
+    const totUsd    = allDays.reduce((s,d) => s + (d.summary?.usd?.total_pnl||0), 0);
+    const totAll    = allDays.reduce((s,d) => s + (d.summary?.total_pnl||0), 0);
+
+    const totals = document.getElementById('footer-totals');
+    totals.innerHTML = `
+      <div class="footer-total">EUR total: <span class="${clsPnl(totEur)}">${fmtPnl(totEur)}</span></div>
+      <div class="footer-total">USD total: <span class="${clsPnl(totUsd)}">${fmtPnl(totUsd)}</span></div>
+      <div class="footer-total">Acumulado: <span class="${clsPnl(totAll)}">${fmtPnl(totAll)}</span></div>
+      <div class="footer-total">${allDays.length} dias · ${allDays.reduce((s,d)=>s+(d.eur||[]).length+(d.usd||[]).length,0)} posições</div>
+    `;
+
+    document.getElementById('footer-meta').textContent =
+      `Carlos · eToro · Updated ${D.meta.updated ? D.meta.updated.slice(0,10) : '—'}`;
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  buildDateTabs();
+  updateKPIs();
+  updatePanelStats();
+  buildSparklines();
+  updateEvents();
+  updateTable();
+  buildFooter();
+
+})();
+</script>
+</body>
+</html>
