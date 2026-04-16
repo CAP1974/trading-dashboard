@@ -1,14 +1,15 @@
 #!/usr/bin/env node
 /**
- * extract.js — eToro screenshot → Claude Vision → trading_data.json + dashboard/data.js
+ * extract.js — eToro screenshot → Claude Vision → trading_data.json + data.js
+ *
+ * Estrutura real do trading_data.json (flat por data):
+ *   { "2025-04-09": { date, eventos, eur: { lucro, positions[] }, usd: { lucro, positions[] } }, ... }
  *
  * Usage:
- *   node scripts/extract.js --date 2026-04-15 --eur path/to/eur.png --usd path/to/usd.png
- *   node scripts/extract.js --date 2026-04-15 --eur path/to/eur.png
- *   node scripts/extract.js --date 2026-04-15 --usd path/to/usd.png
+ *   node scripts/extract.js --date 2025-04-16 --eur path/eur.png --usd path/usd.png
+ *   node scripts/extract.js --date 2025-04-16 --eur path/eur.png
  *
- * Env:
- *   ANTHROPIC_API_KEY  (required)
+ * Env:  ANTHROPIC_API_KEY  (required)
  */
 
 'use strict';
@@ -17,9 +18,28 @@ const fs        = require('fs');
 const path      = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
 
-// ── arg parsing ────────────────────────────────────────────────────────────
-const args  = process.argv.slice(2);
-const get   = flag => { const i = args.indexOf(flag); return i !== -1 ? args[i + 1] : null; };
+// ── carrega API key do ficheiro .env ───────────────────────────────────────
+(function loadEnv() {
+  const root     = path.join(__dirname, '..');
+  const envFiles = ['ANTHROPIC_API_KEY.env', '.env'];
+  for (const name of envFiles) {
+    const p = path.join(root, name);
+    if (fs.existsSync(p)) {
+      fs.readFileSync(p, 'utf8').split('\n').forEach(line => {
+        const m = line.trim().match(/^([^#=]+)=(.*)$/);
+        if (m && !process.env[m[1].trim()]) {
+          process.env[m[1].trim()] = m[2].trim();
+        }
+      });
+      console.log(`Env carregado: ${name}`);
+      break;
+    }
+  }
+})();
+
+// ── args ───────────────────────────────────────────────────────────────────
+const args    = process.argv.slice(2);
+const get     = flag => { const i = args.indexOf(flag); return i !== -1 ? args[i + 1] : null; };
 
 const date    = get('--date') || new Date().toISOString().slice(0, 10);
 const eurPath = get('--eur');
@@ -31,11 +51,11 @@ if (!eurPath && !usdPath) {
 }
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'trading_data.json');
-const DATA_JS   = path.join(__dirname, '..', 'dashboard', 'data.js');
+const DATA_JS   = path.join(__dirname, '..', 'data.js');
 
 const client = new Anthropic();
 
-// ── vision extraction ──────────────────────────────────────────────────────
+// ── Claude Vision ──────────────────────────────────────────────────────────
 async function extractPositions(imagePath, currency) {
   const buf       = fs.readFileSync(imagePath);
   const base64    = buf.toString('base64');
@@ -45,26 +65,29 @@ async function extractPositions(imagePath, currency) {
                   : ext === '.gif'                      ? 'image/gif'
                   :                                       'image/png';
 
-  const prompt = `This is an eToro trading platform screenshot showing ${currency} positions.
+  const prompt = `This is an eToro trading screenshot showing ${currency} positions.
 
-Extract ALL positions visible in the table as a JSON array.
-For each row include these exact fields:
+Extract ALL visible positions as a JSON array. For each position use these exact fields:
 {
-  "id":         position ID string visible on screen (if not visible use sequential "P001", "P002", ...),
-  "asset":      instrument name exactly as shown (e.g. "EUR/USD", "GBP/USD", "USD/JPY"),
-  "direction":  "buy" or "sell",
-  "amount":     invested amount as a number (no currency symbols),
-  "open_rate":  open/entry price as a number,
-  "close_rate": close price as a number, or null if position is still open,
-  "pnl":        profit/loss as a number (positive = profit, negative = loss),
-  "pnl_pct":    P&L percentage as a number (e.g. 4.5 for 4.5%),
-  "status":     "open" or "closed",
-  "open_time":  time or datetime string exactly as shown,
-  "close_time": close time string or null if open
+  "name":      instrument/stock name as shown (e.g. "Ericsson", "Samsung", "Micron"),
+  "mkt":       "${currency}",
+  "pct":       P&L percentage as number (e.g. 2.35 or -4.10),
+  "lucro":     P&L amount as number (positive = profit, negative = loss),
+  "vol":       volume/units as number,
+  "valor":     current invested value as number,
+  "atual":     current price as number,
+  "abertura":  open/entry price as number,
+  "trust":     "v" (green/good), "a" (yellow/neutral), or "r" (red/bad) based on performance,
+  "delta":     { "pct": day_change_pct, "val": day_change_value } or null if not shown
 }
 
-Return ONLY a valid JSON array with no explanation, no markdown fences, no extra text.
-If no positions are visible return an empty array [].`;
+Also extract the total P&L shown for the ${currency} section as a separate number.
+
+Return ONLY this JSON object, no markdown, no explanation:
+{
+  "lucro": <total pnl number>,
+  "positions": [ <array of positions> ]
+}`;
 
   const response = await client.messages.create({
     model:      'claude-opus-4-5',
@@ -84,111 +107,74 @@ If no positions are visible return an empty array [].`;
   try {
     return JSON.parse(cleaned);
   } catch (e) {
-    console.error(`  Failed to parse Claude response for ${currency}:`);
-    console.error('  Raw:', text.slice(0, 300));
-    throw new Error(`JSON parse error for ${currency} positions: ${e.message}`);
+    console.error(`  Falha a parsear resposta Claude para ${currency}:`);
+    console.error('  Raw:', text.slice(0, 400));
+    throw new Error(`JSON parse error (${currency}): ${e.message}`);
   }
 }
 
-// ── summarise positions ────────────────────────────────────────────────────
-function summarise(positions) {
-  const pnl  = positions.reduce((s, p) => s + (p.pnl || 0), 0);
-  const pos  = positions.filter(p => (p.pnl || 0) > 0);
-  const neg  = positions.filter(p => (p.pnl || 0) < 0);
-  return {
-    total_pnl: Math.round(pnl * 100) / 100,
-    positions: positions.length,
-    positive:  pos.length,
-    negative:  neg.length,
-    best:      pos.length ? Math.max(...pos.map(p => p.pnl)) : 0,
-    worst:     neg.length ? Math.min(...neg.map(p => p.pnl)) : 0,
-  };
-}
-
-// ── generate events from positions ────────────────────────────────────────
-function deriveEvents(eurPositions, usdPositions) {
-  const events = [];
-  const all    = [
-    ...eurPositions.map(p => ({ ...p, _ccy: 'EUR' })),
-    ...usdPositions.map(p => ({ ...p, _ccy: 'USD' })),
-  ];
-
-  for (const p of all) {
-    const sym = p._ccy === 'EUR' ? '€' : '$';
-    if (p.open_time) {
-      events.push({
-        time:        p.open_time,
-        type:        'open',
-        description: `Abriu ${p.asset} ${p.direction === 'buy' ? 'Buy' : 'Sell'} ${sym}${p.amount}${p.status === 'open' ? ' (aberta)' : ''}`,
-      });
-    }
-    if (p.close_time) {
-      const sign = p.pnl >= 0 ? '+' : '';
-      events.push({
-        time:        p.close_time,
-        type:        p.pnl >= 0 ? 'close' : 'loss',
-        description: `Fechou ${p.asset} ${sign}${sym}${Math.abs(p.pnl).toFixed(2)} (${sign}${p.pnl_pct}%)`,
-      });
-    }
-  }
-
-  return events.sort((a, b) => a.time.localeCompare(b.time));
-}
-
-// ── write dashboard/data.js ────────────────────────────────────────────────
+// ── write data.js (raiz) ───────────────────────────────────────────────────
 function writeDataJs(data) {
-  const sorted     = Object.keys(data.days).sort();
-  const latest     = sorted[sorted.length - 1];
-  const last7      = sorted.slice(-7);
+  const sorted = Object.keys(data).sort();
+  const latest = sorted[sorted.length - 1];
+  const last7  = sorted.slice(-7);
 
   const js = `// AUTO-GENERATED by scripts/extract.js — DO NOT EDIT MANUALLY
-// Updated: ${data.meta.updated}
+// Updated: ${new Date().toISOString()}
 const TRADING_DATA = ${JSON.stringify(data, null, 2)};
 const DATA_DATES   = ${JSON.stringify(last7)};
 const LATEST_DATE  = "${latest}";
 `;
   fs.writeFileSync(DATA_JS, js);
-  console.log(`Generated → dashboard/data.js  (${sorted.length} days, latest: ${latest})`);
+  console.log(`Gerado → data.js  (${sorted.length} dias, último: ${latest})`);
 }
 
 // ── main ───────────────────────────────────────────────────────────────────
 async function run() {
-  let data = { meta: { trader: 'Carlos', updated: '' }, days: {} };
+  // Carrega dados existentes (estrutura flat)
+  let data = {};
   if (fs.existsSync(DATA_FILE)) {
     data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-    console.log(`Loaded existing data (${Object.keys(data.days).length} days)`);
+    console.log(`Dados carregados: ${Object.keys(data).length} dias`);
   }
 
-  const day = data.days[date] || { date, eur: [], usd: [], events: [] };
-
-  if (eurPath) {
-    console.log(`\nExtracting EUR positions from: ${eurPath}`);
-    day.eur = await extractPositions(eurPath, 'EUR');
-    console.log(`  → ${day.eur.length} EUR positions extracted`);
-  }
-
-  if (usdPath) {
-    console.log(`\nExtracting USD positions from: ${usdPath}`);
-    day.usd = await extractPositions(usdPath, 'USD');
-    console.log(`  → ${day.usd.length} USD positions extracted`);
-  }
-
-  const eurPnl = (day.eur || []).reduce((s, p) => s + (p.pnl || 0), 0);
-  const usdPnl = (day.usd || []).reduce((s, p) => s + (p.pnl || 0), 0);
-
-  day.events  = deriveEvents(day.eur || [], day.usd || []);
-  day.summary = {
-    eur:       summarise(day.eur || []),
-    usd:       summarise(day.usd || []),
-    total_pnl: Math.round((eurPnl + usdPnl) * 100) / 100,
+  // Dia actual — preserva eventos manuais já existentes
+  const existing = data[date] || {};
+  const day = {
+    date,
+    eventos:  existing.eventos || [],
+    eur:      existing.eur     || { lucro: 0, positions: [] },
+    usd:      existing.usd     || { lucro: 0, positions: [] },
   };
 
-  data.days[date]  = day;
-  data.meta.updated = new Date().toISOString();
+  // Extrai EUR
+  if (eurPath) {
+    console.log(`\nA extrair EUR de: ${eurPath}`);
+    const result = await extractPositions(eurPath, 'EUR');
+    day.eur = {
+      lucro:     result.lucro     ?? 0,
+      positions: result.positions ?? [],
+    };
+    console.log(`  → ${day.eur.positions.length} posições EUR | lucro: ${day.eur.lucro}`);
+  }
+
+  // Extrai USD
+  if (usdPath) {
+    console.log(`\nA extrair USD de: ${usdPath}`);
+    const result = await extractPositions(usdPath, 'USD');
+    day.usd = {
+      lucro:     result.lucro     ?? 0,
+      positions: result.positions ?? [],
+    };
+    console.log(`  → ${day.usd.positions.length} posições USD | lucro: ${day.usd.lucro}`);
+  }
+
+  // Guarda o dia
+  data[date] = day;
 
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  console.log(`\nSaved → data/trading_data.json`);
-  console.log(`  EUR: ${day.summary.eur.total_pnl >= 0 ? '+' : ''}${day.summary.eur.total_pnl} | USD: ${day.summary.usd.total_pnl >= 0 ? '+' : ''}${day.summary.usd.total_pnl} | Total: ${day.summary.total_pnl >= 0 ? '+' : ''}${day.summary.total_pnl}`);
+  console.log(`\nGravado → data/trading_data.json`);
+  console.log(`  EUR: ${day.eur.lucro} | USD: ${day.usd.lucro} | Total: ${Math.round((day.eur.lucro + day.usd.lucro) * 100) / 100}`);
 
   writeDataJs(data);
 }
