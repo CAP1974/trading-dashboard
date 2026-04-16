@@ -210,7 +210,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <script src="data.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const DATES = DATA_DATES;
+// Usa TODOS os dias do histórico, não só os últimos 7
+const DATES = Object.keys(TRADING_DATA).sort();
 const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 const MONTHS  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 

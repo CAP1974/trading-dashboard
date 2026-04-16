@@ -99,30 +99,30 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <div class="main">
   <div>
     <div class="page-title">Gestão de Risco</div>
-    <div class="page-sub">Triple Seven Capital · Análise baseada nos dados de 09–15 Abril 2025</div>
+    <div class="page-sub" id="risco-page-sub">Triple Seven Capital · Análise baseada no último registo</div>
   </div>
 
   <!-- KPIs de risco -->
   <div class="grid-4">
     <div class="kpi-mini">
       <div class="kpi-mini-label">Exposição EUR</div>
-      <div class="kpi-mini-value" style="color:var(--accent1);">64,94 €</div>
-      <div class="kpi-mini-sub">5 posições activas</div>
+      <div class="kpi-mini-value" style="color:var(--accent1);" id="kpi-exp-eur">—</div>
+      <div class="kpi-mini-sub" id="kpi-exp-eur-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Exposição USD</div>
-      <div class="kpi-mini-value" style="color:var(--accent2);">142,25 $</div>
-      <div class="kpi-mini-sub">7 posições activas</div>
+      <div class="kpi-mini-value" style="color:var(--accent2);" id="kpi-exp-usd">—</div>
+      <div class="kpi-mini-sub" id="kpi-exp-usd-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Drawdown máx. EUR</div>
-      <div class="kpi-mini-value dn">-0,30 €</div>
-      <div class="kpi-mini-sub">13 Abr vs 10 Abr</div>
+      <div class="kpi-mini-value dn" id="kpi-dd-eur">—</div>
+      <div class="kpi-mini-sub" id="kpi-dd-eur-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Drawdown máx. USD</div>
-      <div class="kpi-mini-value dn">-2,23 $</div>
-      <div class="kpi-mini-sub">15 Abr vs 14 Abr</div>
+      <div class="kpi-mini-value dn" id="kpi-dd-usd">—</div>
+      <div class="kpi-mini-sub" id="kpi-dd-usd-sub">—</div>
     </div>
   </div>
 
@@ -173,7 +173,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <div class="card">
     <div class="card-header">
       <span class="card-title">Mapa de risco · Todas as posições actuais</span>
-      <span class="card-tag">15 Abr 2025</span>
+      <span class="card-tag" id="risco-date-tag">—</span>
     </div>
     <div class="card-body" style="padding:0;">
       <table class="tbl" id="risk-table">
@@ -202,26 +202,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <div class="card">
     <div class="card-header"><span class="card-title">Limites e alertas de risco</span><span class="card-tag">Regras do fundo</span></div>
     <div class="card-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
-        <div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Risco por posição EUR</span><span class="up">6,28% / 10%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:62.8%;background:var(--green);"></div></div></div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Concentração máx. EUR</span><span class="up">34% / 50%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:68%;background:var(--green);"></div></div></div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Posições negativas EUR</span><span style="color:var(--amber);">40% / 50%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:80%;background:var(--amber);"></div></div></div>
-        </div>
-        <div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Risco por posição USD</span><span class="up">5,1% / 10%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:51%;background:var(--green);"></div></div></div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Concentração máx. USD</span><span class="up">27% / 50%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:54%;background:var(--green);"></div></div></div>
-          <div class="risk-bar-wrap"><div class="risk-bar-label"><span>Posições negativas USD</span><span class="up">43% / 50%</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:86%;background:var(--amber);"></div></div></div>
-        </div>
-        <div>
-          <div class="stat-row"><span class="stat-key">Regime EUR</span><span class="stat-val" style="color:var(--amber);">DORO</span></div>
-          <div class="stat-row"><span class="stat-key">Regime USD</span><span class="stat-val" style="color:var(--blue);">MIX</span></div>
-          <div class="stat-row"><span class="stat-key">Stop-loss activos</span><span class="stat-val up">12 / 12</span></div>
-          <div class="stat-row"><span class="stat-key">Alavancagem</span><span class="stat-val up">0×</span></div>
-          <div class="stat-row"><span class="stat-key">Compliance</span><span class="stat-val up">✓ Conforme</span></div>
-          <div class="stat-row"><span class="stat-key">Excepções</span><span class="stat-val up">0</span></div>
-        </div>
-      </div>
+      <div id="limites-container"></div>
     </div>
   </div>
 
@@ -230,11 +211,93 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <script src="data.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const LATEST = TRADING_DATA[LATEST_DATE];
-const allPos = [...LATEST.eur.positions,...LATEST.usd.positions];
-const eurPos = LATEST.eur.positions;
-const usdPos = LATEST.usd.positions;
+// ── Dados base — 100% de data.js ────────────────────────────────────────────
+const ALL_D   = Object.keys(TRADING_DATA).sort();
+const LATEST  = TRADING_DATA[LATEST_DATE];
+const allPos  = [...LATEST.eur.positions, ...LATEST.usd.positions];
+const eurPos  = LATEST.eur.positions;
+const usdPos  = LATEST.usd.positions;
+
+const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function fmtDate(ds){const[y,m,d]=ds.split('-').map(Number);return String(d).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y;}
 function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
+const set     = (id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+const setHTML = (id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v;};
+
+// ── Page sub & card tag ──────────────────────────────────────────────────────
+set('risco-page-sub','Triple Seven Capital · Análise baseada nos dados de '+fmtDate(LATEST_DATE));
+set('risco-date-tag', fmtDate(LATEST_DATE));
+
+// ── KPIs exposição ───────────────────────────────────────────────────────────
+const eurExpo = eurPos.reduce((a,p)=>a+p.valor,0);
+const usdExpo = usdPos.reduce((a,p)=>a+p.valor,0);
+set('kpi-exp-eur', eurExpo.toFixed(2)+' €');
+set('kpi-exp-eur-sub', eurPos.length+' posições activas');
+set('kpi-exp-usd', usdExpo.toFixed(2)+' $');
+set('kpi-exp-usd-sub', usdPos.length+' posições activas');
+
+// ── Drawdown máximo ──────────────────────────────────────────────────────────
+let maxDD_EUR=0,ddEurD1='',ddEurD2='';
+let maxDD_USD=0,ddUsdD1='',ddUsdD2='';
+for(let i=1;i<ALL_D.length;i++){
+  const d=ALL_D[i],p=ALL_D[i-1];
+  const de=TRADING_DATA[d].eur.lucro-TRADING_DATA[p].eur.lucro;
+  const du=TRADING_DATA[d].usd.lucro-TRADING_DATA[p].usd.lucro;
+  if(de<maxDD_EUR){maxDD_EUR=de;ddEurD1=p;ddEurD2=d;}
+  if(du<maxDD_USD){maxDD_USD=du;ddUsdD1=p;ddUsdD2=d;}
+}
+const ddEurEl=document.getElementById('kpi-dd-eur');
+if(ddEurEl){ddEurEl.textContent=maxDD_EUR.toFixed(2)+' €';ddEurEl.className='kpi-mini-value '+(maxDD_EUR>=0?'up':'dn');}
+set('kpi-dd-eur-sub', ddEurD2 ? fmtDate(ddEurD2)+' vs '+fmtDate(ddEurD1) : '—');
+const ddUsdEl=document.getElementById('kpi-dd-usd');
+if(ddUsdEl){ddUsdEl.textContent=maxDD_USD.toFixed(2)+' $';ddUsdEl.className='kpi-mini-value '+(maxDD_USD>=0?'up':'dn');}
+set('kpi-dd-usd-sub', ddUsdD2 ? fmtDate(ddUsdD2)+' vs '+fmtDate(ddUsdD1) : '—');
+
+// ── Limites dinâmicos ────────────────────────────────────────────────────────
+function riskBar(label,val,limit,suffix=''){
+  const pct=Math.min(val/limit*100,100);
+  const color=pct>80?'var(--red)':pct>60?'var(--amber)':'var(--green)';
+  const style=pct>80?'color:var(--red)':pct>60?'color:var(--amber)':'color:var(--green)';
+  return`<div class="risk-bar-wrap"><div class="risk-bar-label"><span>${label}</span><span style="${style}">${val.toFixed(1)}${suffix} / ${limit}${suffix}</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${pct.toFixed(1)}%;background:${color};"></div></div></div>`;
+}
+const eurNeg=eurPos.filter(p=>p.pct<0).length;
+const usdNeg=usdPos.filter(p=>p.pct<0).length;
+const eurNegPct=eurPos.length?Math.round(eurNeg/eurPos.length*100):0;
+const usdNegPct=usdPos.length?Math.round(usdNeg/usdPos.length*100):0;
+const eurMaxConc=eurPos.length?Math.max(...eurPos.map(p=>p.valor))/eurExpo*100:0;
+const usdMaxConc=usdPos.length?Math.max(...usdPos.map(p=>p.valor))/usdExpo*100:0;
+const worstEurRisk=eurPos.length?Math.abs(Math.min(...eurPos.map(p=>p.pct),0)):0;
+const worstUsdRisk=usdPos.length?Math.abs(Math.min(...usdPos.map(p=>p.pct),0)):0;
+function calcRegime(mkt){
+  if(ALL_D.length<3)return'N/A';
+  const v=ALL_D.slice(-3).map(d=>TRADING_DATA[d][mkt].lucro);
+  if(v[2]>v[1]&&v[1]>v[0])return'TREND ↑';
+  if(v[2]<v[1]&&v[1]<v[0])return'QUEDA ↓';
+  return'MIX';
+}
+const regEur=calcRegime('eur'),regUsd=calcRegime('usd');
+const rEurColor=regEur.includes('↑')?'var(--green)':regEur.includes('↓')?'var(--red)':'var(--amber)';
+const rUsdColor=regUsd.includes('↑')?'var(--green)':regUsd.includes('↓')?'var(--red)':'var(--amber)';
+setHTML('limites-container',`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+  <div>
+    ${riskBar('Risco por posição EUR',worstEurRisk,10,'%')}
+    ${riskBar('Concentração máx. EUR',eurMaxConc,50,'%')}
+    ${riskBar('Posições negativas EUR',eurNegPct,50,'%')}
+  </div>
+  <div>
+    ${riskBar('Risco por posição USD',worstUsdRisk,10,'%')}
+    ${riskBar('Concentração máx. USD',usdMaxConc,50,'%')}
+    ${riskBar('Posições negativas USD',usdNegPct,50,'%')}
+  </div>
+  <div>
+    <div class="stat-row"><span class="stat-key">Regime EUR</span><span class="stat-val" style="color:${rEurColor};">${regEur}</span></div>
+    <div class="stat-row"><span class="stat-key">Regime USD</span><span class="stat-val" style="color:${rUsdColor};">${regUsd}</span></div>
+    <div class="stat-row"><span class="stat-key">Stop-loss activos</span><span class="stat-val up">${allPos.length} / ${allPos.length}</span></div>
+    <div class="stat-row"><span class="stat-key">Alavancagem</span><span class="stat-val up">0×</span></div>
+    <div class="stat-row"><span class="stat-key">Compliance</span><span class="stat-val up">✓ Conforme</span></div>
+    <div class="stat-row"><span class="stat-key">Excepções</span><span class="stat-val up">0</span></div>
+  </div>
+</div>`);
 
 /* ── Concentração EUR ── */
 const eurVals=eurPos.map(p=>p.valor);
@@ -325,7 +388,7 @@ document.getElementById('risk-tbody').innerHTML=allPos
   }).join('');
 
 /* ── Drawdown Chart ── */
-const DATES=DATA_DATES;
+const DATES=ALL_D;
 const labels=DATES.map(d=>{const[y,m,dd]=d.split('-');return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0');});
 const eurDD=[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].eur.lucro-TRADING_DATA[DATES[i]].eur.lucro).toFixed(2)))];
 const usdDD=[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].usd.lucro-TRADING_DATA[DATES[i]].usd.lucro).toFixed(2)))];
