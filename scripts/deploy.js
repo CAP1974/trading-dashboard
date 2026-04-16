@@ -1,16 +1,25 @@
 #!/usr/bin/env node
 /**
- * deploy.js — git add . && git commit -m "update data" && git push origin main
+ * deploy.js — copia dashboard/data.js → ./data.js, depois git add/commit/push
  */
 
 'use strict';
 
 const { execSync } = require('child_process');
-const path         = require('path');
-const ROOT         = path.join(__dirname, '..');
+const fs   = require('fs');
+const path = require('path');
+const ROOT = path.join(__dirname, '..');
 
 function run(cmd) {
   execSync(cmd, { stdio: 'inherit', cwd: ROOT });
+}
+
+// Copia dashboard/data.js para raiz (se existir)
+const src = path.join(ROOT, 'dashboard', 'data.js');
+const dst = path.join(ROOT, 'data.js');
+if (fs.existsSync(src)) {
+  fs.copyFileSync(src, dst);
+  console.log('Copiado dashboard/data.js → ./data.js');
 }
 
 try {
