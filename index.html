@@ -3,650 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Centro de Controlo Institucional · Trading Dashboard</title>
+<title>Triple Seven Capital · Fund Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-base: #080c10;
-    --bg-01: #0d1117;
-    --bg-02: #111820;
-    --bg-03: #161d27;
-    --bg-04: #1c2533;
-    --border: rgba(255,255,255,0.07);
-    --border-hi: rgba(255,255,255,0.12);
-    --text-primary: #e2eaf4;
-    --text-secondary: #7a8a9e;
-    --text-muted: #3d4f63;
-    --green: #22c55e;
-    --green-dim: rgba(34,197,94,0.12);
-    --green-border: rgba(34,197,94,0.25);
-    --red: #ef4444;
-    --red-dim: rgba(239,68,68,0.12);
-    --red-border: rgba(239,68,68,0.25);
-    --amber: #f59e0b;
-    --amber-dim: rgba(245,158,11,0.12);
-    --blue: #3b82f6;
-    --blue-dim: rgba(59,130,246,0.12);
-    --blue-border: rgba(59,130,246,0.25);
-    --accent: #00d4ff;
-    --accent-dim: rgba(0,212,255,0.08);
-    --font-mono: 'IBM Plex Mono', monospace;
-    --font-sans: 'IBM Plex Sans', sans-serif;
-  }
+:root {
+  --bg:       #060a0d;
+  --bg-01:    #0a1018;
+  --bg-02:    #0f1923;
+  --bg-03:    #152030;
+  --bg-04:    #1c2a3d;
+  --border:   rgba(255,255,255,0.06);
+  --border-hi:rgba(255,255,255,0.11);
+  --txt:      #ddeaf7;
+  --txt-2:    #6b8aaa;
+  --txt-3:    #334455;
+  --green:    #1eff8e;
+  --green-d:  rgba(30,255,142,0.10);
+  --green-b:  rgba(30,255,142,0.22);
+  --red:      #ff4d6a;
+  --red-d:    rgba(255,77,106,0.10);
+  --red-b:    rgba(255,77,106,0.22);
+  --amber:    #ffb340;
+  --amber-d:  rgba(255,179,64,0.10);
+  --blue:     #4da6ff;
+  --blue-d:   rgba(77,166,255,0.10);
+  --accent1:  #3dffb0;  /* triple seven green */
+  --accent2:  #00c8ff;  /* triple seven cyan  */
+  --accent-g: linear-gradient(135deg,#3dffb0,#00c8ff);
+  --mono:     'JetBrains Mono', monospace;
+  --display:  'Syne', sans-serif;
+  --radius:   8px;
+  --radius-lg:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:var(--mono);
+  font-size:12px;
+  line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── TOPBAR ── */
+.topbar{
+  background:var(--bg-01);
+  border-bottom:1px solid var(--border);
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;top:0;z-index:100;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-logo{width:36px;height:36px;object-fit:contain;}
+.brand-text{display:flex;flex-direction:column;}
+.brand-name{
+  font-family:var(--display);
+  font-size:15px;font-weight:700;
+  background:var(--accent-g);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:0.03em;
+}
+.brand-sub{font-size:9px;color:var(--txt-3);letter-spacing:0.12em;text-transform:uppercase;}
+.topbar-center{display:flex;gap:6px;align-items:center;}
+.pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg-03);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px;
+  font-size:10px;color:var(--txt-2);
+}
+.dot{width:6px;height:6px;border-radius:50%;animation:blink 2s infinite;}
+.dot-g{background:var(--green);}
+.dot-a{background:var(--amber);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.topbar-right{display:flex;align-items:center;gap:20px;}
+.clock{font-size:12px;color:var(--txt-3);letter-spacing:.06em;font-variant-numeric:tabular-nums;}
+.export-btn{
+  font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+  padding:6px 14px;border-radius:var(--radius);cursor:pointer;
+  background:var(--accent-g);color:#060a0d;font-weight:600;
+  border:none;transition:opacity .15s;
+}
+.export-btn:hover{opacity:.85;}
 
-  body {
-    background: var(--bg-base);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 13px;
-    line-height: 1.5;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── NAV ── */
+.nav{
+  background:var(--bg-01);border-bottom:1px solid var(--border);
+  display:flex;padding:0 28px;gap:2px;
+}
+.nav-item{
+  font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--txt-3);padding:10px 14px;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .15s;
+  font-family:var(--display);font-weight:600;
+}
+.nav-item:hover{color:var(--txt-2);}
+.nav-item.active{color:var(--accent1);border-bottom-color:var(--accent1);}
 
-  /* ── TOPBAR ── */
-  .topbar {
-    background: var(--bg-01);
-    border-bottom: 1px solid var(--border);
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--text-primary);
-    text-transform: uppercase;
-  }
-  .logo .accent { color: var(--accent); }
-  .logo .version {
-    font-weight: 300;
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-left: 10px;
-    letter-spacing: 0.05em;
-  }
-  .topbar-center {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .market-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--bg-03);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 10px 4px 8px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-secondary);
-  }
-  .market-pill .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-  .dot-green { background: var(--green); }
-  .dot-amber { background: var(--amber); }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .clock {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-  }
+/* ── FUND HEADER ── */
+.fund-header{
+  background:var(--bg-01);border-bottom:1px solid var(--border);
+  padding:16px 28px;display:grid;
+  grid-template-columns:repeat(6,1fr);gap:1px;
+}
+.fh-item{padding:0 20px;border-right:1px solid var(--border);}
+.fh-item:first-child{padding-left:0;}
+.fh-item:last-child{border-right:none;}
+.fh-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:5px;}
+.fh-value{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;}
+.fh-sub{font-size:10px;color:var(--txt-2);margin-top:2px;}
+.grad{background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 
-  /* ── NAV ── */
-  .nav {
-    background: var(--bg-01);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    padding: 0 24px;
-    gap: 2px;
-  }
-  .nav-item {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 10px 14px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .nav-item:hover { color: var(--text-secondary); }
-  .nav-item.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+/* ── DATE BAR ── */
+.date-bar{
+  background:var(--bg-01);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 28px;
+}
+.date-tabs{display:flex;gap:4px;}
+.date-tab{
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;
+}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
 
-  /* ── DATE SWITCHER ── */
-  .date-bar {
-    background: var(--bg-01);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 24px;
-  }
-  .date-tabs { display: flex; gap: 4px; }
-  .date-tab {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 5px 14px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    transition: all 0.15s;
-  }
-  .date-tab.active {
-    background: var(--accent-dim);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .date-tab:hover:not(.active) {
-    border-color: var(--border-hi);
-    color: var(--text-secondary);
-  }
-  .date-info {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-  }
+/* ── MAIN ── */
+.main{padding:16px 28px;display:flex;flex-direction:column;gap:14px;}
+.zone-label{
+  font-size:9px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--txt-3);margin-bottom:7px;display:flex;align-items:center;gap:8px;
+}
+.zone-label::after{content:'';flex:1;height:1px;background:var(--border);}
 
-  /* ── LAYOUT ── */
-  .main { padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; }
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;}
+.kpi{
+  background:var(--bg-02);border:1px solid var(--border);
+  border-radius:var(--radius);padding:11px 13px;
+  position:relative;overflow:hidden;transition:border-color .2s;
+}
+.kpi:hover{border-color:var(--border-hi);}
+.kpi::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--accent-g);opacity:0;transition:opacity .2s;
+}
+.kpi:hover::before{opacity:1;}
+.kpi-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:7px;}
+.kpi-value{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;}
+.kpi-sub{font-size:10px;margin-top:3px;}
+.up{color:var(--green);}
+.dn{color:var(--red);}
+.neu{color:var(--txt-3);}
+.ac{color:var(--accent2);}
 
-  /* ── ALERT ROW ── */
-  .alert-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
-  .alert-card {
-    border-radius: 6px;
-    padding: 10px 12px;
-    border: 1px solid;
-    position: relative;
-    overflow: hidden;
-  }
-  .alert-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
-  .alert-card.danger { background: #1a0a0a; border-color: var(--red-border); }
-  .alert-card.danger::before { background: var(--red); }
-  .alert-card.warn { background: #1a1200; border-color: rgba(245,158,11,0.3); }
-  .alert-card.warn::before { background: var(--amber); }
-  .alert-card.ok { background: #091a0e; border-color: var(--green-border); }
-  .alert-card.ok::before { background: var(--green); }
-  .alert-card.info { background: #091020; border-color: var(--blue-border); }
-  .alert-card.info::before { background: var(--blue); }
-  .alert-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-  .alert-card.danger .alert-label { color: var(--red); }
-  .alert-card.warn .alert-label { color: var(--amber); }
-  .alert-card.ok .alert-label { color: var(--green); }
-  .alert-card.info .alert-label { color: var(--blue); }
-  .alert-msg { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+/* ── PANELS ── */
+.panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.panel{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.panel-header{
+  padding:11px 15px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.panel-title{font-family:var(--display);font-size:12px;font-weight:600;color:var(--txt);letter-spacing:.02em;}
+.panel-tag{
+  font-size:9px;color:var(--txt-3);background:var(--bg-04);
+  padding:2px 7px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;
+}
+.panel-body{padding:13px 15px;}
+.metric-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);
+}
+.metric-row:last-child{border-bottom:none;}
+.metric-key{font-size:11px;color:var(--txt-2);}
+.metric-val{font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;}
+.sparkline-wrap{height:54px;position:relative;margin-bottom:11px;border-radius:4px;overflow:hidden;}
 
-  /* ── SECTION LABEL ── */
-  .zone-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .zone-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+/* ── EVENTOS ── */
+.evento-card{
+  background:var(--bg-02);border:1px solid var(--border);
+  border-radius:var(--radius);padding:9px 13px;
+  display:flex;align-items:flex-start;gap:9px;flex:1;min-width:200px;
+}
+.evento-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.evento-ativo{font-size:12px;font-weight:500;color:var(--accent1);}
+.evento-mkt{
+  font-size:9px;color:var(--txt-3);background:var(--bg-04);
+  padding:1px 5px;border-radius:2px;margin-left:6px;
+}
+.evento-nota{font-size:11px;color:var(--txt-2);margin-top:2px;line-height:1.4;}
 
-  /* ── KPI ROW ── */
-  .kpi-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
-  .kpi {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .kpi:hover { border-color: var(--border-hi); }
-  .kpi-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-  .kpi-value {
-    font-family: var(--font-mono);
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-  .kpi-sub {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    margin-top: 3px;
-  }
-  .up { color: var(--green); }
-  .dn { color: var(--red); }
-  .neu { color: var(--text-muted); }
-  .kpi-accent-line {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent);
-    opacity: 0.3;
-  }
+/* ── POSITIONS ── */
+.positions-panel{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.positions-header{
+  padding:11px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pos-tab{
+  font-size:10px;letter-spacing:.04em;
+  padding:4px 12px;border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;background:transparent;color:var(--txt-3);
+  font-family:var(--mono);transition:all .15s;
+}
+.pos-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.pos-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.btn-sm{
+  font-family:var(--mono);font-size:10px;padding:4px 10px;
+  border:1px solid var(--border);border-radius:3px;background:transparent;
+  color:var(--txt-3);cursor:pointer;transition:all .15s;letter-spacing:.04em;
+}
+.btn-sm:hover{border-color:var(--border-hi);color:var(--txt-2);background:var(--bg-03);}
+.pos-table{width:100%;border-collapse:collapse;}
+.pos-table th{
+  padding:7px 10px;text-align:left;font-size:9px;font-weight:400;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);
+  border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.pos-table th.r{text-align:right;}
+.pos-table td{
+  padding:7px 10px;font-size:11px;color:var(--txt);
+  border-bottom:1px solid rgba(255,255,255,.025);white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.pos-table td.r{text-align:right;}
+.pos-table tr:last-child td{border-bottom:none;}
+.pos-table tbody tr:hover td{background:rgba(255,255,255,.02);}
+.ticker{font-weight:500;color:var(--accent2);font-size:12px;}
+.trust-badge{
+  display:inline-block;border-radius:3px;padding:1px 6px;
+  font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;
+}
+.trust-v{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.trust-a{background:var(--amber-d);color:var(--amber);border:1px solid rgba(255,179,64,.3);}
+.trust-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
 
-  /* ── PANELS ── */
-  .panels { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-  .panel {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .panel-header {
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .panel-title {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-primary);
-    letter-spacing: 0.04em;
-  }
-  .panel-tag {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-muted);
-    background: var(--bg-04);
-    padding: 2px 7px;
-    border-radius: 3px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .panel-body { padding: 12px 14px; }
+/* ── FLOW ── */
+.flow-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;}
+.flow-item{
+  background:var(--bg-02);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 12px;text-align:center;
+}
+.flow-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:6px;}
+.flow-val{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums;}
 
-  .metric-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .metric-row:last-child { border-bottom: none; }
-  .metric-key { font-size: 11px; color: var(--text-secondary); }
-  .metric-val {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
+/* ── FOOTER TOTALS ── */
+.total-footer{
+  background:var(--bg-02);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:14px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.total-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:4px;}
+.total-value{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;}
+.total-sub{font-size:10px;color:var(--txt-2);margin-top:2px;}
+.divider{width:1px;height:44px;background:var(--border);}
 
-  /* Sparkline container */
-  .sparkline-wrap {
-    height: 52px;
-    position: relative;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    overflow: hidden;
-  }
+/* ── ALERT ROW ── */
+.alert-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;}
+.alert-card{border-radius:var(--radius);padding:10px 12px;border:1px solid;position:relative;overflow:hidden;}
+.alert-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.alert-card.ok{background:#071a0f;border-color:var(--green-b);}
+.alert-card.ok::before{background:var(--green);}
+.alert-card.warn{background:#1a1200;border-color:rgba(255,179,64,.3);}
+.alert-card.warn::before{background:var(--amber);}
+.alert-card.info{background:#071020;border-color:rgba(77,166,255,.25);}
+.alert-card.info::before{background:var(--blue);}
+.alert-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;}
+.alert-card.ok .alert-label{color:var(--green);}
+.alert-card.warn .alert-label{color:var(--amber);}
+.alert-card.info .alert-label{color:var(--blue);}
+.alert-msg{font-size:11px;color:var(--txt-2);line-height:1.4;}
 
-  /* ── POSITIONS TABLE ── */
-  .positions-panel {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .positions-header {
-    padding: 10px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .positions-tabs { display: flex; gap: 2px; }
-  .pos-tab {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    padding: 4px 12px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    transition: all 0.15s;
-  }
-  .pos-tab.active {
-    background: var(--accent-dim);
-    border-color: rgba(0,212,255,0.3);
-    color: var(--accent);
-  }
-  .pos-tab:hover:not(.active) {
-    border-color: var(--border-hi);
-    color: var(--text-secondary);
-  }
-  .pos-actions { display: flex; gap: 6px; }
-  .btn-sm {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 4px 10px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.15s;
-  }
-  .btn-sm:hover {
-    border-color: var(--border-hi);
-    color: var(--text-secondary);
-    background: var(--bg-03);
-  }
+/* ── RISK MINI ── */
+.risk-mini{background:var(--bg-01);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-top:10px;}
+.risk-mini-title{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:8px;}
+.risk-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.risk-mini-item{text-align:center;}
+.risk-mini-val{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;}
+.risk-mini-key{font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.06em;}
 
-  .pos-table { width: 100%; border-collapse: collapse; }
-  .pos-table th {
-    padding: 7px 10px;
-    text-align: left;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .pos-table th.right { text-align: right; }
-  .pos-table td {
-    padding: 7px 10px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-primary);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    white-space: nowrap;
-  }
-  .pos-table td.right { text-align: right; }
-  .pos-table tr:last-child td { border-bottom: none; }
-  .pos-table tbody tr { transition: background 0.1s; }
-  .pos-table tbody tr:hover td { background: rgba(255,255,255,0.025); }
-  .ticker {
-    font-weight: 500;
-    color: var(--accent);
-    font-size: 12px;
-  }
-  .trust-badge {
-    display: inline-block;
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-size: 9px;
-    font-weight: 500;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .trust-v { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
-  .trust-a { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
-  .trust-r { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-border); }
-
-  /* ── FLOW ROW ── */
-  .flow-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 6px; }
-  .flow-item {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    text-align: center;
-  }
-  .flow-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-  .flow-val {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  /* ── READ GRID ── */
-  .read-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-  .read-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    gap: 8px;
-  }
-  .read-item:last-child, .read-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
-  .read-key { font-size: 11px; color: var(--text-secondary); }
-  .read-val { font-family: var(--font-mono); font-size: 11px; font-weight: 500; }
-
-  /* ── GOV ── */
-  .gov-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
-  .gov-item {
-    text-align: center;
-    padding: 8px 6px;
-    background: var(--bg-01);
-    border-radius: 4px;
-    border: 1px solid var(--border);
-  }
-  .gov-num {
-    font-family: var(--font-mono);
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-  .gov-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .check-icon { font-size: 14px; }
-
-  /* ── BOTTOM SECTION ── */
-  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .chart-panel {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-  }
-  .chart-title {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* ── RISK MINI PANEL ── */
-  .risk-mini {
-    background: var(--bg-01);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-top: 10px;
-  }
-  .risk-mini-title {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin-bottom: 8px;
-  }
-  .risk-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .risk-mini-item { text-align: center; }
-  .risk-mini-val {
-    font-family: var(--font-mono);
-    font-size: 15px;
-    font-weight: 500;
-  }
-  .risk-mini-key {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  /* ── TOTAL FOOTER ── */
-  .total-footer {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .total-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .total-value {
-    font-family: var(--font-mono);
-    font-size: 22px;
-    font-weight: 600;
-  }
-  .total-sub {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-  .total-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--border);
-  }
-
-  /* ── DELTA BADGE ── */
-  .delta {
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-weight: 500;
-  }
-  .delta.up { background: var(--green-dim); color: var(--green); }
-  .delta.dn { background: var(--red-dim); color: var(--red); }
-
-  /* ── SCROLL ── */
-  .table-wrap { overflow-x: auto; }
-  .table-wrap::-webkit-scrollbar { height: 4px; }
-  .table-wrap::-webkit-scrollbar-track { background: var(--bg-01); }
-  .table-wrap::-webkit-scrollbar-thumb { background: var(--bg-04); border-radius: 2px; }
-
-  /* ── HIDDEN ── */
-  .day-content { display: none; }
-  .day-content.active { display: contents; }
-
-  /* ── EVENTOS ── */
-  .evento-card {
-    background: var(--bg-02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    min-width: 220px;
-    flex: 1;
-  }
-  .evento-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-  .evento-ativo { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--accent); }
-  .evento-nota { font-size: 11px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
-  .evento-mkt { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); background: var(--bg-04); padding: 1px 5px; border-radius: 2px; margin-left: 6px; }
+/* ── GOV ── */
+.gov-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:8px;}
+.gov-item{text-align:center;padding:8px 6px;background:var(--bg-01);border-radius:4px;border:1px solid var(--border);}
+.gov-num{font-size:20px;font-weight:500;}
+.gov-label{font-size:9px;color:var(--txt-3);margin-top:2px;text-transform:uppercase;letter-spacing:.05em;}
+.read-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.read-item{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);gap:8px;}
+.read-key{font-size:11px;color:var(--txt-2);}
+.read-val{font-size:11px;font-weight:500;}
+.table-wrap{overflow-x:auto;}
+.table-wrap::-webkit-scrollbar{height:3px;}
+.table-wrap::-webkit-scrollbar-track{background:var(--bg-01);}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--bg-04);border-radius:2px;}
 </style>
 </head>
 <body>
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">
-    <span class="accent">MRC</span> TRADE
-    <span class="version">· Centro de Controlo Institucional v2.0</span>
+  <div class="brand">
+    <img src="data:image/png;base64,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ypuNfPXVcrpaid5fI9xJJJ8Sr3DLbbe8lovqXOC2O9nvprgtO/8AR+zStjrtR32mtFvjc+ad2MgZ7I5k/wAdyt9pWxUemtPUtloWtEcDcyPA/SP95x7/AOPFcN1f9DjT1g/KC4xdm6XBmImuG8MP4F37PNSacLvd195PZWiI2N3/AGipuoPzY9WBwXF9MOsYtIaUkdC8fOla0x0jM/UHBzz9+OG4O+y6+pqKejpZaurkEdNCwvkcTwA/E8B4qonSXqmo1dqupucriIAexTR52ZGNgAvttS3kuOiI2D2Haq+1L0Y6/g5uR7pHuke4ue45c4nJJPNYoitzfBERAEREAREQBERAEREAREQBERAEREAREQBERAFLnVfsFLW65F+udRSQUdraXsNRM2MSTY+iBkjOM5I7iojTlhR7qi69GVNSyzWWZzqwdSDinlmX/F0tR/rm1k/99F+8vrrnaQMm82rH/exfvL+f6LN+S0f9On7KvxSvf6F/Pna0OPZbebWT3fLYv3l9+dbO0FzrzbOy1uTisjJx5drJVAkXryXh/p0/Z88Tr3+h3HTXrF+stb1NZG8/IKbMFGzOQGA8Rjbc75HFc/o3T9VqbUNNaKR8URlcPaSyyBjI2ZGXEnYYyvHRaSnRVKkqdPhkskWsaexDYhwyLy6ej05p6yUlkoLvaI6ajjEbP59EC483H6XEnf7ByX7XXazD+u7R6V8X7yoaion4PKTzdTj3fsqJYMpPNz6F7nXezEnF6tP69F+8sDd7P/bVq/XY/wB5UURe1gEV6/T9nh4FH3+her52tG/+ebV+ux/Fa33azhj3m82wtY0udirjcQBzwDk+Soyi9rBIr1+h58QR9/odz0z61frHVUj6dzm2ykzFSMzsWji7zJyfVft6CtJUd+1ILleammp7VQOD3e2nbH7WQbtYMnfx7tlHKK33OzS3cHkW0rbKhuab2eGWZd+S7Wj+2LU0DAAFXGAAOQ34LULtZydrza/12P8AeVJUURYel63Qo/JqH+j/AOE+9YzW8DLZDpa01TJTUD2tZJE7I7PAMBHqTx4+CgJEUyjSVKOyi7srOFpSVOH/AH2hERdSWEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf/Z" alt="Triple Seven Capital" class="brand-logo">
+    <div class="brand-text">
+      <div class="brand-name">Triple Seven Capital</div>
+      <div class="brand-sub">Fund Management · Since Apr 2025</div>
+    </div>
   </div>
   <div class="topbar-center">
-    <div class="market-pill">
-      <span class="dot dot-green"></span>EUR · 8MSN
-    </div>
-    <div class="market-pill">
-      <span class="dot dot-amber"></span>USD · OMV
-    </div>
+    <div class="pill"><span class="dot dot-g"></span>EUR · 8MSN</div>
+    <div class="pill"><span class="dot dot-a"></span>USD · OMV</div>
   </div>
   <div class="topbar-right">
     <div class="clock" id="clock">--:--:-- UTC</div>
+    <button class="export-btn" onclick="exportExcel()">↓ Export Excel</button>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-  <div class="nav-item active">Vista consolidada</div>
+  <div class="nav-item active">Vista Consolidada</div>
   <div class="nav-item">Contas</div>
   <div class="nav-item">Posições</div>
   <div class="nav-item">Risco</div>
@@ -654,11 +334,43 @@
   <div class="nav-item">Governança</div>
 </div>
 
-<!-- DATE SWITCHER -->
-<div class="date-bar">
-  <div class="date-tabs" id="date-tabs-container">
-    <!-- Gerado dinamicamente por JS com base em data.js -->
+<!-- FUND HEADER — métricas permanentes do fundo -->
+<div class="fund-header">
+  <div class="fh-item">
+    <div class="fh-label">Capital EUR</div>
+    <div class="fh-value up" id="fh-cap-eur">64,94 €</div>
+    <div class="fh-sub" id="fh-cap-eur-sub">+ 0,26 € em caixa</div>
   </div>
+  <div class="fh-item">
+    <div class="fh-label">Capital USD</div>
+    <div class="fh-value up" id="fh-cap-usd">142,25 $</div>
+    <div class="fh-sub" id="fh-cap-usd-sub">+ 16,38 $ em caixa</div>
+  </div>
+  <div class="fh-item">
+    <div class="fh-label">Retorno EUR</div>
+    <div class="fh-value grad" id="fh-ret-eur">+4,7%</div>
+    <div class="fh-sub">desde 09 Abr 2025</div>
+  </div>
+  <div class="fh-item">
+    <div class="fh-label">Retorno USD</div>
+    <div class="fh-value grad" id="fh-ret-usd">+6,9%</div>
+    <div class="fh-sub">desde 09 Abr 2025</div>
+  </div>
+  <div class="fh-item">
+    <div class="fh-label">AUM Total ~EUR</div>
+    <div class="fh-value grad" id="fh-aum">≈ 196 €</div>
+    <div class="fh-sub">EUR + USD convertido</div>
+  </div>
+  <div class="fh-item">
+    <div class="fh-label">Dias Activos</div>
+    <div class="fh-value ac" id="fh-dias">5</div>
+    <div class="fh-sub" id="fh-inicio">Início: 09 Abr 2025</div>
+  </div>
+</div>
+
+<!-- DATE BAR -->
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
   <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
@@ -667,301 +379,195 @@
 
   <!-- ALERTAS -->
   <div>
-    <div class="zone-label">Estado do sistema e alertas</div>
+    <div class="zone-label">Estado do sistema</div>
     <div class="alert-row">
       <div class="alert-card ok">
         <div class="alert-label">EUR · Conta activa</div>
-        <div class="alert-msg">Conta 8MSN sincronizada. 7 posições abertas com lucro consolidado.</div>
+        <div class="alert-msg">Conta 8MSN sincronizada. Posições abertas com lucro consolidado.</div>
       </div>
       <div class="alert-card ok">
         <div class="alert-label">USD · Conta activa</div>
-        <div class="alert-msg">Conta OMV sincronizada. 7 posições abertas com lucro consolidado.</div>
+        <div class="alert-msg">Conta OMV sincronizada. Posições abertas com lucro consolidado.</div>
       </div>
       <div class="alert-card info">
-        <div class="alert-label">Mercados abertos</div>
-        <div class="alert-msg">Euronext Paris/Amsterdam, NYSE, NASDAQ operacionais. Sem interrupções.</div>
+        <div class="alert-label">Mercados</div>
+        <div class="alert-msg">Euronext · NYSE · NASDAQ operacionais. Sem interrupções.</div>
       </div>
-      <div class="alert-card warn">
-        <div class="alert-label">Atenção · Posições negativas</div>
-        <div class="alert-msg" id="alert-neg">DOF e OMV em EUR com lucro negativo. Monitorizar stop-loss.</div>
+      <div class="alert-card warn" id="alert-neg">
+        <div class="alert-label">Atenção</div>
+        <div class="alert-msg" id="alert-neg-msg">Monitorizar posições negativas.</div>
       </div>
     </div>
   </div>
 
   <!-- KPIs -->
   <div>
-    <div class="zone-label">KPIs consolidados · EUR + USD</div>
+    <div class="zone-label">Performance · sessão seleccionada</div>
     <div class="kpi-row">
       <div class="kpi">
         <div class="kpi-label">Lucro EUR</div>
-        <div class="kpi-value up" id="kpi-eur-lucro">2,15 €</div>
-        <div class="kpi-sub neu" id="kpi-eur-sub">7 posições abertas</div>
-        <div class="kpi-accent-line" style="background:var(--green);opacity:0.5;"></div>
+        <div class="kpi-value up" id="kpi-eur-lucro">—</div>
+        <div class="kpi-sub neu" id="kpi-eur-pos">—</div>
       </div>
       <div class="kpi">
         <div class="kpi-label">Lucro USD</div>
-        <div class="kpi-value up" id="kpi-usd-lucro">3,28 $</div>
-        <div class="kpi-sub neu" id="kpi-usd-sub">7 posições abertas</div>
-        <div class="kpi-accent-line" style="background:var(--green);opacity:0.5;"></div>
+        <div class="kpi-value up" id="kpi-usd-lucro">—</div>
+        <div class="kpi-sub neu" id="kpi-usd-pos">—</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Lucro total ~EUR</div>
-        <div class="kpi-value up" id="kpi-total">≈ 5,12 €</div>
-        <div class="kpi-sub up">Consolidado</div>
+        <div class="kpi-label">Total ~EUR</div>
+        <div class="kpi-value up" id="kpi-total">—</div>
+        <div class="kpi-sub neu">Consolidado</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Variação EUR dia</div>
-        <div class="kpi-value" id="kpi-eur-delta">—</div>
-        <div class="kpi-sub" id="kpi-eur-delta-sub">vs. dia anterior</div>
+        <div class="kpi-label">Δ EUR vs D-1</div>
+        <div class="kpi-value neu" id="kpi-eur-delta">—</div>
+        <div class="kpi-sub neu" id="kpi-eur-delta-sub">—</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Variação USD dia</div>
-        <div class="kpi-value" id="kpi-usd-delta">—</div>
-        <div class="kpi-sub" id="kpi-usd-delta-sub">vs. dia anterior</div>
+        <div class="kpi-label">Δ USD vs D-1</div>
+        <div class="kpi-value neu" id="kpi-usd-delta">—</div>
+        <div class="kpi-sub neu" id="kpi-usd-delta-sub">—</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Posições positivas</div>
-        <div class="kpi-value" id="kpi-pos-pos">10 / 14</div>
-        <div class="kpi-sub up">71% em ganho</div>
+        <div class="kpi-label">Pos. positivas</div>
+        <div class="kpi-value" id="kpi-pos-pos">—</div>
+        <div class="kpi-sub up" id="kpi-pos-pct">—</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Maior ganho</div>
-        <div class="kpi-value up" id="kpi-best">Samsung</div>
-        <div class="kpi-sub up" id="kpi-best-val">+15,92% EUR</div>
+        <div class="kpi-label">Melhor</div>
+        <div class="kpi-value up" id="kpi-best">—</div>
+        <div class="kpi-sub up" id="kpi-best-val">—</div>
       </div>
       <div class="kpi">
-        <div class="kpi-label">Maior perda</div>
-        <div class="kpi-value dn" id="kpi-worst">Erasca</div>
-        <div class="kpi-sub dn" id="kpi-worst-val">-6,50% USD</div>
+        <div class="kpi-label">Pior</div>
+        <div class="kpi-value dn" id="kpi-worst">—</div>
+        <div class="kpi-sub dn" id="kpi-worst-val">—</div>
       </div>
     </div>
   </div>
 
   <!-- PAINÉIS OPERACIONAIS -->
   <div class="panels">
-
-    <!-- Conta EUR -->
+    <!-- EUR -->
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Conta EUR · 8MSN</span>
         <span class="panel-tag">Euronext</span>
       </div>
       <div class="panel-body">
-        <div class="sparkline-wrap">
-          <canvas id="eurSparkline" role="img" aria-label="Lucro EUR dia 9 vs dia 10"></canvas>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Lucro líquido</span>
-          <span class="metric-val up" id="m-eur-lucro">2,15 €</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Posições abertas</span>
-          <span class="metric-val">7</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Em ganho / Em perda</span>
-          <span class="metric-val"><span class="up">5</span> / <span class="dn">2</span></span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Melhor posição</span>
-          <span class="metric-val up" id="m-eur-best">Samsung +15,92%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Pior posição</span>
-          <span class="metric-val dn" id="m-eur-worst">DOF -2,84%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Variação vs D-1</span>
-          <span class="metric-val up" id="m-eur-var">+0,31 € (+16,9%)</span>
-        </div>
+        <div class="sparkline-wrap"><canvas id="eurSparkline" role="img" aria-label="EUR P&L histórico"></canvas></div>
+        <div class="metric-row"><span class="metric-key">Lucro líquido</span><span class="metric-val up" id="m-eur-lucro">—</span></div>
+        <div class="metric-row"><span class="metric-key">Posições abertas</span><span class="metric-val" id="m-eur-npos">—</span></div>
+        <div class="metric-row"><span class="metric-key">Em ganho / Em perda</span><span class="metric-val" id="m-eur-gp">—</span></div>
+        <div class="metric-row"><span class="metric-key">Melhor posição</span><span class="metric-val up" id="m-eur-best">—</span></div>
+        <div class="metric-row"><span class="metric-key">Pior posição</span><span class="metric-val dn" id="m-eur-worst">—</span></div>
+        <div class="metric-row"><span class="metric-key">Variação vs D-1</span><span class="metric-val" id="m-eur-var">—</span></div>
+        <div class="metric-row" id="m-eur-caixa-row" style="display:none"><span class="metric-key">Caixa fim do dia</span><span class="metric-val ac" id="m-eur-caixa">—</span></div>
         <div class="risk-mini">
-          <div class="risk-mini-title">Painel de risco EUR</div>
+          <div class="risk-mini-title">Risco EUR</div>
           <div class="risk-mini-grid">
-            <div class="risk-mini-item">
-              <div class="risk-mini-val up">6,28%</div>
-              <div class="risk-mini-key">por posição</div>
-            </div>
-            <div class="risk-mini-item">
-              <div class="risk-mini-val" style="color:var(--amber)">DORO</div>
-              <div class="risk-mini-key">regime</div>
-            </div>
-            <div class="risk-mini-item">
-              <div class="risk-mini-val">50,4%</div>
-              <div class="risk-mini-key">alocação</div>
-            </div>
+            <div class="risk-mini-item"><div class="risk-mini-val up">6,28%</div><div class="risk-mini-key">por posição</div></div>
+            <div class="risk-mini-item"><div class="risk-mini-val" style="color:var(--amber)">DORO</div><div class="risk-mini-key">regime</div></div>
+            <div class="risk-mini-item"><div class="risk-mini-val">50,4%</div><div class="risk-mini-key">alocação</div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Conta USD -->
+    <!-- USD -->
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Conta USD · OMV</span>
         <span class="panel-tag">NYSE / NASDAQ</span>
       </div>
       <div class="panel-body">
-        <div class="sparkline-wrap">
-          <canvas id="usdSparkline" role="img" aria-label="Lucro USD dia 9 vs dia 10"></canvas>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Lucro líquido</span>
-          <span class="metric-val up" id="m-usd-lucro">3,28 $</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Posições abertas</span>
-          <span class="metric-val">7</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Em ganho / Em perda</span>
-          <span class="metric-val"><span class="up">5</span> / <span class="dn">2</span></span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Melhor posição</span>
-          <span class="metric-val up" id="m-usd-best">SanDisk +18,79%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Pior posição</span>
-          <span class="metric-val dn" id="m-usd-worst">Erasca -6,50%</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-key">Variação vs D-1</span>
-          <span class="metric-val up" id="m-usd-var">+0,21 $ (+6,8%)</span>
-        </div>
+        <div class="sparkline-wrap"><canvas id="usdSparkline" role="img" aria-label="USD P&L histórico"></canvas></div>
+        <div class="metric-row"><span class="metric-key">Lucro líquido</span><span class="metric-val up" id="m-usd-lucro">—</span></div>
+        <div class="metric-row"><span class="metric-key">Posições abertas</span><span class="metric-val" id="m-usd-npos">—</span></div>
+        <div class="metric-row"><span class="metric-key">Em ganho / Em perda</span><span class="metric-val" id="m-usd-gp">—</span></div>
+        <div class="metric-row"><span class="metric-key">Melhor posição</span><span class="metric-val up" id="m-usd-best">—</span></div>
+        <div class="metric-row"><span class="metric-key">Pior posição</span><span class="metric-val dn" id="m-usd-worst">—</span></div>
+        <div class="metric-row"><span class="metric-key">Variação vs D-1</span><span class="metric-val" id="m-usd-var">—</span></div>
+        <div class="metric-row" id="m-usd-aporte-row" style="display:none"><span class="metric-key">Aporte do dia</span><span class="metric-val" style="color:var(--amber)" id="m-usd-aporte">—</span></div>
+        <div class="metric-row" id="m-usd-caixa-row" style="display:none"><span class="metric-key">Caixa fim do dia</span><span class="metric-val ac" id="m-usd-caixa">—</span></div>
         <div class="risk-mini">
-          <div class="risk-mini-title">Painel de risco USD</div>
+          <div class="risk-mini-title">Risco USD</div>
           <div class="risk-mini-grid">
-            <div class="risk-mini-item">
-              <div class="risk-mini-val up">5,1%</div>
-              <div class="risk-mini-key">por posição</div>
-            </div>
-            <div class="risk-mini-item">
-              <div class="risk-mini-val" style="color:var(--blue)">MIX</div>
-              <div class="risk-mini-key">regime</div>
-            </div>
-            <div class="risk-mini-item">
-              <div class="risk-mini-val">62,3%</div>
-              <div class="risk-mini-key">alocação</div>
-            </div>
+            <div class="risk-mini-item"><div class="risk-mini-val up">5,1%</div><div class="risk-mini-key">por posição</div></div>
+            <div class="risk-mini-item"><div class="risk-mini-val" style="color:var(--blue)">MIX</div><div class="risk-mini-key">regime</div></div>
+            <div class="risk-mini-item"><div class="risk-mini-val">62,3%</div><div class="risk-mini-key">alocação</div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Governança -->
+    <!-- GOVERNANÇA -->
     <div class="panel">
       <div class="panel-header">
-        <span class="panel-title">Governança e compliance</span>
+        <span class="panel-title">Governança · Compliance</span>
         <span class="panel-tag">Diário</span>
       </div>
       <div class="panel-body">
         <div class="read-grid">
-          <div class="read-item">
-            <span class="read-key">Validação EUR</span>
-            <span class="read-val up">✓ Conforme</span>
-          </div>
-          <div class="read-item">
-            <span class="read-key">Validação USD</span>
-            <span class="read-val up">✓ Conforme</span>
-          </div>
-          <div class="read-item">
-            <span class="read-key">Avaliação diária</span>
-            <span class="read-val up">✓ Sólida</span>
-          </div>
-          <div class="read-item">
-            <span class="read-key">Leitura inst.</span>
-            <span class="read-val up">✓ Válida</span>
-          </div>
-          <div class="read-item">
-            <span class="read-key">Stop-loss activos</span>
-            <span class="read-val">14 / 14</span>
-          </div>
-          <div class="read-item">
-            <span class="read-key">Excepções</span>
-            <span class="read-val up">0</span>
-          </div>
+          <div class="read-item"><span class="read-key">Validação EUR</span><span class="read-val up">✓ Conforme</span></div>
+          <div class="read-item"><span class="read-key">Validação USD</span><span class="read-val up">✓ Conforme</span></div>
+          <div class="read-item"><span class="read-key">Avaliação diária</span><span class="read-val up">✓ Sólida</span></div>
+          <div class="read-item"><span class="read-key">Leitura inst.</span><span class="read-val up">✓ Válida</span></div>
+          <div class="read-item"><span class="read-key">Stop-loss</span><span class="read-val" id="gov-stops">14 / 14</span></div>
+          <div class="read-item"><span class="read-key">Excepções</span><span class="read-val up">0</span></div>
         </div>
         <div class="gov-row">
-          <div class="gov-item">
-            <div class="gov-num">2</div>
-            <div class="gov-label">Setup</div>
-          </div>
-          <div class="gov-item">
-            <div class="gov-num">2</div>
-            <div class="gov-label">Pos/Setup</div>
-          </div>
-          <div class="gov-item">
-            <div class="gov-num">3</div>
-            <div class="gov-label">Pos/Risco</div>
-          </div>
-          <div class="gov-item">
-            <div class="gov-num check-icon up">✓</div>
-            <div class="gov-label">Conforme</div>
-          </div>
-          <div class="gov-item">
-            <div class="gov-num check-icon up">✓</div>
-            <div class="gov-label">Válida</div>
-          </div>
-          <div class="gov-item">
-            <div class="gov-num">0</div>
-            <div class="gov-label">Excepções</div>
-          </div>
+          <div class="gov-item"><div class="gov-num">2</div><div class="gov-label">Setup</div></div>
+          <div class="gov-item"><div class="gov-num">2</div><div class="gov-label">Pos/Setup</div></div>
+          <div class="gov-item"><div class="gov-num">3</div><div class="gov-label">Pos/Risco</div></div>
+          <div class="gov-item"><div class="gov-num up">✓</div><div class="gov-label">Conforme</div></div>
+          <div class="gov-item"><div class="gov-num up">✓</div><div class="gov-label">Válida</div></div>
+          <div class="gov-item"><div class="gov-num">0</div><div class="gov-label">Excepções</div></div>
         </div>
         <div style="margin-top:10px;padding:8px 10px;background:var(--bg-01);border-radius:5px;border:1px solid var(--border);">
-          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;">Controlo update diário</div>
+          <div style="font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;">Update diário</div>
           <div style="display:flex;flex-direction:column;gap:3px;">
-            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
-              <span style="color:var(--text-secondary);">Revisão</span><span class="up">✓ Concluída</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
-              <span style="color:var(--text-secondary);">Validação</span><span class="up">✓ Concluída</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;">
-              <span style="color:var(--text-secondary);">Acção</span><span class="up">✓ Executada</span>
-            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;"><span style="color:var(--txt-2);">Revisão</span><span class="up">✓</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;"><span style="color:var(--txt-2);">Validação</span><span class="up">✓</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;"><span style="color:var(--txt-2);">Acção</span><span class="up">✓</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- EVENTOS DO DIA -->
+  <!-- EVENTOS -->
   <div id="eventos-section" style="display:none;">
     <div class="zone-label">Eventos do dia</div>
     <div id="eventos-container" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
   </div>
 
-  <!-- TABELA DE POSIÇÕES -->
+  <!-- POSIÇÕES -->
   <div class="positions-panel">
     <div class="positions-header">
       <div style="display:flex;align-items:center;gap:12px;">
-        <span class="panel-title">Posições abertas</span>
-        <div class="positions-tabs">
-          <button class="pos-tab active" onclick="setAccount('eur')" id="btn-eur">EUR · 8MSN</button>
-          <button class="pos-tab" onclick="setAccount('usd')" id="btn-usd">USD · OMV</button>
-          <button class="pos-tab" onclick="setAccount('all')" id="btn-all">Ambas</button>
+        <span class="panel-title" style="font-family:var(--display);">Posições abertas</span>
+        <div style="display:flex;gap:4px;">
+          <button class="pos-tab active" onclick="setAccount('all')" id="btn-all">Ambas</button>
+          <button class="pos-tab" onclick="setAccount('eur')" id="btn-eur">EUR</button>
+          <button class="pos-tab" onclick="setAccount('usd')" id="btn-usd">USD</button>
         </div>
       </div>
-      <div class="pos-actions">
-        <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding-right:8px;" id="pos-count">14 posições activas</span>
-        <button class="btn-sm">↓ Exportar CSV</button>
-        <button class="btn-sm">⚙ Filtrar</button>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <span style="font-size:10px;color:var(--txt-3);" id="pos-count">—</span>
+        <button class="btn-sm" onclick="exportExcel()">↓ Excel</button>
       </div>
     </div>
     <div class="table-wrap">
       <table class="pos-table">
         <thead>
           <tr>
-            <th>Instrumento</th>
-            <th>Mercado</th>
-            <th class="right">Lucro liq. %</th>
-            <th class="right">Lucro liq.</th>
-            <th class="right">Volume</th>
-            <th class="right">Valor (€/$)</th>
-            <th class="right">Preço actual</th>
-            <th class="right">Preço abertura</th>
-            <th>Confiança</th>
-            <th>Variação D-1</th>
+            <th>Activo</th><th>Mkt</th>
+            <th class="r">Lucro %</th><th class="r">Lucro</th>
+            <th class="r">Volume</th><th class="r">Valor</th>
+            <th class="r">Actual</th><th class="r">Abertura</th>
+            <th>Trust</th><th>Δ D-1</th>
           </tr>
         </thead>
         <tbody id="pos-tbody"></tbody>
@@ -969,60 +575,48 @@
     </div>
   </div>
 
-  <!-- FLUXO DE CAPITAL -->
+  <!-- FLUXO -->
   <div>
-    <div class="zone-label">Fluxo de capital consolidado</div>
+    <div class="zone-label">Fluxo de capital</div>
     <div class="flow-grid">
-      <div class="flow-item">
-        <div class="flow-label">Depósitos</div>
-        <div class="flow-val neu">0,00 €</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-label">Levantamentos</div>
-        <div class="flow-val neu">0,00 €</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-label">Capital em risco EUR</div>
-        <div class="flow-val" style="color:var(--amber)">~4,88 €</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-label">Capital em risco USD</div>
-        <div class="flow-val" style="color:var(--amber)">~3,75 $</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-label">P&L realizado EUR</div>
-        <div class="flow-val up" id="fl-eur">+2,15 €</div>
-      </div>
-      <div class="flow-item">
-        <div class="flow-label">P&L realizado USD</div>
-        <div class="flow-val up" id="fl-usd">+3,28 $</div>
-      </div>
+      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">64,94 €</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac">0,26 €</div></div>
+      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">142,25 $</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">16,38 $</div></div>
+      <div class="flow-item"><div class="flow-label">P&L hoje EUR</div><div class="flow-val up" id="fl-eur">—</div></div>
+      <div class="flow-item"><div class="flow-label">P&L hoje USD</div><div class="flow-val up" id="fl-usd">—</div></div>
     </div>
   </div>
 
-  <!-- TOTAL FOOTER -->
+  <!-- FOOTER -->
   <div class="total-footer">
     <div>
-      <div class="total-label">Conta EUR · 8MSN</div>
-      <div class="total-value up" id="foot-eur">2,15 €</div>
-      <div class="total-sub" id="foot-eur-sub">+16,9% vs dia anterior</div>
+      <div class="total-label">Triple Seven Capital</div>
+      <div class="total-value grad">777</div>
+      <div class="total-sub">Fund Management</div>
     </div>
-    <div class="total-divider"></div>
+    <div class="divider"></div>
+    <div>
+      <div class="total-label">Conta EUR · 8MSN</div>
+      <div class="total-value up" id="foot-eur">—</div>
+      <div class="total-sub" id="foot-eur-sub">—</div>
+    </div>
+    <div class="divider"></div>
     <div>
       <div class="total-label">Conta USD · OMV</div>
-      <div class="total-value up" id="foot-usd">3,28 $</div>
-      <div class="total-sub" id="foot-usd-sub">+6,8% vs dia anterior</div>
+      <div class="total-value up" id="foot-usd">—</div>
+      <div class="total-sub" id="foot-usd-sub">—</div>
     </div>
-    <div class="total-divider"></div>
+    <div class="divider"></div>
     <div>
-      <div class="total-label">Total consolidado ~EUR</div>
-      <div class="total-value up" id="foot-total">≈ 5,12 €</div>
-      <div class="total-sub">EUR + USD convertido</div>
+      <div class="total-label">AUM consolidado ~EUR</div>
+      <div class="total-value grad" id="foot-total">—</div>
+      <div class="total-sub">EUR + USD × 0.92</div>
     </div>
-    <div class="total-divider"></div>
+    <div class="divider"></div>
     <div>
-      <div class="total-label">Data de referência</div>
-      <div class="total-value" style="font-size:15px;color:var(--accent);" id="foot-date">10 / ABR / 2025</div>
+      <div class="total-label">Sessão</div>
+      <div class="total-value ac" style="font-size:15px;" id="foot-date">—</div>
       <div class="total-sub">Fecho de sessão</div>
     </div>
   </div>
@@ -1030,296 +624,281 @@
 </div><!-- /main -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="data.js"></script>
 <script>
 /* ── CLOCK ── */
-function tick() {
-  const d = new Date();
-  const h = String(d.getUTCHours()).padStart(2,'0');
-  const m = String(d.getUTCMinutes()).padStart(2,'0');
-  const s = String(d.getUTCSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent = h+':'+m+':'+s+' UTC';
+function tick(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('clock').textContent=pad(d.getUTCHours())+':'+pad(d.getUTCMinutes())+':'+pad(d.getUTCSeconds())+' UTC';
 }
-tick(); setInterval(tick, 1000);
+tick();setInterval(tick,1000);
 
-/* ── BRIDGE: adapta TRADING_DATA (de data.js) para DATA usado pelo dashboard ── */
-// TRADING_DATA vem do data.js gerado pelo pipeline
-// Formato: { "2025-04-10": { date, eur: { lucro, positions }, usd: { lucro, positions } } }
-// Aqui convertemos para { "2025-04-10": { eur, usd } } e construímos os date-tabs dinamicamente
-
-const DATA = typeof TRADING_DATA !== 'undefined' ? TRADING_DATA : {};
-const ALL_DATES = typeof DATA_DATES !== 'undefined' ? DATA_DATES : Object.keys(DATA).sort();
-const latestDate = typeof LATEST_DATE !== 'undefined' ? LATEST_DATE : ALL_DATES[ALL_DATES.length - 1];
-
-/* ── STATE ── */
-let currentDay = latestDate;
+/* ── DATA BRIDGE ── */
+const DATA = typeof TRADING_DATA!=='undefined'?TRADING_DATA:{};
+const ALL_DATES = typeof DATA_DATES!=='undefined'?DATA_DATES:Object.keys(DATA).sort();
+let currentDay = typeof LATEST_DATE!=='undefined'?LATEST_DATE:ALL_DATES[ALL_DATES.length-1];
 let currentAccount = 'all';
 
-function fmt(v, decimals=2, prefix='') {
-  const sign = v > 0 ? '+' : '';
-  return prefix + sign + v.toFixed(decimals);
-}
-function fmtCur(v, sym='€') {
-  const sign = v > 0 ? '+' : (v < 0 ? '' : '');
-  return sign + v.toFixed(2) + ' ' + sym;
+/* ── HELPERS ── */
+const MONTHS=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const DAYS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+function fmtLabel(ds){const[y,m,d]=ds.split('-').map(Number);return String(d).padStart(2,'0')+' '+MONTHS[m-1];}
+function fmtLong(ds){const[y,m,d]=ds.split('-').map(Number);const dt=new Date(y,m-1,d);return DAYS[dt.getDay()]+' · '+String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;}
+function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
+function fmtCur(v,s='€'){return(v>0?'+':'')+v.toFixed(2)+' '+s;}
+function trustCls(t){return t==='v'?'trust-v':t==='a'?'trust-a':'trust-r';}
+function trustLbl(t){return t==='v'?'Verde':t==='a'?'Amarelo':'Vermelho';}
+
+/* ── DATE TABS ── */
+function buildDateTabs(){
+  const c=document.getElementById('date-tabs-container');
+  c.innerHTML=ALL_DATES.slice(-7).map(d=>
+    `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtLabel(d)}</button>`
+  ).join('');
+  document.getElementById('date-info').textContent=fmtLong(currentDay);
 }
 
-function trustClass(t) {
-  if (t==='v') return 'trust-v';
-  if (t==='a') return 'trust-a';
-  return 'trust-r';
-}
-function trustLabel(t) {
-  if (t==='v') return 'Verde';
-  if (t==='a') return 'Amarelo';
-  return 'Vermelho';
-}
+/* ── RENDER KPIs ── */
+function renderKPIs(){
+  const d=DATA[currentDay];if(!d)return;
+  const eL=d.eur.lucro, uL=d.usd.lucro;
+  const allPos=[...d.eur.positions,...d.usd.positions];
+  const pos=allPos.filter(p=>p.pct>=0).length;
+  const best=allPos.reduce((a,b)=>a.pct>b.pct?a:b);
+  const worst=allPos.reduce((a,b)=>a.pct<b.pct?a:b);
+  const eBest=d.eur.positions.reduce((a,b)=>a.pct>b.pct?a:b);
+  const eWorst=d.eur.positions.reduce((a,b)=>a.pct<b.pct?a:b);
+  const uBest=d.usd.positions.reduce((a,b)=>a.pct>b.pct?a:b);
+  const uWorst=d.usd.positions.reduce((a,b)=>a.pct<b.pct?a:b);
 
-function renderTable() {
-  const d = DATA[currentDay];
-  let rows = [];
-  const sym = { EUR:'€', USD:'$' };
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const setHtml=(id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v;};
+  const cls=(id,c)=>{const el=document.getElementById(id);if(el)el.className='kpi-value '+c;};
 
-  if (currentAccount === 'eur' || currentAccount === 'all') {
-    rows = rows.concat(d.eur.positions.map(p => ({ ...p, sym:'€' })));
+  set('kpi-eur-lucro',fmtCur(eL,'€')); cls('kpi-eur-lucro',eL>=0?'kpi-value up':'kpi-value dn');
+  set('kpi-usd-lucro',fmtCur(uL,'$')); cls('kpi-usd-lucro',uL>=0?'kpi-value up':'kpi-value dn');
+  set('kpi-eur-pos',d.eur.positions.length+' posições');
+  set('kpi-usd-pos',d.usd.positions.length+' posições');
+  set('kpi-total','≈ '+(eL+uL*0.92).toFixed(2)+' €');
+  set('kpi-pos-pos',pos+' / '+allPos.length);
+  set('kpi-pos-pct',Math.round(pos/allPos.length*100)+'% em ganho');
+  set('kpi-best',best.name); set('kpi-best-val',fmt(best.pct)+'% '+best.mkt);
+  set('kpi-worst',worst.name); set('kpi-worst-val',fmt(worst.pct)+'% '+worst.mkt);
+
+  // Deltas
+  const idx=ALL_DATES.indexOf(currentDay);
+  const prev=idx>0?DATA[ALL_DATES[idx-1]]:null;
+  if(prev){
+    const ed=eL-prev.eur.lucro, ud=uL-prev.usd.lucro;
+    const ep=(ed/prev.eur.lucro*100), up=(ud/prev.usd.lucro*100);
+    setHtml('kpi-eur-delta',`<span class="${ed>=0?'up':'dn'}">${fmt(ed)}€</span>`);
+    set('kpi-eur-delta-sub',fmt(ep,1)+'% vs '+fmtLabel(ALL_DATES[idx-1]));
+    setHtml('kpi-usd-delta',`<span class="${ud>=0?'up':'dn'}">${fmt(ud)}$</span>`);
+    set('kpi-usd-delta-sub',fmt(up,1)+'% vs '+fmtLabel(ALL_DATES[idx-1]));
+    const mv=document.getElementById('m-eur-var');
+    if(mv){mv.textContent=fmt(ed)+'€ ('+fmt(ep,1)+'%)';mv.className='metric-val '+(ed>=0?'up':'dn');}
+    const muv=document.getElementById('m-usd-var');
+    if(muv){muv.textContent=fmt(ud)+'$ ('+fmt(up,1)+'%)';muv.className='metric-val '+(ud>=0?'up':'dn');}
+    set('foot-eur-sub',fmt(ep,1)+'% vs dia anterior');
+    set('foot-usd-sub',fmt(up,1)+'% vs dia anterior');
+  } else {
+    ['kpi-eur-delta','kpi-usd-delta'].forEach(id=>set(id,'—'));
+    ['kpi-eur-delta-sub','kpi-usd-delta-sub','foot-eur-sub','foot-usd-sub'].forEach(id=>set(id,'Primeiro registo'));
+    ['m-eur-var','m-usd-var'].forEach(id=>set(id,'—'));
   }
-  if (currentAccount === 'usd' || currentAccount === 'all') {
-    rows = rows.concat(d.usd.positions.map(p => ({ ...p, sym:'$' })));
-  }
 
-  const tbody = document.getElementById('pos-tbody');
-  tbody.innerHTML = rows.map(p => {
-    const pctClass = p.pct >= 0 ? 'up' : 'dn';
-    const lucroClass = p.lucro >= 0 ? 'up' : 'dn';
-    let deltaHtml = '<span class="neu">—</span>';
-    if (p.delta) {
-      const dc = p.delta.pct >= 0 ? 'up' : 'dn';
-      const arrow = p.delta.pct >= 0 ? '▲' : '▼';
-      deltaHtml = `<span class="${dc}" style="font-family:var(--font-mono);font-size:10px;">${arrow} ${Math.abs(p.delta.pct).toFixed(2)}%</span>`;
+  // Painel EUR
+  set('m-eur-lucro',fmtCur(eL,'€'));
+  document.getElementById('m-eur-lucro').className='metric-val '+(eL>=0?'up':'dn');
+  set('m-eur-npos',d.eur.positions.length);
+  const eg=d.eur.positions.filter(p=>p.pct>=0).length;
+  setHtml('m-eur-gp',`<span class="up">${eg}</span> / <span class="dn">${d.eur.positions.length-eg}</span>`);
+  set('m-eur-best',eBest.name+' '+fmt(eBest.pct)+'%');
+  set('m-eur-worst',eWorst.name+' '+fmt(eWorst.pct)+'%');
+  const ecr=document.getElementById('m-eur-caixa-row');
+  if(d.eur.caixa){ecr.style.display='flex';set('m-eur-caixa',d.eur.caixa.toFixed(2)+' €');}
+  else ecr.style.display='none';
+
+  // Painel USD
+  set('m-usd-lucro',fmtCur(uL,'$'));
+  document.getElementById('m-usd-lucro').className='metric-val '+(uL>=0?'up':'dn');
+  set('m-usd-npos',d.usd.positions.length);
+  const ug=d.usd.positions.filter(p=>p.pct>=0).length;
+  setHtml('m-usd-gp',`<span class="up">${ug}</span> / <span class="dn">${d.usd.positions.length-ug}</span>`);
+  set('m-usd-best',uBest.name+' '+fmt(uBest.pct)+'%');
+  set('m-usd-worst',uWorst.name+' '+fmt(uWorst.pct)+'%');
+  const uar=document.getElementById('m-usd-aporte-row');
+  const ucr=document.getElementById('m-usd-caixa-row');
+  if(d.usd.aporte){uar.style.display='flex';set('m-usd-aporte','+'+d.usd.aporte.toFixed(2)+' $');}
+  else uar.style.display='none';
+  if(d.usd.caixa){ucr.style.display='flex';set('m-usd-caixa',d.usd.caixa.toFixed(2)+' $');}
+  else ucr.style.display='none';
+
+  // Footer
+  const[y,m,dd]=currentDay.split('-');
+  set('foot-eur',fmtCur(eL,'€')); set('foot-usd',fmtCur(uL,'$'));
+  set('foot-total','≈ '+(eL+uL*0.92).toFixed(2)+' €');
+  set('foot-date',String(dd).padStart(2,'0')+' / '+MONTHS[parseInt(m)-1].toUpperCase()+' / '+y);
+  set('fl-eur',fmtCur(eL,'€')); set('fl-usd',fmtCur(uL,'$'));
+
+  // Alert
+  const negNames=allPos.filter(p=>p.pct<-3).map(p=>p.name);
+  if(negNames.length)set('alert-neg-msg','Posições em queda: '+negNames.join(', '));
+  else set('alert-neg-msg','Todas as posições dentro dos parâmetros.');
+
+  // Gov stops
+  set('gov-stops',allPos.length+' / '+allPos.length);
+}
+
+/* ── RENDER TABLE ── */
+function renderTable(){
+  const d=DATA[currentDay];if(!d)return;
+  let rows=[];
+  if(currentAccount==='eur'||currentAccount==='all') rows=rows.concat(d.eur.positions.map(p=>{return{...p,sym:'€'}}) );
+  if(currentAccount==='usd'||currentAccount==='all') rows=rows.concat(d.usd.positions.map(p=>{return{...p,sym:'$'}}) );
+  document.getElementById('pos-tbody').innerHTML=rows.map(p=>{
+    const pc=p.pct>=0?'up':'dn', lc=p.lucro>=0?'up':'dn';
+    let dh='<span class="neu">—</span>';
+    if(p.delta){
+      const dc=p.delta.pct>=0?'up':'dn';
+      dh=`<span class="${dc}" style="font-size:10px;">${p.delta.pct>=0?'▲':'▼'} ${Math.abs(p.delta.pct).toFixed(2)}%</span>`;
     }
-    return `<tr>
+    return`<tr>
       <td><span class="ticker">${p.name}</span></td>
-      <td><span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${p.mkt}</span></td>
-      <td class="right ${pctClass}">${fmt(p.pct,2)}%</td>
-      <td class="right ${lucroClass}">${fmtCur(p.lucro, p.sym)}</td>
-      <td class="right" style="color:var(--text-secondary);">${p.vol}</td>
-      <td class="right">${p.valor.toFixed(2)} ${p.sym}</td>
-      <td class="right">${p.atual.toLocaleString('pt-PT', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-      <td class="right" style="color:var(--text-muted);">${p.abertura.toLocaleString('pt-PT', {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
-      <td><span class="trust-badge ${trustClass(p.trust)}">${trustLabel(p.trust)}</span></td>
-      <td>${deltaHtml}</td>
+      <td><span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${p.mkt}</span></td>
+      <td class="r ${pc}">${fmt(p.pct)}%</td>
+      <td class="r ${lc}">${fmtCur(p.lucro,p.sym)}</td>
+      <td class="r" style="color:var(--txt-2);">${p.vol}</td>
+      <td class="r">${p.valor.toFixed(2)} ${p.sym}</td>
+      <td class="r">${p.atual.toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td class="r" style="color:var(--txt-2);">${p.abertura.toLocaleString('pt-PT',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td><span class="trust-badge ${trustCls(p.trust)}">${trustLbl(p.trust)}</span></td>
+      <td>${dh}</td>
     </tr>`;
   }).join('');
-
-  document.getElementById('pos-count').textContent = rows.length + ' posições activas';
+  document.getElementById('pos-count').textContent=rows.length+' posições';
 }
 
-function renderKPIs() {
-  const d = DATA[currentDay];
-  if (!d) return;
-  const eurL = d.eur.lucro;
-  const usdL = d.usd.lucro;
-
-  document.getElementById('kpi-eur-lucro').textContent = fmtCur(eurL,'€');
-  document.getElementById('kpi-eur-lucro').className = 'kpi-value '+(eurL>=0?'up':'dn');
-  document.getElementById('kpi-usd-lucro').textContent = fmtCur(usdL,'$');
-  document.getElementById('kpi-usd-lucro').className = 'kpi-value '+(usdL>=0?'up':'dn');
-  document.getElementById('kpi-total').textContent = '≈ ' + (eurL + usdL * 0.92).toFixed(2) + ' €';
-
-  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  function fmtDateLabel(ds) { const [y,m,dd]=ds.split('-').map(Number); return String(dd).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y; }
-  function fmtDateLong(ds) { const [y,m,dd]=ds.split('-').map(Number); const dt=new Date(y,m-1,dd); return DAYS_PT[dt.getDay()]+' · Fecho de sessão '+String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y; }
-
-  // Dia anterior
-  const dayIdx = ALL_DATES.indexOf(currentDay);
-  const prevDate = dayIdx > 0 ? ALL_DATES[dayIdx-1] : null;
-  const prevData = prevDate ? DATA[prevDate] : null;
-
-  if (prevData) {
-    const eurDelta = eurL - prevData.eur.lucro;
-    const usdDelta = usdL - prevData.usd.lucro;
-    const eurDeltaPct = (eurDelta/prevData.eur.lucro*100);
-    const usdDeltaPct = (usdDelta/prevData.usd.lucro*100);
-    const ec = eurDelta >= 0 ? 'up' : 'dn';
-    const uc = usdDelta >= 0 ? 'up' : 'dn';
-    document.getElementById('kpi-eur-delta').innerHTML = `<span class="${ec}">${fmt(eurDelta,2)}€</span>`;
-    document.getElementById('kpi-eur-delta-sub').innerHTML = `<span class="${ec}">${fmt(eurDeltaPct,1)}% vs ${fmtDateLabel(prevDate)}</span>`;
-    document.getElementById('kpi-usd-delta').innerHTML = `<span class="${uc}">${fmt(usdDelta,2)}$</span>`;
-    document.getElementById('kpi-usd-delta-sub').innerHTML = `<span class="${uc}">${fmt(usdDeltaPct,1)}% vs ${fmtDateLabel(prevDate)}</span>`;
-    const meurVar = document.getElementById('m-eur-var');
-    meurVar.textContent = fmt(eurDelta,2)+'€ ('+fmt(eurDeltaPct,1)+'%)';
-    meurVar.className = 'metric-val '+ec;
-    const musdVar = document.getElementById('m-usd-var');
-    musdVar.textContent = fmt(usdDelta,2)+'$ ('+fmt(usdDeltaPct,1)+'%)';
-    musdVar.className = 'metric-val '+uc;
-    document.getElementById('foot-eur-sub').textContent = fmt(eurDeltaPct,1)+'% vs dia anterior';
-    document.getElementById('foot-usd-sub').textContent = fmt(usdDeltaPct,1)+'% vs dia anterior';
-  } else {
-    ['kpi-eur-delta','kpi-usd-delta'].forEach(id => document.getElementById(id).textContent='—');
-    ['kpi-eur-delta-sub','kpi-usd-delta-sub'].forEach(id => document.getElementById(id).textContent='Primeiro registo');
-    ['m-eur-var','m-usd-var'].forEach(id => { document.getElementById(id).textContent='— (primeiro registo)'; });
-    ['foot-eur-sub','foot-usd-sub'].forEach(id => document.getElementById(id).textContent='Primeiro registo');
-  }
-
-  // best/worst global
-  const eurPos = d.eur.positions;
-  const usdPos = d.usd.positions;
-  const allPos = [...eurPos, ...usdPos];
-  const eurBest  = eurPos.reduce((a,b) => a.pct > b.pct ? a : b);
-  const eurWorst = eurPos.reduce((a,b) => a.pct < b.pct ? a : b);
-  const usdBest  = usdPos.reduce((a,b) => a.pct > b.pct ? a : b);
-  const usdWorst = usdPos.reduce((a,b) => a.pct < b.pct ? a : b);
-  const gBest    = allPos.reduce((a,b) => a.pct > b.pct ? a : b);
-  const gWorst   = allPos.reduce((a,b) => a.pct < b.pct ? a : b);
-
-  document.getElementById('kpi-best').textContent = gBest.name;
-  document.getElementById('kpi-best-val').textContent = fmt(gBest.pct,2)+'% '+gBest.mkt;
-  document.getElementById('kpi-worst').textContent = gWorst.name;
-  document.getElementById('kpi-worst-val').textContent = fmt(gWorst.pct,2)+'% '+gWorst.mkt;
-  document.getElementById('m-eur-lucro').textContent = fmtCur(eurL,'€');
-  document.getElementById('m-eur-lucro').className = 'metric-val '+(eurL>=0?'up':'dn');
-  document.getElementById('m-eur-best').textContent = eurBest.name+' '+fmt(eurBest.pct,2)+'%';
-  document.getElementById('m-eur-worst').textContent = eurWorst.name+' '+fmt(eurWorst.pct,2)+'%';
-  document.getElementById('m-usd-lucro').textContent = fmtCur(usdL,'$');
-
-  // Caixa EUR
-  const eurCaixaRow = document.getElementById('m-eur-caixa-row');
-  if (d.eur.caixa) {
-    eurCaixaRow.style.display = 'flex';
-    document.getElementById('m-eur-caixa').textContent = d.eur.caixa.toFixed(2) + ' €';
-  } else { eurCaixaRow.style.display = 'none'; }
-
-  // Aporte + Caixa USD
-  const usdAporteRow = document.getElementById('m-usd-aporte-row');
-  const usdCaixaRow = document.getElementById('m-usd-caixa-row');
-  if (d.usd.aporte) {
-    usdAporteRow.style.display = 'flex';
-    document.getElementById('m-usd-aporte').textContent = '+' + d.usd.aporte.toFixed(2) + ' $';
-  } else { usdAporteRow.style.display = 'none'; }
-  if (d.usd.caixa) {
-    usdCaixaRow.style.display = 'flex';
-    document.getElementById('m-usd-caixa').textContent = d.usd.caixa.toFixed(2) + ' $';
-  } else { usdCaixaRow.style.display = 'none'; }
-  document.getElementById('m-usd-best').textContent = usdBest.name+' '+fmt(usdBest.pct,2)+'%';
-  document.getElementById('m-usd-worst').textContent = usdWorst.name+' '+fmt(usdWorst.pct,2)+'%';
-
-  // footer
-  const [y,m,dd] = currentDay.split('-');
-  const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  document.getElementById('foot-eur').textContent = fmtCur(eurL,'€');
-  document.getElementById('foot-usd').textContent = fmtCur(usdL,'$');
-  document.getElementById('foot-total').textContent = '≈ '+(eurL+usdL*0.92).toFixed(2)+' €';
-  document.getElementById('foot-date').textContent = dd+' / '+MONTHS[parseInt(m)-1].toUpperCase()+' / '+y;
-  document.getElementById('fl-eur').textContent = fmtCur(eurL,'€');
-  document.getElementById('fl-usd').textContent = fmtCur(usdL,'$');
-
-  const posCount = allPos.filter(p=>p.pct>=0).length;
-  document.getElementById('kpi-pos-pos').textContent = posCount+' / '+allPos.length;
-  document.getElementById('kpi-pos-pos').className = 'kpi-value '+(posCount > allPos.length/2 ? 'up':'dn');
-  document.getElementById('date-info').textContent = fmtDateLong(currentDay);
+/* ── RENDER EVENTOS ── */
+function renderEventos(){
+  const d=DATA[currentDay];
+  const sec=document.getElementById('eventos-section');
+  const con=document.getElementById('eventos-container');
+  if(!d||!d.eventos||!d.eventos.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  const icons={saida:'🔴',entrada:'🟢',aporte:'💰',caixa:'📦'};
+  con.innerHTML=d.eventos.map(ev=>{
+    const ic=icons[ev.tipo]||'📋';
+    const at=ev.ativo?`<span class="evento-ativo">${ev.ativo}</span><span class="evento-mkt">${ev.mkt}</span>`:`<span class="evento-mkt">${ev.mkt}</span>`;
+    return`<div class="evento-card"><span class="evento-icon">${ic}</span><div><div>${at}</div><div class="evento-nota">${ev.nota}</div></div></div>`;
+  }).join('');
 }
 
 /* ── SPARKLINES ── */
-let eurChart, usdChart;
-
-function buildSparklines() {
-  const eurCtx = document.getElementById('eurSparkline').getContext('2d');
-  const usdCtx = document.getElementById('usdSparkline').getContext('2d');
-  const recentDates = ALL_DATES.slice(-7);
-  const labels = recentDates.map(d => { const [y,m,dd]=d.split('-'); return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0'); });
-  const eurVals = recentDates.map(d => DATA[d]?.eur?.lucro ?? null);
-  const usdVals = recentDates.map(d => DATA[d]?.usd?.lucro ?? null);
-
-  const sparkOpts = (colorKey, data) => ({
-    type: 'bar',
-    data: { labels, datasets: [{ data,
-      backgroundColor: data.map(v => v===null?'transparent':v>=0?'rgba(34,197,94,0.6)':'rgba(239,68,68,0.6)'),
-      borderColor: data.map(v => v===null?'transparent':v>=0?'#22c55e':'#ef4444'),
-      borderWidth:1, borderRadius:3 }] },
-    options: { responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:(ctx)=>' '+(ctx.parsed.y||0).toFixed(2)+' '+(colorKey==='green'?'€':'$') } } },
-      scales:{ x:{grid:{display:false},ticks:{color:'#3d4f63',font:{family:'IBM Plex Mono',size:9}}}, y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#3d4f63',font:{family:'IBM Plex Mono',size:9},callback:v=>v.toFixed(2)}} } }
-  });
-
-  if (eurChart) eurChart.destroy();
-  if (usdChart) usdChart.destroy();
-  eurChart = new Chart(eurCtx, sparkOpts('green', eurVals));
-  usdChart = new Chart(usdCtx, sparkOpts('blue', usdVals));
+let eurChart,usdChart;
+function buildSparklines(){
+  const recent=ALL_DATES.slice(-7);
+  const labels=recent.map(d=>{const[y,m,dd]=d.split('-');return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0');});
+  const eurVals=recent.map(d=>DATA[d]?.eur?.lucro??null);
+  const usdVals=recent.map(d=>DATA[d]?.usd?.lucro??null);
+  const opts=(vals,color)=>(({
+    type:'line',
+    data:{labels,datasets:[{data:vals,borderColor:color,borderWidth:2,pointRadius:3,pointBackgroundColor:color,tension:.4,fill:true,backgroundColor:color.replace(')',',0.08)')}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.y.toFixed(2)}}},
+      scales:{x:{grid:{display:false},ticks:{color:'#334455',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#334455',font:{size:9},callback:v=>v.toFixed(2)}}}}
+  }));
+  if(eurChart)eurChart.destroy();
+  if(usdChart)usdChart.destroy();
+  eurChart=new Chart(document.getElementById('eurSparkline').getContext('2d'),opts(eurVals,'rgb(30,255,142)'));
+  usdChart=new Chart(document.getElementById('usdSparkline').getContext('2d'),opts(usdVals,'rgb(0,200,255)'));
 }
 
-/* ── BUILD DATE TABS ── */
-function buildDateTabs() {
-  const container = document.getElementById('date-tabs-container');
-  const visible = ALL_DATES.slice(-7);
-  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  container.innerHTML = visible.map(date => {
-    const [y,m,dd] = date.split('-').map(Number);
-    const label = String(dd).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y;
-    const tabId = 'tab-'+date.replace(/-/g,'_');
-    return `<button class="date-tab${date===currentDay?' active':''}" onclick="setDay('${date}')" id="${tabId}">${label}</button>`;
-  }).join('');
+/* ── EXPORT EXCEL ── */
+function exportExcel(){
+  if(typeof XLSX==='undefined'){alert('XLSX library não carregada.');return;}
+  const wb=XLSX.utils.book_new();
+
+  // Aba 1: Resumo do fundo
+  const resumo=[
+    ['Triple Seven Capital — Fund Report','','',''],
+    ['Data de exportação',new Date().toLocaleDateString('pt-PT'),'',''],
+    ['','','',''],
+    ['CAPITAL ACTUAL','','',''],
+    ['Conta EUR (8MSN)','64.94 €','Caixa EUR','0.26 €'],
+    ['Conta USD (OMV)','142.25 $','Caixa USD','16.38 $'],
+    ['AUM Total ~EUR','≈ 196 €','',''],
+    ['','','',''],
+    ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
+    ['Retorno EUR','+4.7%','',''],
+    ['Retorno USD','+6.9%','',''],
+    ['Dias activos',ALL_DATES.length,'',''],
+  ];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(resumo),'Resumo');
+
+  // Aba 2: Histórico diário
+  const histHeader=['Data','Lucro EUR (€)','Lucro USD ($)','Total ~EUR','Nº Pos EUR','Nº Pos USD','Eventos'];
+  const histRows=ALL_DATES.map(d=>{
+    const day=DATA[d];
+    return[d,day.eur.lucro,day.usd.lucro,(day.eur.lucro+day.usd.lucro*0.92).toFixed(2),
+      day.eur.positions.length,day.usd.positions.length,(day.eventos||[]).length];
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([histHeader,...histRows]),'Histórico Diário');
+
+  // Aba 3: Posições actuais (dia seleccionado)
+  const d=DATA[currentDay];
+  const posHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust','Δ D-1 %'];
+  const posRows=[...d.eur.positions,...d.usd.positions].map(p=>[
+    currentDay,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+    p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho',p.delta?p.delta.pct:null
+  ]);
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([posHeader,...posRows]),'Posições');
+
+  // Aba 4: Eventos
+  const evHeader=['Data','Tipo','Activo','Mercado','Nota','Valor'];
+  const evRows=[];
+  ALL_DATES.forEach(dt=>{
+    (DATA[dt].eventos||[]).forEach(ev=>{
+      evRows.push([dt,ev.tipo,ev.ativo||'—',ev.mkt,ev.nota,ev.valor||'—']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([evHeader,...evRows]),'Eventos');
+
+  // Todas as posições históricas
+  const allPosHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust'];
+  const allPosRows=[];
+  ALL_DATES.forEach(dt=>{
+    const day=DATA[dt];
+    [...day.eur.positions,...day.usd.positions].forEach(p=>{
+      allPosRows.push([dt,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+        p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([allPosHeader,...allPosRows]),'Histórico Posições');
+
+  XLSX.writeFile(wb,'TripleSevenCapital_'+currentDay+'.xlsx');
 }
 
 /* ── CONTROLS ── */
-function setDay(date) {
-  currentDay = date;
-  buildDateTabs();
-  renderKPIs();
-  renderTable();
-  renderEventos();
+function setDay(date){
+  currentDay=date;buildDateTabs();renderKPIs();renderTable();renderEventos();
 }
-
-function setAccount(acct) {
-  currentAccount = acct;
-  ['eur','usd','all'].forEach(a => {
-    document.getElementById('btn-'+a).classList.toggle('active', a===acct);
-  });
+function setAccount(a){
+  currentAccount=a;
+  ['all','eur','usd'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===a));
   renderTable();
 }
 
 /* ── INIT ── */
-window.addEventListener('load', () => {
-  if (!ALL_DATES.length) {
-    document.getElementById('date-info').textContent = 'Sem dados. Corre: npm run pipeline -- --eur <img> --usd <img>';
-    return;
-  }
-  buildDateTabs();
-  buildSparklines();
-  renderKPIs();
-  renderTable();
-  renderEventos();
+window.addEventListener('load',()=>{
+  if(!ALL_DATES.length){document.getElementById('date-info').textContent='Sem dados.';return;}
+  buildDateTabs();buildSparklines();renderKPIs();renderTable();renderEventos();
 });
-
-
-/* ── RENDER EVENTOS ── */
-function renderEventos() {
-  const d = DATA[currentDay];
-  const section = document.getElementById('eventos-section');
-  const container = document.getElementById('eventos-container');
-  if (!d || !d.eventos || d.eventos.length === 0) {
-    section.style.display = 'none';
-    return;
-  }
-  section.style.display = 'block';
-  const icons = { saida: '🔴', entrada: '🟢', aporte: '💰', caixa: '📦' };
-  container.innerHTML = d.eventos.map(ev => {
-    const icon = icons[ev.tipo] || '📋';
-    const ativo = ev.ativo ? `<span class="evento-ativo">${ev.ativo}</span><span class="evento-mkt">${ev.mkt}</span>` : `<span class="evento-mkt">${ev.mkt}</span>`;
-    return `<div class="evento-card">
-      <span class="evento-icon">${icon}</span>
-      <div>
-        <div>${ativo}</div>
-        <div class="evento-nota">${ev.nota}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* Nav visual only */
-document.querySelectorAll('.nav-item').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
     el.classList.add('active');
   });
 });
