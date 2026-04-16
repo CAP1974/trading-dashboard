@@ -101,30 +101,30 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <div class="main">
   <div>
     <div class="page-title">Histórico do Fundo</div>
-    <div class="page-sub">Triple Seven Capital · Início: 09 Abril 2025 · 5 sessões registadas</div>
+    <div class="page-sub" id="hist-page-sub">Triple Seven Capital · Início: 09 Abril 2025 · — sessões registadas</div>
   </div>
 
   <!-- KPIs topo -->
   <div class="grid-4">
     <div class="kpi-mini">
       <div class="kpi-mini-label">Retorno EUR total</div>
-      <div class="kpi-mini-value up">+4,7%</div>
-      <div class="kpi-mini-sub">1,84€ → 2,65€/sessão</div>
+      <div class="kpi-mini-value up" id="kpi-ret-eur-val">—</div>
+      <div class="kpi-mini-sub" id="kpi-ret-eur-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Retorno USD total</div>
-      <div class="kpi-mini-value up">+6,9%</div>
-      <div class="kpi-mini-sub">3,07$ → 7,34$/sessão</div>
+      <div class="kpi-mini-value up" id="kpi-ret-usd-val">—</div>
+      <div class="kpi-mini-sub" id="kpi-ret-usd-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Melhor sessão EUR</div>
-      <div class="kpi-mini-value up">+2,65 €</div>
-      <div class="kpi-mini-sub">15 Abr 2025</div>
+      <div class="kpi-mini-value up" id="kpi-best-eur-val">—</div>
+      <div class="kpi-mini-sub" id="kpi-best-eur-sub">—</div>
     </div>
     <div class="kpi-mini">
       <div class="kpi-mini-label">Melhor sessão USD</div>
-      <div class="kpi-mini-value up">+9,57 $</div>
-      <div class="kpi-mini-sub">14 Abr 2025</div>
+      <div class="kpi-mini-value up" id="kpi-best-usd-val">—</div>
+      <div class="kpi-mini-sub" id="kpi-best-usd-sub">—</div>
     </div>
   </div>
 
@@ -132,7 +132,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <div class="card">
     <div class="card-header">
       <span class="card-title">Equity Curve · P&L por sessão</span>
-      <span class="card-tag">09–15 Abr 2025</span>
+      <span class="card-tag" id="equity-range">—</span>
     </div>
     <div class="card-body">
       <div class="chart-wrap" style="height:260px;">
@@ -224,6 +224,43 @@ function fmtDay(ds){
   return DAYS_PT[new Date(y,m-1,d).getDay()];
 }
 function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
+
+/* ── KPIs topo ── */
+(function(){
+  const first = DATES[0];
+  const last  = DATES[DATES.length - 1];
+  const firstEur = TRADING_DATA[first].eur.lucro;
+  const firstUsd = TRADING_DATA[first].usd.lucro;
+  const lastEur  = TRADING_DATA[last].eur.lucro;
+  const lastUsd  = TRADING_DATA[last].usd.lucro;
+
+  const retEurPct = ((lastEur - firstEur) / Math.abs(firstEur) * 100).toFixed(1);
+  const retUsdPct = ((lastUsd - firstUsd) / Math.abs(firstUsd) * 100).toFixed(1);
+
+  let bestEurDate = first, bestEurVal = firstEur;
+  let bestUsdDate = first, bestUsdVal = firstUsd;
+  DATES.forEach(d => {
+    if (TRADING_DATA[d].eur.lucro > bestEurVal) { bestEurVal = TRADING_DATA[d].eur.lucro; bestEurDate = d; }
+    if (TRADING_DATA[d].usd.lucro > bestUsdVal) { bestUsdVal = TRADING_DATA[d].usd.lucro; bestUsdDate = d; }
+  });
+
+  const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+
+  set('kpi-ret-eur-val', (retEurPct >= 0 ? '+' : '') + retEurPct + '%');
+  set('kpi-ret-eur-sub', firstEur.toFixed(2) + '€ → ' + lastEur.toFixed(2) + '€/sessão');
+  set('kpi-ret-usd-val', (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%');
+  set('kpi-ret-usd-sub', firstUsd.toFixed(2) + '$ → ' + lastUsd.toFixed(2) + '$/sessão');
+  set('kpi-best-eur-val', '+' + bestEurVal.toFixed(2) + ' €');
+  set('kpi-best-eur-sub', fmtDate(bestEurDate));
+  set('kpi-best-usd-val', '+' + bestUsdVal.toFixed(2) + ' $');
+  set('kpi-best-usd-sub', fmtDate(bestUsdDate));
+
+  const [,fm,fd] = first.split('-').map(Number);
+  const [,lm,ld] = last.split('-').map(Number);
+  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  set('equity-range', String(fd).padStart(2,'0') + '–' + String(ld).padStart(2,'0') + ' ' + MONTHS_PT[lm-1] + ' 2025');
+  set('hist-page-sub', 'Triple Seven Capital · Início: ' + fmtDate(first) + ' · ' + DATES.length + ' sessões registadas');
+})();
 
 /* ── Equity Chart ── */
 const labels = DATES.map(d=>{const[y,m,dd]=d.split('-');return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0');});
