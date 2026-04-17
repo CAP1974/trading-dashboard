@@ -1,5 +1,6 @@
 node_modules/
 data/raw/
+data/backups/
 .env
 *.log
 .DS_Store

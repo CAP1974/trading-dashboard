@@ -27,3 +27,9 @@ Erros:
 Ficheiros grandes:
 - Ler só o necessário (grep/sed em vez de cat completo)
 - Editar só as linhas afectadas
+
+## PROTECÇÃO DE DADOS
+- NUNCA escrever trading_data.json sem backup prévio (extract.js faz isto automaticamente)
+- NUNCA fazer push sem validação passar (deploy.js valida antes do git push)
+- Em caso de dados corrompidos: node scripts/restore.js --list
+- Backups em data/backups/ — últimos 30 mantidos, ignorados pelo git

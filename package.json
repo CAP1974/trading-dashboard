@@ -6,7 +6,8 @@
   "scripts": {
     "extract":  "node scripts/extract.js",
     "deploy":   "node scripts/deploy.js",
-    "pipeline": "node scripts/pipeline.js"
+    "pipeline": "node scripts/pipeline.js",
+    "restore":  "node scripts/restore.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0"

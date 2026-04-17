@@ -50,8 +50,31 @@ if (!eurPath && !usdPath) {
   process.exit(1);
 }
 
-const DATA_FILE = path.join(__dirname, '..', 'data', 'trading_data.json');
-const DATA_JS   = path.join(__dirname, '..', 'data.js');
+const DATA_FILE    = path.join(__dirname, '..', 'data', 'trading_data.json');
+const DATA_JS      = path.join(__dirname, '..', 'data.js');
+const BACKUP_DIR   = path.join(__dirname, '..', 'data', 'backups');
+const MAX_BACKUPS  = 30;
+
+function makeBackup() {
+  if (!fs.existsSync(DATA_FILE)) return;
+  if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR, { recursive: true });
+  const now  = new Date();
+  const pad  = n => String(n).padStart(2, '0');
+  const stamp = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+  const dest = path.join(BACKUP_DIR, `trading_data_${stamp}.json`);
+  fs.copyFileSync(DATA_FILE, dest);
+  console.log(`Backup → ${path.basename(dest)}`);
+  // keep only last MAX_BACKUPS
+  const files = fs.readdirSync(BACKUP_DIR)
+    .filter(f => f.startsWith('trading_data_') && f.endsWith('.json'))
+    .sort();
+  if (files.length > MAX_BACKUPS) {
+    files.slice(0, files.length - MAX_BACKUPS).forEach(f => {
+      fs.unlinkSync(path.join(BACKUP_DIR, f));
+      console.log(`Backup antigo removido: ${f}`);
+    });
+  }
+}
 
 const client = new Anthropic();
 
@@ -131,6 +154,9 @@ const LATEST_DATE  = "${latest}";
 
 // ── main ───────────────────────────────────────────────────────────────────
 async function run() {
+  // Backup antes de qualquer escrita
+  makeBackup();
+
   // Carrega dados existentes (estrutura flat)
   let data = {};
   if (fs.existsSync(DATA_FILE)) {
