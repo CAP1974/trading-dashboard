@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contas · Triple Seven Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060a0d;--bg-01:#0a1018;--bg-02:#0f1923;--bg-03:#152030;--bg-04:#1c2a3d;
+  --border:rgba(255,255,255,0.06);--border-hi:rgba(255,255,255,0.11);
+  --txt:#ddeaf7;--txt-2:#6b8aaa;--txt-3:#334455;
+  --green:#1eff8e;--green-d:rgba(30,255,142,0.10);--green-b:rgba(30,255,142,0.22);
+  --red:#ff4d6a;--red-d:rgba(255,77,106,0.10);--red-b:rgba(255,77,106,0.22);
+  --amber:#ffb340;--amber-d:rgba(255,179,64,0.10);
+  --blue:#4da6ff;--blue-d:rgba(77,166,255,0.10);
+  --accent1:#3dffb0;--accent2:#00c8ff;
+  --accent-g:linear-gradient(135deg,#3dffb0,#00c8ff);
+  --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
+  --radius:8px;--radius-lg:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12px;line-height:1.5;min-height:100vh;}
+.topbar{background:var(--bg-01);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100;}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.brand-logo{width:36px;height:36px;object-fit:contain;}
+.brand-name{font-family:var(--display);font-size:15px;font-weight:700;background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.03em;}
+.brand-sub{font-size:9px;color:var(--txt-3);letter-spacing:.12em;text-transform:uppercase;}
+.clock{font-size:12px;color:var(--txt-3);letter-spacing:.06em;font-variant-numeric:tabular-nums;}
+.nav{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;padding:0 28px;gap:2px;}
+.nav-item{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3);padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--display);font-weight:600;text-decoration:none;display:flex;align-items:center;}
+.nav-item:hover{color:var(--txt-2);}
+.nav-item.active{color:var(--accent1);border-bottom-color:var(--accent1);}
+.main{padding:20px 28px;display:flex;flex-direction:column;gap:16px;}
+.zone-label{font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:var(--txt-3);margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.zone-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.page-title{font-family:var(--display);font-size:24px;font-weight:700;background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.page-sub{font-size:11px;color:var(--txt-2);margin-bottom:20px;}
+.card{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.card-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:var(--display);font-size:13px;font-weight:600;}
+.card-tag{font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:2px 7px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;}
+.card-body{padding:16px;}
+.up{color:var(--green);} .dn{color:var(--red);} .neu{color:var(--txt-3);} .ac{color:var(--accent2);}
+.grad{background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-grid{display:grid;gap:8px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.stat-row:last-child{border-bottom:none;}
+.stat-key{font-size:11px;color:var(--txt-2);}
+.stat-val{font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;}
+.kpi-mini{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
+.kpi-mini-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:6px;}
+.kpi-mini-value{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;}
+.kpi-mini-sub{font-size:10px;color:var(--txt-2);margin-top:3px;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{padding:8px 10px;text-align:left;font-size:9px;font-weight:400;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);border-bottom:1px solid var(--border);}
+.tbl th.r{text-align:right;}
+.tbl td{padding:8px 10px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.025);font-variant-numeric:tabular-nums;}
+.tbl td.r{text-align:right;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.02);}
+.badge{display:inline-block;border-radius:3px;padding:2px 7px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
+.badge-g{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.badge-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
+.badge-a{background:var(--amber-d);color:var(--amber);border:1px solid rgba(255,179,64,.3);}
+.badge-b{background:var(--blue-d);color:var(--blue);border:1px solid rgba(77,166,255,.3);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.chart-wrap{position:relative;width:100%;}
+.sparkline-wrap{position:relative;height:60px;margin:10px 0 6px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html">
+    <img src="data:image/png;base64,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puNfPXVcrpaid5fI9xJJJ8Sr3DLbbe8lovqXOC2O9nvprgtO/8AR+zStjrtR32mtFvjc+ad2MgZ7I5k/wAdyt9pWxUemtPUtloWtEcDcyPA/SP95x7/AOPFcN1f9DjT1g/KC4xdm6XBmImuG8MP4F37PNSacLvd195PZWiI2N3/AGipuoPzY9WBwXF9MOsYtIaUkdC8fOla0x0jM/UHBzz9+OG4O+y6+pqKejpZaurkEdNCwvkcTwA/E8B4qonSXqmo1dqupucriIAexTR52ZGNgAvttS3kuOiI2D2Haq+1L0Y6/g5uR7pHuke4ue45c4nJJPNYoitzfBERAEREAREQBERAEREAREQBERAEREAREQBERAFLnVfsFLW65F+udRSQUdraXsNRM2MSTY+iBkjOM5I7iojTlhR7qi69GVNSyzWWZzqwdSDinlmX/F0tR/rm1k/99F+8vrrnaQMm82rH/exfvL+f6LN+S0f9On7KvxSvf6F/Pna0OPZbebWT3fLYv3l9+dbO0FzrzbOy1uTisjJx5drJVAkXryXh/p0/Z88Tr3+h3HTXrF+stb1NZG8/IKbMFGzOQGA8Rjbc75HFc/o3T9VqbUNNaKR8URlcPaSyyBjI2ZGXEnYYyvHRaSnRVKkqdPhkskWsaexDYhwyLy6ej05p6yUlkoLvaI6ajjEbP59EC483H6XEnf7ByX7XXazD+u7R6V8X7yoaion4PKTzdTj3fsqJYMpPNz6F7nXezEnF6tP69F+8sDd7P/bVq/XY/wB5UURe1gEV6/T9nh4FH3+her52tG/+ebV+ux/Fa33azhj3m82wtY0udirjcQBzwDk+Soyi9rBIr1+h58QR9/odz0z61frHVUj6dzm2ykzFSMzsWji7zJyfVft6CtJUd+1ILleammp7VQOD3e2nbH7WQbtYMnfx7tlHKK33OzS3cHkW0rbKhuab2eGWZd+S7Wj+2LU0DAAFXGAAOQ34LULtZydrza/12P8AeVJUURYel63Qo/JqH+j/AOE+9YzW8DLZDpa01TJTUD2tZJE7I7PAMBHqTx4+CgJEUyjSVKOyi7srOFpSVOH/AH2hERdSWEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAf/Z" alt="777" class="brand-logo">
+    <div><div class="brand-name">Triple Seven Capital</div><div class="brand-sub">Fund Management · Since Apr 2025</div></div>
+  </a>
+  <div class="clock" id="clock">--:--:-- UTC</div>
+</div>
+
+<div class="nav">
+  <a class="nav-item" href="index.html">Vista Consolidada</a>
+  <a class="nav-item active" href="contas.html">Contas</a>
+  <a class="nav-item" href="#">Posições</a>
+  <a class="nav-item" href="risco.html">Risco</a>
+  <a class="nav-item" href="historico.html">Histórico</a>
+  <a class="nav-item" href="#">Governança</a>
+</div>
+
+<div class="main">
+  <div>
+    <div class="page-title">Contas</div>
+    <div class="page-sub" id="page-sub">Triple Seven Capital · Detalhe de capital e movimentos</div>
+  </div>
+
+  <!-- ── SECÇÃO 1: KPIs topo ── -->
+  <div class="zone-label">Resumo do Fundo</div>
+  <div class="grid-4">
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Saldo EUR</div>
+      <div class="kpi-mini-value" style="color:var(--accent1);" id="kpi-saldo-eur">—</div>
+      <div class="kpi-mini-sub" id="kpi-saldo-eur-sub">—</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Saldo USD</div>
+      <div class="kpi-mini-value" style="color:var(--accent2);" id="kpi-saldo-usd">—</div>
+      <div class="kpi-mini-sub" id="kpi-saldo-usd-sub">—</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">AUM Consolidado</div>
+      <div class="kpi-mini-value grad" id="kpi-aum">—</div>
+      <div class="kpi-mini-sub" id="kpi-aum-sub">—</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Dias Activos</div>
+      <div class="kpi-mini-value" style="color:var(--amber);" id="kpi-dias">—</div>
+      <div class="kpi-mini-sub" id="kpi-dias-sub">—</div>
+    </div>
+  </div>
+
+  <!-- ── SECÇÃO 2: Detalhe EUR | USD ── -->
+  <div class="zone-label">Detalhe por Conta</div>
+  <div class="grid-2">
+    <!-- EUR -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--accent1);">Conta EUR</span>
+        <span class="card-tag" id="eur-date-tag">—</span>
+      </div>
+      <div class="card-body">
+        <div class="sparkline-wrap">
+          <canvas id="sparkEur"></canvas>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-row">
+            <span class="stat-key">Capital inicial</span>
+            <span class="stat-val">62,00 €</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Saldo actual</span>
+            <span class="stat-val up" id="eur-saldo-actual">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Retorno total</span>
+            <span class="stat-val" id="eur-retorno">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Melhor sessão</span>
+            <span class="stat-val up" id="eur-best">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Pior sessão</span>
+            <span class="stat-val dn" id="eur-worst">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Posições abertas</span>
+            <span class="stat-val" id="eur-pos-count">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USD -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title" style="color:var(--accent2);">Conta USD</span>
+        <span class="card-tag" id="usd-date-tag">—</span>
+      </div>
+      <div class="card-body">
+        <div class="sparkline-wrap">
+          <canvas id="sparkUsd"></canvas>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-row">
+            <span class="stat-key">Capital inicial</span>
+            <span class="stat-val">125,87 $</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Aportes</span>
+            <span class="stat-val ac" id="usd-aportes">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Base de cálculo</span>
+            <span class="stat-val">138,77 $</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Saldo actual</span>
+            <span class="stat-val up" id="usd-saldo-actual">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Retorno total</span>
+            <span class="stat-val" id="usd-retorno">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Melhor sessão</span>
+            <span class="stat-val up" id="usd-best">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Pior sessão</span>
+            <span class="stat-val dn" id="usd-worst">—</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-key">Posições abertas</span>
+            <span class="stat-val" id="usd-pos-count">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECÇÃO 3: Tabela de movimentos ── -->
+  <div class="zone-label">Movimentos de Capital</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Histórico de Movimentos</span>
+      <span class="card-tag" id="mov-count-tag">—</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Conta</th>
+            <th>Tipo</th>
+            <th class="r">Valor</th>
+            <th>Descrição</th>
+          </tr>
+        </thead>
+        <tbody id="mov-tbody">
+          <tr><td colspan="5" style="text-align:center;color:var(--txt-3);padding:20px;">A carregar...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECÇÃO 4: Evolução por sessão ── -->
+  <div class="zone-label">Evolução por Sessão</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">AUM por Sessão</span>
+      <span class="card-tag" id="evolucao-tag">EUR + USD</span>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="evolucaoChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script>
+// ── CONSTANTES ──
+const CAP_EUR_INICIAL = 62.00;
+const CAP_USD_INICIAL = 125.87;
+const BASE_USD        = 138.77; // 125.87 + 12.90 aporte
+
+// ── HELPERS ──
+function fmtDate(d) {
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const dt = new Date(d + 'T12:00:00Z');
+  return dt.getDate() + ' ' + months[dt.getMonth()];
+}
+
+function setHTML(id, html) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = html;
+}
+function setText(id, txt) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = txt;
+}
+
+function calcAUM(day, side) {
+  const s = day[side];
+  if (!s) return 0;
+  const pos = (s.positions || []).reduce((a,p) => a + (p.valor || 0), 0);
+  return pos + (s.caixa || 0);
+}
+
+// ── RELÓGIO ──
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getUTCHours()).padStart(2,'0');
+  const m = String(now.getUTCMinutes()).padStart(2,'0');
+  const s = String(now.getUTCSeconds()).padStart(2,'0');
+  setText('clock', `${h}:${m}:${s} UTC`);
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── DADOS ──
+const ALL_D  = Object.keys(TRADING_DATA).sort();
+const LATEST = TRADING_DATA[LATEST_DATE];
+const last   = ALL_D[ALL_D.length - 1];
+
+// ── SECÇÃO 1: KPIs ──
+const eurAUM = calcAUM(LATEST, 'eur');
+const usdAUM = calcAUM(LATEST, 'usd');
+const retEurPct = ((eurAUM - CAP_EUR_INICIAL) / CAP_EUR_INICIAL * 100).toFixed(1);
+const retUsdPct = ((usdAUM - BASE_USD) / BASE_USD * 100).toFixed(1);
+
+// AUM em EUR (convert USD at ~0.93)
+const EUR_RATE = 0.93;
+const aumTotalEur = (eurAUM + usdAUM * EUR_RATE).toFixed(0);
+
+const eurPos   = (LATEST.eur.positions || []).reduce((a,p) => a + (p.valor||0), 0);
+const eurCaixa = LATEST.eur.caixa || 0;
+const usdPos   = (LATEST.usd.positions || []).reduce((a,p) => a + (p.valor||0), 0);
+const usdCaixa = LATEST.usd.caixa || 0;
+
+// EUR KPI
+setText('kpi-saldo-eur', eurAUM.toFixed(2) + ' €');
+const eurRetSign = retEurPct >= 0 ? '+' : '';
+setText('kpi-saldo-eur-sub', `${eurRetSign}${retEurPct}% vs ${CAP_EUR_INICIAL.toFixed(2)}€ base`);
+document.getElementById('kpi-saldo-eur').className = 'kpi-mini-value ' + (retEurPct >= 0 ? 'up' : 'dn');
+
+// USD KPI
+setText('kpi-saldo-usd', usdAUM.toFixed(2) + ' $');
+const usdRetSign = retUsdPct >= 0 ? '+' : '';
+setText('kpi-saldo-usd-sub', `${usdRetSign}${retUsdPct}% vs ${BASE_USD.toFixed(2)}$ base`);
+document.getElementById('kpi-saldo-usd').className = 'kpi-mini-value ' + (retUsdPct >= 0 ? 'up' : 'dn');
+
+// AUM KPI
+setText('kpi-aum', '≈ ' + aumTotalEur + ' €');
+setText('kpi-aum-sub', `${eurAUM.toFixed(2)}€ + ${usdAUM.toFixed(2)}$ (×${EUR_RATE})`);
+
+// Dias
+setText('kpi-dias', ALL_D.length);
+setText('kpi-dias-sub', `${fmtDate(ALL_D[0])} → ${fmtDate(last)}`);
+
+// page sub
+setText('page-sub', `Triple Seven Capital · Actualizado ${fmtDate(LATEST_DATE)}`);
+
+// ── SECÇÃO 2: Detalhe EUR|USD ──
+setText('eur-date-tag', fmtDate(last));
+setText('usd-date-tag', fmtDate(last));
+
+// EUR stats
+setText('eur-saldo-actual', eurAUM.toFixed(2) + ' €');
+const eurRetStr = (retEurPct >= 0 ? '+' : '') + retEurPct + '%';
+const eurRetEl = document.getElementById('eur-retorno');
+if (eurRetEl) {
+  eurRetEl.textContent = `${eurRetStr}  (${CAP_EUR_INICIAL.toFixed(2)}€ → ${eurAUM.toFixed(2)}€)`;
+  eurRetEl.className = 'stat-val ' + (retEurPct >= 0 ? 'up' : 'dn');
+}
+
+let eurBest = -Infinity, eurWorst = Infinity;
+let eurBestDate = '', eurWorstDate = '';
+ALL_D.forEach(d => {
+  const lucro = TRADING_DATA[d].eur ? (TRADING_DATA[d].eur.lucro || 0) : 0;
+  if (lucro > eurBest)  { eurBest = lucro; eurBestDate = d; }
+  if (lucro < eurWorst) { eurWorst = lucro; eurWorstDate = d; }
+});
+setText('eur-best',  (eurBest >= 0 ? '+' : '') + eurBest.toFixed(2) + ' €  (' + fmtDate(eurBestDate) + ')');
+setText('eur-worst', (eurWorst >= 0 ? '+' : '') + eurWorst.toFixed(2) + ' €  (' + fmtDate(eurWorstDate) + ')');
+setText('eur-pos-count', (LATEST.eur.positions || []).length);
+
+// USD aportes total
+let totalAportes = 0;
+ALL_D.forEach(d => {
+  const evs = TRADING_DATA[d].eventos || [];
+  evs.filter(ev => ev.tipo === 'aporte' || (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte))
+     .forEach(ev => { totalAportes += (ev.valor || 0); });
+  // also check usd.aporte field
+  if (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte) {
+    totalAportes += TRADING_DATA[d].usd.aporte;
+  }
+});
+// Use known value if no events found
+if (totalAportes === 0) totalAportes = 12.90;
+setText('usd-aportes', '+' + totalAportes.toFixed(2) + ' $');
+
+// USD stats
+setText('usd-saldo-actual', usdAUM.toFixed(2) + ' $');
+const usdRetStr = (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%';
+const usdRetEl = document.getElementById('usd-retorno');
+if (usdRetEl) {
+  usdRetEl.textContent = `${usdRetStr}  (${BASE_USD.toFixed(2)}$ → ${usdAUM.toFixed(2)}$)`;
+  usdRetEl.className = 'stat-val ' + (retUsdPct >= 0 ? 'up' : 'dn');
+}
+
+let usdBest = -Infinity, usdWorst = Infinity;
+let usdBestDate = '', usdWorstDate = '';
+ALL_D.forEach(d => {
+  const lucro = TRADING_DATA[d].usd ? (TRADING_DATA[d].usd.lucro || 0) : 0;
+  if (lucro > usdBest)  { usdBest = lucro; usdBestDate = d; }
+  if (lucro < usdWorst) { usdWorst = lucro; usdWorstDate = d; }
+});
+setText('usd-best',  (usdBest >= 0 ? '+' : '') + usdBest.toFixed(2) + ' $  (' + fmtDate(usdBestDate) + ')');
+setText('usd-worst', (usdWorst >= 0 ? '+' : '') + usdWorst.toFixed(2) + ' $  (' + fmtDate(usdWorstDate) + ')');
+setText('usd-pos-count', (LATEST.usd.positions || []).length);
+
+// ── SPARKLINES ──
+const SPARK_DATES = ALL_D.slice(-6);
+const eurSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'eur'));
+const usdSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'usd'));
+
+const sparkCfg = (data, color) => ({
+  type: 'line',
+  data: {
+    labels: SPARK_DATES.map(fmtDate),
+    datasets: [{
+      data,
+      borderColor: color,
+      borderWidth: 2,
+      pointRadius: 2,
+      pointBackgroundColor: color,
+      fill: true,
+      backgroundColor: color.replace(')', ',0.08)').replace('rgb(','rgba('),
+      tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(2) }
+    }},
+    scales: {
+      x: { display: false },
+      y: { display: false }
+    }
+  }
+});
+
+new Chart(document.getElementById('sparkEur'), sparkCfg(eurSparkData, '#3dffb0'));
+new Chart(document.getElementById('sparkUsd'), sparkCfg(usdSparkData, '#00c8ff'));
+
+// ── SECÇÃO 3: Tabela de movimentos ──
+const movements = [];
+
+// Capital inicial EUR
+movements.push({ date: ALL_D[0], conta: 'EUR', tipo: 'inicial', valor: CAP_EUR_INICIAL, desc: 'Capital inicial EUR' });
+// Capital inicial USD
+movements.push({ date: ALL_D[0], conta: 'USD', tipo: 'inicial', valor: CAP_USD_INICIAL, desc: 'Capital inicial USD' });
+
+// Dynamic events from TRADING_DATA
+ALL_D.forEach(d => {
+  const day = TRADING_DATA[d];
+  // eventos array
+  (day.eventos || []).forEach(ev => {
+    if (ev.tipo === 'aporte') {
+      movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: ev.valor || 0, desc: ev.desc || 'Aporte USD' });
+    } else if (ev.tipo === 'caixa') {
+      const conta = ev.conta || (ev.moeda === 'EUR' ? 'EUR' : 'USD');
+      movements.push({ date: d, conta, tipo: 'caixa', valor: ev.valor || 0, desc: ev.desc || 'Movimento caixa' });
+    }
+  });
+  // usd.aporte field
+  if (day.usd && day.usd.aporte && !(day.eventos || []).some(e => e.tipo === 'aporte')) {
+    movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: day.usd.aporte, desc: 'Aporte USD' });
+  }
+  // caixa fields
+  if (day.eur && day.eur.caixa !== undefined && d === last) {
+    movements.push({ date: d, conta: 'EUR', tipo: 'caixa', valor: day.eur.caixa, desc: 'Caixa EUR actual' });
+  }
+  if (day.usd && day.usd.caixa !== undefined && d === last) {
+    movements.push({ date: d, conta: 'USD', tipo: 'caixa', valor: day.usd.caixa, desc: 'Caixa USD actual' });
+  }
+});
+
+const tipoBadge = {
+  'inicial': '<span class="badge badge-b">Inicial</span>',
+  'aporte':  '<span class="badge badge-g">Aporte</span>',
+  'caixa':   '<span class="badge badge-a">Caixa</span>',
+  'saida':   '<span class="badge badge-r">Saída</span>',
+};
+const contaColor = { 'EUR': 'var(--accent1)', 'USD': 'var(--accent2)' };
+
+setText('mov-count-tag', movements.length + ' movimentos');
+
+const tbody = document.getElementById('mov-tbody');
+tbody.innerHTML = movements.map(mv => {
+  const sign = mv.tipo === 'inicial' || mv.tipo === 'aporte' ? '+' : '';
+  const sym  = mv.conta === 'EUR' ? '€' : '$';
+  const valStr = sign + mv.valor.toFixed(2) + ' ' + sym;
+  const badge = tipoBadge[mv.tipo] || `<span class="badge">${mv.tipo}</span>`;
+  return `<tr>
+    <td>${fmtDate(mv.date)}</td>
+    <td style="color:${contaColor[mv.conta]};font-weight:600;">${mv.conta}</td>
+    <td>${badge}</td>
+    <td class="r" style="color:${mv.tipo==='inicial'||mv.tipo==='aporte'?'var(--green)':'var(--amber)'};">${valStr}</td>
+    <td style="color:var(--txt-2);">${mv.desc}</td>
+  </tr>`;
+}).join('');
+
+// ── SECÇÃO 4: Evolução por sessão ──
+const evolLabels   = ALL_D.map(fmtDate);
+const evolEurData  = ALL_D.map(d => calcAUM(TRADING_DATA[d], 'eur'));
+const evolUsdData  = ALL_D.map(d => calcAUM(TRADING_DATA[d], 'usd'));
+
+setText('evolucao-tag', ALL_D.length + ' sessões');
+
+new Chart(document.getElementById('evolucaoChart'), {
+  type: 'bar',
+  data: {
+    labels: evolLabels,
+    datasets: [
+      {
+        label: 'EUR (€)',
+        data: evolEurData,
+        backgroundColor: 'rgba(61,255,176,0.25)',
+        borderColor: '#3dffb0',
+        borderWidth: 1.5,
+        borderRadius: 4,
+      },
+      {
+        label: 'USD ($)',
+        data: evolUsdData,
+        backgroundColor: 'rgba(0,200,255,0.20)',
+        borderColor: '#00c8ff',
+        borderWidth: 1.5,
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        labels: { color: '#6b8aaa', font: { family: "'JetBrains Mono'" }, boxWidth: 12 }
+      },
+      tooltip: {
+        backgroundColor: '#0f1923',
+        borderColor: 'rgba(255,255,255,0.08)',
+        borderWidth: 1,
+        titleColor: '#ddeaf7',
+        bodyColor: '#6b8aaa',
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#334455', font: { family: "'JetBrains Mono'", size: 10 } },
+        grid:  { color: 'rgba(255,255,255,0.03)' }
+      },
+      y: {
+        ticks: {
+          color: '#334455',
+          font: { family: "'JetBrains Mono'", size: 10 },
+          callback: v => v.toFixed(0)
+        },
+        grid: { color: 'rgba(255,255,255,0.04)' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
