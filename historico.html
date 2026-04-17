@@ -205,6 +205,50 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
+  <!-- ── ANÁLISE MENSAL ── -->
+  <div class="zone-label">Análise Mensal</div>
+
+  <!-- KPIs mês actual -->
+  <div class="grid-4" id="monthly-kpis"></div>
+
+  <!-- Tabela mensal + gráfico -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Performance por Mês</span>
+        <span class="card-tag" id="monthly-tbl-tag">—</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Mês</th>
+              <th class="r">Sessões</th>
+              <th class="r">Lucro EUR</th>
+              <th class="r">Lucro USD</th>
+              <th class="r">Total ~€</th>
+              <th class="r">Ret EUR%</th>
+              <th class="r">Ret USD%</th>
+              <th class="r">Melhor dia</th>
+              <th class="r">Pior dia</th>
+            </tr>
+          </thead>
+          <tbody id="monthly-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Lucro Mensal EUR vs USD</span>
+      </div>
+      <div class="card-body">
+        <div class="chart-wrap" style="height:220px;">
+          <canvas id="monthlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="data.js"></script>
@@ -358,6 +402,119 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     <div class="evento-content"><div>${at}<span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${ev.mkt}</span></div><div class="evento-nota">${ev.nota}</div></div>
   </div>`;
 }).join(''):'<div style="color:var(--txt-3);font-size:11px;">Sem eventos registados.</div>';
+
+/* ── Análise Mensal ── */
+(function(){
+  const EUR_RATE = 0.93;
+  const CAP_EUR  = 62.00;
+  const BASE_USD = 138.77;
+  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+  // group by YYYY-MM
+  const byMonth = {};
+  DATES.forEach(d => {
+    const ym = d.slice(0,7);
+    if (!byMonth[ym]) byMonth[ym] = [];
+    byMonth[ym].push(d);
+  });
+
+  const monthKeys = Object.keys(byMonth).sort().reverse();
+
+  // build stats per month
+  const stats = monthKeys.map(ym => {
+    const days = byMonth[ym];
+    let eurLucro=0, usdLucro=0;
+    let bestEurDay={v:-Infinity,d:''}, worstEurDay={v:Infinity,d:''};
+    days.forEach(d => {
+      const el = TRADING_DATA[d].eur?.lucro || 0;
+      const ul = TRADING_DATA[d].usd?.lucro || 0;
+      eurLucro += el; usdLucro += ul;
+      if (el > bestEurDay.v)  bestEurDay  = {v:el, d};
+      if (el < worstEurDay.v) worstEurDay = {v:el, d};
+    });
+    const retEur = (eurLucro / CAP_EUR * 100);
+    const retUsd = (usdLucro / BASE_USD * 100);
+    const totalEur = (eurLucro + usdLucro * EUR_RATE);
+    const [y,m] = ym.split('-').map(Number);
+    return {ym, label: MONTHS_PT[m-1]+' '+y, sessions:days.length,
+            eurLucro, usdLucro, totalEur, retEur, retUsd,
+            bestDay: bestEurDay, worstDay: worstEurDay};
+  });
+
+  function fmtL(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+' '+sym; }
+  function fmtP(v){ return (v>=0?'+':'')+v.toFixed(1)+'%'; }
+  function cls(v){ return v>=0?'up':'dn'; }
+
+  // table
+  document.getElementById('monthly-tbl-tag').textContent = stats.length+' '+(stats.length===1?'mês':'meses');
+  document.getElementById('monthly-tbody').innerHTML = stats.map(s => `<tr>
+    <td style="font-weight:600;color:var(--accent2);">${s.label}</td>
+    <td class="r neu">${s.sessions}</td>
+    <td class="r ${cls(s.eurLucro)}">${fmtL(s.eurLucro,'€')}</td>
+    <td class="r ${cls(s.usdLucro)}">${fmtL(s.usdLucro,'$')}</td>
+    <td class="r ${cls(s.totalEur)}">${fmtL(s.totalEur,'€')}</td>
+    <td class="r ${cls(s.retEur)}">${fmtP(s.retEur)}</td>
+    <td class="r ${cls(s.retUsd)}">${fmtP(s.retUsd)}</td>
+    <td class="r up">${fmtL(s.bestDay.v,'€')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.bestDay.d)}</span></td>
+    <td class="r dn">${fmtL(s.worstDay.v,'€')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.worstDay.d)}</span></td>
+  </tr>`).join('');
+
+  // KPIs mês actual
+  const cur = stats[0];
+  if (cur) {
+    document.getElementById('monthly-kpis').innerHTML = `
+      <div class="kpi-mini">
+        <div class="kpi-mini-label">Lucro EUR · ${cur.label}</div>
+        <div class="kpi-mini-value ${cls(cur.eurLucro)}">${fmtL(cur.eurLucro,'€')}</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre base</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="kpi-mini-label">Lucro USD · ${cur.label}</div>
+        <div class="kpi-mini-value ${cls(cur.usdLucro)}">${fmtL(cur.usdLucro,'$')}</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre base</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="kpi-mini-label">Sessões · ${cur.label}</div>
+        <div class="kpi-mini-value" style="color:var(--amber);">${cur.sessions}</div>
+        <div class="kpi-mini-sub">média EUR ${(cur.eurLucro/cur.sessions).toFixed(2)}€/dia</div>
+      </div>
+      <div class="kpi-mini">
+        <div class="kpi-mini-label">Médias diárias</div>
+        <div class="kpi-mini-value" style="color:var(--accent2);">${(cur.usdLucro/cur.sessions).toFixed(2)}$</div>
+        <div class="kpi-mini-sub">melhor EUR: ${fmtL(cur.bestDay.v,'€')}</div>
+      </div>`;
+  }
+
+  // chart (chronological order for chart)
+  const chartStats = [...stats].reverse();
+  new Chart(document.getElementById('monthlyChart'), {
+    type: 'bar',
+    data: {
+      labels: chartStats.map(s=>s.label),
+      datasets: [
+        { label:'EUR (€)', data: chartStats.map(s=>s.eurLucro),
+          backgroundColor:'rgba(61,255,176,0.25)', borderColor:'#3dffb0', borderWidth:1.5, borderRadius:3 },
+        { label:'USD ($)', data: chartStats.map(s=>s.usdLucro),
+          backgroundColor:'rgba(0,200,255,0.20)', borderColor:'#00c8ff', borderWidth:1.5, borderRadius:3 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'#6b8aaa',font:{family:"'JetBrains Mono'"},boxWidth:12}},
+        tooltip:{backgroundColor:'#0f1923',borderColor:'rgba(255,255,255,.08)',borderWidth:1,
+          titleColor:'#ddeaf7',bodyColor:'#6b8aaa',
+          callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y>=0?'+':''}${ctx.parsed.y.toFixed(2)}`}}
+      },
+      scales:{
+        x:{ticks:{color:'#334455',font:{family:"'JetBrains Mono'",size:10}},grid:{color:'rgba(255,255,255,.03)'}},
+        y:{ticks:{color:'#334455',font:{family:"'JetBrains Mono'",size:10},callback:v=>v.toFixed(2)},
+           grid:{color:'rgba(255,255,255,.04)'}}
+      }
+    }
+  });
+})();
 
 /* ── Performance por activo ── */
 const ativos={};
