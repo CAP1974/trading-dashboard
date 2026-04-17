@@ -420,25 +420,27 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 
   const monthKeys = Object.keys(byMonth).sort().reverse();
 
-  // build stats per month
+  // build stats per month — usa só eur.lucro / usd.lucro (P&L posições), nunca eventos
   const stats = monthKeys.map(ym => {
     const days = byMonth[ym];
     let eurLucro=0, usdLucro=0;
-    let bestEurDay={v:-Infinity,d:''}, worstEurDay={v:Infinity,d:''};
+    let bestDay={v:-Infinity,d:''}, worstDay={v:Infinity,d:''};
     days.forEach(d => {
       const el = TRADING_DATA[d].eur?.lucro || 0;
       const ul = TRADING_DATA[d].usd?.lucro || 0;
-      eurLucro += el; usdLucro += ul;
-      if (el > bestEurDay.v)  bestEurDay  = {v:el, d};
-      if (el < worstEurDay.v) worstEurDay = {v:el, d};
+      eurLucro += el;
+      usdLucro += ul;
+      const combined = el + ul * EUR_RATE;
+      if (combined > bestDay.v)  bestDay  = {v:combined, vEur:el, vUsd:ul, d};
+      if (combined < worstDay.v) worstDay = {v:combined, vEur:el, vUsd:ul, d};
     });
-    const retEur = (eurLucro / CAP_EUR * 100);
-    const retUsd = (usdLucro / BASE_USD * 100);
+    const retEur  = (eurLucro / CAP_EUR  * 100);
+    const retUsd  = (usdLucro / BASE_USD * 100);
     const totalEur = (eurLucro + usdLucro * EUR_RATE);
     const [y,m] = ym.split('-').map(Number);
     return {ym, label: MONTHS_PT[m-1]+' '+y, sessions:days.length,
             eurLucro, usdLucro, totalEur, retEur, retUsd,
-            bestDay: bestEurDay, worstDay: worstEurDay};
+            bestDay, worstDay};
   });
 
   function fmtL(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+' '+sym; }
@@ -455,8 +457,8 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     <td class="r ${cls(s.totalEur)}">${fmtL(s.totalEur,'€')}</td>
     <td class="r ${cls(s.retEur)}">${fmtP(s.retEur)}</td>
     <td class="r ${cls(s.retUsd)}">${fmtP(s.retUsd)}</td>
-    <td class="r up">${fmtL(s.bestDay.v,'€')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.bestDay.d)}</span></td>
-    <td class="r dn">${fmtL(s.worstDay.v,'€')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.worstDay.d)}</span></td>
+    <td class="r up">${fmtL(s.bestDay.vEur,'€')} / ${fmtL(s.bestDay.vUsd,'$')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.bestDay.d)}</span></td>
+    <td class="r dn">${fmtL(s.worstDay.vEur,'€')} / ${fmtL(s.worstDay.vUsd,'$')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.worstDay.d)}</span></td>
   </tr>`).join('');
 
   // KPIs mês actual
@@ -466,22 +468,22 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Lucro EUR · ${cur.label}</div>
         <div class="kpi-mini-value ${cls(cur.eurLucro)}">${fmtL(cur.eurLucro,'€')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre base</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre 62,00€ base</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Lucro USD · ${cur.label}</div>
         <div class="kpi-mini-value ${cls(cur.usdLucro)}">${fmtL(cur.usdLucro,'$')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre base</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre 138,77$ base</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Sessões · ${cur.label}</div>
         <div class="kpi-mini-value" style="color:var(--amber);">${cur.sessions}</div>
-        <div class="kpi-mini-sub">média EUR ${(cur.eurLucro/cur.sessions).toFixed(2)}€/dia</div>
+        <div class="kpi-mini-sub">média EUR ${(cur.eurLucro/cur.sessions).toFixed(2)}€ · USD ${(cur.usdLucro/cur.sessions).toFixed(2)}$</div>
       </div>
       <div class="kpi-mini">
-        <div class="kpi-mini-label">Médias diárias</div>
-        <div class="kpi-mini-value" style="color:var(--accent2);">${(cur.usdLucro/cur.sessions).toFixed(2)}$</div>
-        <div class="kpi-mini-sub">melhor EUR: ${fmtL(cur.bestDay.v,'€')}</div>
+        <div class="kpi-mini-label">Melhor sessão</div>
+        <div class="kpi-mini-value up">${fmtL(cur.bestDay.vEur,'€')}</div>
+        <div class="kpi-mini-sub">${fmtDate(cur.bestDay.d)} · USD ${fmtL(cur.bestDay.vUsd,'$')}</div>
       </div>`;
   }
 
