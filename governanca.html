@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Posições · Triple Seven Capital</title>
+<title>Governança · Triple Seven Capital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,7 +14,7 @@
   --green:#1eff8e;--green-d:rgba(30,255,142,0.10);--green-b:rgba(30,255,142,0.22);
   --red:#ff4d6a;--red-d:rgba(255,77,106,0.10);--red-b:rgba(255,77,106,0.22);
   --amber:#ffb340;--amber-d:rgba(255,179,64,0.10);--amber-b:rgba(255,179,64,0.22);
-  --blue:#4da6ff;--blue-d:rgba(77,166,255,0.10);
+  --blue:#4da6ff;--blue-d:rgba(77,166,255,0.10);--blue-b:rgba(77,166,255,0.22);
   --accent1:#3dffb0;--accent2:#00c8ff;
   --accent-g:linear-gradient(135deg,#3dffb0,#00c8ff);
   --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
@@ -43,43 +43,67 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .card-tag{font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:2px 7px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;}
 .card-body{padding:16px;}
 .up{color:var(--green);} .dn{color:var(--red);} .neu{color:var(--txt-3);} .ac{color:var(--accent2);}
+.grad{background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .kpi-mini{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
 .kpi-mini-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:6px;}
 .kpi-mini-value{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;}
 .kpi-mini-sub{font-size:10px;color:var(--txt-2);margin-top:3px;}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th{padding:8px 10px;text-align:left;font-size:9px;font-weight:400;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;}
-.tbl th:hover{color:var(--txt-2);}
-.tbl th.r,.tbl td.r{text-align:right;}
-.tbl td{padding:8px 10px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.025);font-variant-numeric:tabular-nums;white-space:nowrap;}
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tbody tr:hover td{background:rgba(255,255,255,.02);}
 .badge{display:inline-block;border-radius:3px;padding:2px 7px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
 .badge-g{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
 .badge-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
 .badge-a{background:var(--amber-d);color:var(--amber);border:1px solid var(--amber-b);}
+.badge-b{background:var(--blue-d);color:var(--blue);border:1px solid var(--blue-b);}
+.badge-p{background:rgba(180,100,255,.12);color:#c87fff;border:1px solid rgba(180,100,255,.28);}
 
-/* filtros */
-.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.filter-sep{width:1px;height:20px;background:var(--border);margin:0 4px;}
-.fbtn{font-family:var(--mono);font-size:10px;padding:4px 11px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--txt-3);cursor:pointer;transition:all .15s;letter-spacing:.04em;}
-.fbtn:hover{border-color:var(--border-hi);color:var(--txt-2);}
-.fbtn.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
-.fbtn.active-r{background:var(--red-d);border-color:var(--red-b);color:var(--red);}
-.fbtn.active-a{background:var(--amber-d);border-color:var(--amber-b);color:var(--amber);}
-.search-input{font-family:var(--mono);font-size:11px;padding:4px 10px;background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);color:var(--txt);outline:none;width:140px;}
-.search-input:focus{border-color:rgba(61,255,176,.3);}
-.search-input::placeholder{color:var(--txt-3);}
+/* layout 60/40 */
+.split{display:grid;grid-template-columns:3fr 2fr;gap:16px;align-items:start;}
 
-/* sort arrow */
-.sort-arrow{margin-left:4px;opacity:.4;}
-.tbl th.sort-asc .sort-arrow::after{content:'▲';}
-.tbl th.sort-desc .sort-arrow::after{content:'▼';}
-.tbl th.sort-asc,.tbl th.sort-desc{color:var(--accent1);}
+/* timeline */
+.timeline{display:flex;flex-direction:column;gap:8px;}
+.tl-item{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;gap:12px;align-items:flex-start;}
+.tl-icon{font-size:18px;line-height:1;padding-top:1px;flex-shrink:0;}
+.tl-body{flex:1;min-width:0;}
+.tl-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.tl-date{font-size:10px;color:var(--txt-3);}
+.tl-ativo{font-size:12px;font-weight:600;color:var(--txt);}
+.tl-nota{font-size:11px;color:var(--txt-2);line-height:1.5;margin-top:4px;}
 
-/* chart */
-.chart-wrap{position:relative;width:100%;}
+/* stat bars */
+.stat-bar-wrap{margin:8px 0;}
+.stat-bar-label{display:flex;justify-content:space-between;font-size:10px;color:var(--txt-2);margin-bottom:3px;}
+.stat-bar-track{background:var(--bg-04);border-radius:3px;height:5px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:3px;}
+
+/* checklist */
+.checklist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.checklist-col{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
+.checklist-col-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:10px;}
+.check-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.check-item:last-child{border-bottom:none;}
+.check-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent1);cursor:pointer;flex-shrink:0;}
+.check-item label{font-size:11px;color:var(--txt-2);cursor:pointer;transition:color .15s;}
+.check-item input:checked + label{color:var(--accent1);}
+.checklist-date{font-size:9px;color:var(--txt-3);margin-bottom:10px;letter-spacing:.06em;}
+
+/* notas */
+.nota-wrap{display:flex;flex-direction:column;gap:10px;}
+.nota-textarea{width:100%;min-height:120px;background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);color:var(--txt);font-family:var(--mono);font-size:12px;line-height:1.6;padding:12px;resize:vertical;outline:none;transition:border-color .15s;}
+.nota-textarea:focus{border-color:rgba(61,255,176,.3);}
+.nota-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.btn-save{font-family:var(--mono);font-size:10px;padding:6px 14px;background:rgba(61,255,176,.08);border:1px solid rgba(61,255,176,.3);border-radius:var(--radius);color:var(--accent1);cursor:pointer;letter-spacing:.06em;transition:all .15s;}
+.btn-save:hover{background:rgba(61,255,176,.14);}
+.nota-status{font-size:10px;color:var(--txt-3);}
+.nota-saved{color:var(--green);}
+
+/* lista saídas */
+.saidas-list{display:flex;flex-direction:column;gap:4px;}
+.saida-item{background:var(--bg-04);border-radius:4px;padding:6px 10px;font-size:10px;color:var(--txt-2);line-height:1.4;}
+.saida-item strong{color:var(--txt);font-weight:500;}
+
+/* aportes list */
+.aporte-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.aporte-row:last-child{border-bottom:none;}
 </style>
 </head>
 <body>
@@ -95,375 +119,346 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <div class="nav">
   <a class="nav-item" href="index.html">Vista Consolidada</a>
   <a class="nav-item" href="contas.html">Contas</a>
-  <a class="nav-item active" href="posicoes.html">Posições</a>
+  <a class="nav-item" href="posicoes.html">Posições</a>
   <a class="nav-item" href="risco.html">Risco</a>
   <a class="nav-item" href="historico.html">Histórico</a>
-  <a class="nav-item" href="governanca.html">Governança</a>
+  <a class="nav-item active" href="governanca.html">Governança</a>
 </div>
 
 <div class="main">
   <div>
-    <div class="page-title">Posições</div>
-    <div class="page-sub" id="page-sub">Triple Seven Capital · Carteira actual</div>
+    <div class="page-title">Governança</div>
+    <div class="page-sub" id="page-sub">Triple Seven Capital · Registo de decisões e compliance</div>
   </div>
 
-  <!-- SECÇÃO 1 — Filtros -->
-  <div class="zone-label">Filtros</div>
-  <div style="background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 16px;">
-    <div class="filter-bar">
-      <!-- Date tabs -->
-      <div id="date-tabs" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
-      <div class="filter-sep"></div>
-      <!-- Conta -->
-      <button class="fbtn active" data-grp="conta" data-val="all">Todas</button>
-      <button class="fbtn" data-grp="conta" data-val="EUR">EUR</button>
-      <button class="fbtn" data-grp="conta" data-val="USD">USD</button>
-      <div class="filter-sep"></div>
-      <!-- Trust -->
-      <button class="fbtn active" data-grp="trust" data-val="all">Todos</button>
-      <button class="fbtn" data-grp="trust" data-val="v" style="color:var(--green);">Verde</button>
-      <button class="fbtn" data-grp="trust" data-val="a" style="color:var(--amber);">Amarelo</button>
-      <button class="fbtn" data-grp="trust" data-val="r" style="color:var(--red);">Vermelho</button>
-      <div class="filter-sep"></div>
-      <!-- Search -->
-      <input class="search-input" id="search-input" placeholder="Pesquisar activo…" type="text">
-    </div>
-  </div>
-
-  <!-- SECÇÃO 2 — KPIs -->
+  <!-- SECÇÃO 1 — KPIs -->
+  <div class="zone-label">Resumo de Decisões</div>
   <div class="grid-4">
     <div class="kpi-mini">
-      <div class="kpi-mini-label">Total Posições</div>
+      <div class="kpi-mini-label">Total Decisões</div>
       <div class="kpi-mini-value grad" id="kpi-total">—</div>
-      <div class="kpi-mini-sub" id="kpi-total-sub">—</div>
+      <div class="kpi-mini-sub" id="kpi-total-sub">em todos os dias</div>
     </div>
     <div class="kpi-mini">
-      <div class="kpi-mini-label">Em Ganho</div>
-      <div class="kpi-mini-value up" id="kpi-ganho">—</div>
-      <div class="kpi-mini-sub" id="kpi-ganho-sub">—</div>
+      <div class="kpi-mini-label">Entradas</div>
+      <div class="kpi-mini-value up" id="kpi-entradas">—</div>
+      <div class="kpi-mini-sub" id="kpi-entradas-sub">—</div>
     </div>
     <div class="kpi-mini">
-      <div class="kpi-mini-label">Em Perda</div>
-      <div class="kpi-mini-value dn" id="kpi-perda">—</div>
-      <div class="kpi-mini-sub" id="kpi-perda-sub">—</div>
+      <div class="kpi-mini-label">Saídas</div>
+      <div class="kpi-mini-value dn" id="kpi-saidas">—</div>
+      <div class="kpi-mini-sub" id="kpi-saidas-sub">—</div>
     </div>
     <div class="kpi-mini">
-      <div class="kpi-mini-label">Maior Posição</div>
-      <div class="kpi-mini-value" style="color:var(--amber);" id="kpi-maior">—</div>
-      <div class="kpi-mini-sub" id="kpi-maior-sub">—</div>
+      <div class="kpi-mini-label">Aportes</div>
+      <div class="kpi-mini-value" style="color:var(--amber);" id="kpi-aportes">—</div>
+      <div class="kpi-mini-sub" id="kpi-aportes-sub">—</div>
     </div>
   </div>
 
-  <!-- SECÇÃO 3 — Tabela principal -->
-  <div class="zone-label">Carteira</div>
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Posições Abertas</span>
-      <span class="card-tag" id="tbl-tag">—</span>
-    </div>
-    <div style="overflow-x:auto;">
-      <table class="tbl" id="pos-table">
-        <thead>
-          <tr>
-            <th data-col="name">Activo <span class="sort-arrow"></span></th>
-            <th data-col="mkt">Mkt <span class="sort-arrow"></span></th>
-            <th data-col="pct" class="r">Lucro% <span class="sort-arrow"></span></th>
-            <th data-col="lucro" class="r">Lucro€/$ <span class="sort-arrow"></span></th>
-            <th data-col="vol" class="r">Volume <span class="sort-arrow"></span></th>
-            <th data-col="valor" class="r">Valor <span class="sort-arrow"></span></th>
-            <th data-col="atual" class="r">Actual <span class="sort-arrow"></span></th>
-            <th data-col="abertura" class="r">Abertura <span class="sort-arrow"></span></th>
-            <th data-col="trust">Trust <span class="sort-arrow"></span></th>
-            <th data-col="delta" class="r">ΔD-1 <span class="sort-arrow"></span></th>
-            <th>Acção</th>
-          </tr>
-        </thead>
-        <tbody id="pos-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <!-- SECÇÃO 2+3 — Timeline + Stats -->
+  <div class="zone-label">Histórico de Decisões</div>
+  <div class="split">
 
-  <!-- SECÇÃO 4 — Gráfico top 10 -->
-  <div class="zone-label">Top 10 por Lucro%</div>
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Distribuição de Performance</span>
-      <span class="card-tag" id="chart-tag">—</span>
-    </div>
-    <div class="card-body">
-      <div class="chart-wrap" style="height:280px;">
-        <canvas id="top10Chart"></canvas>
+    <!-- coluna esquerda: timeline -->
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Timeline</span>
+          <span class="card-tag" id="timeline-tag">—</span>
+        </div>
+        <div class="card-body">
+          <div class="timeline" id="timeline"></div>
+        </div>
       </div>
     </div>
+
+    <!-- coluna direita: stats -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+
+      <!-- entradas por mercado -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Entradas por Mercado</span>
+        </div>
+        <div class="card-body" id="stat-entradas"></div>
+      </div>
+
+      <!-- saídas por mercado -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Saídas por Mercado</span>
+        </div>
+        <div class="card-body" id="stat-saidas"></div>
+      </div>
+
+      <!-- motivos de saída -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Motivos de Saída</span>
+          <span class="card-tag" id="motivos-tag">—</span>
+        </div>
+        <div class="card-body">
+          <div class="saidas-list" id="saidas-notas"></div>
+        </div>
+      </div>
+
+      <!-- aportes -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Aportes</span>
+          <span class="card-tag" id="aportes-tag">—</span>
+        </div>
+        <div class="card-body" id="aportes-lista"></div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- SECÇÃO 5 — Posições fechadas -->
-  <div class="zone-label">Histórico de Saídas</div>
+  <!-- SECÇÃO 4 — Checklist diária -->
+  <div class="zone-label">Checklist Diária</div>
   <div class="card">
     <div class="card-header">
-      <span class="card-title">Posições Fechadas</span>
-      <span class="card-tag" id="saidas-tag">—</span>
+      <span class="card-title">Compliance · Verificação Diária</span>
+      <span class="card-tag" id="checklist-date-tag">—</span>
     </div>
-    <div style="overflow-x:auto;">
-      <table class="tbl">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Activo</th>
-            <th>Mkt</th>
-            <th>Motivo / Nota</th>
-          </tr>
-        </thead>
-        <tbody id="saidas-tbody"></tbody>
-      </table>
+    <div class="card-body">
+      <div class="checklist-date" id="checklist-date-label">—</div>
+      <div class="checklist-grid" id="checklist-grid"></div>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 5 — Notas livres -->
+  <div class="zone-label">Notas do Dia</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Diário de Trading</span>
+      <span class="card-tag" id="nota-date-tag">—</span>
+    </div>
+    <div class="card-body">
+      <div class="nota-wrap">
+        <textarea class="nota-textarea" id="nota-textarea" placeholder="Regista aqui as tuas observações do dia, contexto de mercado, lições aprendidas…"></textarea>
+        <div class="nota-footer">
+          <button class="btn-save" id="btn-guardar">Guardar nota do dia</button>
+          <span class="nota-status" id="nota-status"></span>
+        </div>
+      </div>
     </div>
   </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="data.js"></script>
 <script>
-// ── helpers ──
 const $ = id => document.getElementById(id);
-const setText = (id, t) => { const e = $(id); if(e) e.textContent = t; };
-const setHTML = (id, h) => { const e = $(id); if(e) e.innerHTML = h; };
-function fmtDate(d) {
-  const mo = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const dt = new Date(d + 'T12:00:00Z');
-  return dt.getDate() + ' ' + mo[dt.getMonth()];
+const setText = (id,t) => { const e=$(id); if(e) e.textContent=t; };
+const setHTML = (id,h) => { const e=$(id); if(e) e.innerHTML=h; };
+
+// clock
+setInterval(()=>{
+  const n=new Date();
+  setText('clock',[n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+' UTC');
+},1000);
+
+function fmtDate(d){
+  const mo=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const dw=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const dt=new Date(d+'T12:00:00Z');
+  return {short: dt.getDate()+' '+mo[dt.getMonth()], dow: dw[dt.getDay()], full: dt.getDate()+' '+mo[dt.getMonth()]+' · '+dw[dt.getDay()]};
 }
 
-// ── clock ──
-setInterval(() => {
-  const n = new Date();
-  setText('clock', [n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':') + ' UTC');
-}, 1000);
+function todayKey(){
+  const n=new Date();
+  return [n.getFullYear(),String(n.getMonth()+1).padStart(2,'0'),String(n.getDate()).padStart(2,'0')].join('-');
+}
 
-// ── state ──
-let selDate  = LATEST_DATE;
-let selConta = 'all';
-let selTrust = 'all';
-let selSearch = '';
-let sortCol  = 'valor';
-let sortDir  = -1; // -1 desc, 1 asc
-let top10Chart = null;
-
+// ── collect all events ──
 const ALL_D = Object.keys(TRADING_DATA).sort();
-
-// ── SECÇÃO 1: date tabs ──
-const dateTabsEl = $('date-tabs');
-DATA_DATES.forEach(d => {
-  const b = document.createElement('button');
-  b.className = 'fbtn' + (d === selDate ? ' active' : '');
-  b.textContent = fmtDate(d);
-  b.dataset.date = d;
-  b.addEventListener('click', () => { selDate = d; render(); });
-  dateTabsEl.appendChild(b);
-});
-
-// filter buttons
-document.querySelectorAll('[data-grp]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const grp = btn.dataset.grp, val = btn.dataset.val;
-    document.querySelectorAll(`[data-grp="${grp}"]`).forEach(b => {
-      b.classList.remove('active','active-r','active-a');
-    });
-    if (grp === 'trust' && val === 'v') btn.classList.add('active');
-    else if (grp === 'trust' && val === 'a') btn.classList.add('active-a');
-    else if (grp === 'trust' && val === 'r') btn.classList.add('active-r');
-    else btn.classList.add('active');
-    if (grp === 'conta') selConta = val;
-    else selTrust = val;
-    render();
-  });
-});
-
-$('search-input').addEventListener('input', e => { selSearch = e.target.value.toLowerCase(); render(); });
-
-// ── sort ──
-document.querySelectorAll('#pos-table th[data-col]').forEach(th => {
-  th.addEventListener('click', () => {
-    const col = th.dataset.col;
-    if (sortCol === col) sortDir *= -1;
-    else { sortCol = col; sortDir = -1; }
-    render();
-  });
-});
-
-// ── data helpers ──
-function getPositions(date) {
-  const day = TRADING_DATA[date];
-  if (!day) return [];
-  const eurPos = (day.eur?.positions || []).map(p => ({...p, _conta:'EUR', _sym:'€'}));
-  const usdPos = (day.usd?.positions || []).map(p => ({...p, _conta:'USD', _sym:'$'}));
-  return [...eurPos, ...usdPos];
-}
-
-function trustBadge(t) {
-  if (t === 'v') return '<span class="badge badge-g">Verde</span>';
-  if (t === 'a') return '<span class="badge badge-a">Amarelo</span>';
-  return '<span class="badge badge-r">Vermelho</span>';
-}
-
-function deltaCell(delta, sym) {
-  if (!delta) return '<td class="r neu">—</td>';
-  const pct = delta.pct ?? 0;
-  const arrow = pct >= 0 ? '▲' : '▼';
-  const cls = pct >= 0 ? 'up' : 'dn';
-  return `<td class="r ${cls}">${arrow} ${Math.abs(pct).toFixed(2)}%</td>`;
-}
-
-// ── render ──
-function render() {
-  // update date tab active states
-  document.querySelectorAll('#date-tabs .fbtn').forEach(b => {
-    b.classList.toggle('active', b.dataset.date === selDate);
-  });
-
-  let positions = getPositions(selDate);
-
-  // filters
-  if (selConta !== 'all') positions = positions.filter(p => p._conta === selConta);
-  if (selTrust !== 'all') positions = positions.filter(p => p.trust === selTrust);
-  if (selSearch) positions = positions.filter(p => (p.name||'').toLowerCase().includes(selSearch));
-
-  // sort
-  positions.sort((a,b) => {
-    let va = a[sortCol], vb = b[sortCol];
-    if (sortCol === 'delta') { va = a.delta?.pct ?? -Infinity; vb = b.delta?.pct ?? -Infinity; }
-    if (sortCol === 'name' || sortCol === 'mkt' || sortCol === 'trust') {
-      va = (va||'').toString(); vb = (vb||'').toString();
-      return sortDir * va.localeCompare(vb);
-    }
-    return sortDir * ((va||0) - (vb||0));
-  });
-
-  // sort indicators
-  document.querySelectorAll('#pos-table th[data-col]').forEach(th => {
-    th.classList.remove('sort-asc','sort-desc');
-    if (th.dataset.col === sortCol) th.classList.add(sortDir === -1 ? 'sort-desc' : 'sort-asc');
-  });
-
-  // KPIs
-  const ganho = positions.filter(p => (p.lucro||0) > 0);
-  const perda  = positions.filter(p => (p.lucro||0) < 0);
-  const maior  = positions.reduce((m,p) => (p.valor||0) > (m.valor||0) ? p : m, {});
-  const totalVal = positions.reduce((s,p) => s + (p.valor||0), 0);
-
-  setText('kpi-total', positions.length);
-  setText('kpi-total-sub', 'valor total: ' + totalVal.toFixed(2));
-  setText('kpi-ganho', ganho.length);
-  setText('kpi-ganho-sub', '+' + ganho.reduce((s,p)=>s+(p.lucro||0),0).toFixed(2));
-  setText('kpi-perda', perda.length);
-  setText('kpi-perda-sub', perda.reduce((s,p)=>s+(p.lucro||0),0).toFixed(2));
-  setText('kpi-maior', maior.name || '—');
-  setText('kpi-maior-sub', maior.valor ? maior.valor.toFixed(2) + ' ' + (maior._sym||'') : '—');
-
-  setText('tbl-tag', positions.length + ' posições · ' + fmtDate(selDate));
-  setText('page-sub', 'Triple Seven Capital · ' + fmtDate(selDate));
-
-  // table rows
-  const tbody = $('pos-tbody');
-  if (!positions.length) {
-    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--txt-3);padding:20px;">Sem posições para os filtros seleccionados</td></tr>';
-  } else {
-    tbody.innerHTML = positions.map(p => {
-      const lucroSign = (p.lucro||0) >= 0 ? 'up' : 'dn';
-      const pctSign   = (p.pct||0) >= 0 ? 'up' : 'dn';
-      const mktColor  = p._conta === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
-      return `<tr>
-        <td style="font-weight:600;">${p.name||'—'}</td>
-        <td style="color:${mktColor};">${p.mkt||p._conta}</td>
-        <td class="r ${pctSign}">${(p.pct||0) >= 0 ? '+' : ''}${(p.pct||0).toFixed(2)}%</td>
-        <td class="r ${lucroSign}">${(p.lucro||0) >= 0 ? '+' : ''}${(p.lucro||0).toFixed(2)} ${p._sym}</td>
-        <td class="r">${(p.vol||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td class="r">${(p.valor||0).toFixed(2)} ${p._sym}</td>
-        <td class="r">${(p.atual||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td class="r neu">${(p.abertura||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td>${trustBadge(p.trust)}</td>
-        ${deltaCell(p.delta, p._sym)}
-        <td><span style="font-size:9px;color:var(--txt-3);">—</span></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // ── SECÇÃO 4: top 10 chart ──
-  const sorted = [...positions].sort((a,b) => (b.pct||0) - (a.pct||0));
-  const top10  = sorted.slice(0,10);
-  setText('chart-tag', fmtDate(selDate));
-
-  const labels = top10.map(p => p.name||'?');
-  const data   = top10.map(p => p.pct||0);
-  const colors = data.map(v => v >= 0 ? 'rgba(30,255,142,0.7)' : 'rgba(255,77,106,0.7)');
-  const borders= data.map(v => v >= 0 ? '#1eff8e' : '#ff4d6a');
-
-  if (top10Chart) top10Chart.destroy();
-  top10Chart = new Chart($('top10Chart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        backgroundColor: colors,
-        borderColor: borders,
-        borderWidth: 1,
-        borderRadius: 3,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f1923',
-          borderColor: 'rgba(255,255,255,.08)',
-          borderWidth: 1,
-          titleColor: '#ddeaf7',
-          bodyColor: '#6b8aaa',
-          callbacks: { label: ctx => ` ${ctx.parsed.x >= 0 ? '+' : ''}${ctx.parsed.x.toFixed(2)}%` }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color:'#334455', font:{family:"'JetBrains Mono'",size:10}, callback: v => v+'%' },
-          grid:  { color:'rgba(255,255,255,.03)' }
-        },
-        y: {
-          ticks: { color:'#6b8aaa', font:{family:"'JetBrains Mono'",size:10} },
-          grid:  { display:false }
-        }
-      }
-    }
-  });
-}
-
-// ── SECÇÃO 5: saídas ──
-const saidas = [];
+const allEvents = [];
 ALL_D.forEach(d => {
-  (TRADING_DATA[d].eventos || []).forEach(ev => {
-    if (ev.tipo === 'saida') saidas.push({ date: d, ...ev });
+  (TRADING_DATA[d].eventos||[]).forEach(ev => {
+    allEvents.push({date:d, ...ev});
   });
 });
 
-setText('saidas-tag', saidas.length + ' saídas');
-const saidasTbody = $('saidas-tbody');
-if (!saidas.length) {
-  saidasTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--txt-3);padding:20px;">Sem saídas registadas</td></tr>';
+// counts by tipo
+const counts = {entrada:0, saida:0, aporte:0, caixa:0};
+allEvents.forEach(ev => { if(counts[ev.tipo]!==undefined) counts[ev.tipo]++; });
+const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+// ── SECÇÃO 1: KPIs ──
+setText('kpi-total', total);
+setText('kpi-total-sub', ALL_D.length+' sessões · '+allEvents.length+' eventos');
+setText('kpi-entradas', counts.entrada);
+setText('kpi-entradas-sub', 'novas posições');
+setText('kpi-saidas', counts.saida);
+setText('kpi-saidas-sub', 'posições encerradas');
+setText('kpi-aportes', counts.aporte);
+setText('kpi-aportes-sub', 'reforços de capital');
+
+// ── SECÇÃO 2: Timeline (desc) ──
+const TIPO_ICON  = {entrada:'🟢', saida:'🔴', aporte:'💰', caixa:'📦'};
+const TIPO_BADGE = {
+  entrada: '<span class="badge badge-g">Entrada</span>',
+  saida:   '<span class="badge badge-r">Saída</span>',
+  aporte:  '<span class="badge badge-a">Aporte</span>',
+  caixa:   '<span class="badge badge-b">Caixa</span>',
+};
+const MKT_COLOR = {EUR:'var(--accent1)', USD:'var(--accent2)'};
+
+const evDesc = [...allEvents].reverse();
+setText('timeline-tag', evDesc.length+' eventos');
+
+const tlEl = $('timeline');
+if (!evDesc.length) {
+  tlEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem eventos registados</div>';
 } else {
-  const mktColor = m => m === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
-  saidasTbody.innerHTML = saidas.map(s => `<tr>
-    <td>${fmtDate(s.date)}</td>
-    <td style="font-weight:600;">${s.ativo||'—'}</td>
-    <td style="color:${mktColor(s.mkt)}">${s.mkt||'—'}</td>
-    <td style="color:var(--txt-2);font-size:10px;">${s.nota||'—'}</td>
-  </tr>`).join('');
+  tlEl.innerHTML = evDesc.map(ev => {
+    const fd = fmtDate(ev.date);
+    const mktBadge = ev.mkt ? `<span style="font-size:9px;color:${MKT_COLOR[ev.mkt]||'var(--txt-2)'};background:var(--bg-04);padding:1px 6px;border-radius:3px;">${ev.mkt}</span>` : '';
+    return `<div class="tl-item">
+      <div class="tl-icon">${TIPO_ICON[ev.tipo]||'•'}</div>
+      <div class="tl-body">
+        <div class="tl-head">
+          <span class="tl-date">${fd.full}</span>
+          ${ev.ativo ? `<span class="tl-ativo">${ev.ativo}</span>` : ''}
+          ${mktBadge}
+          ${TIPO_BADGE[ev.tipo]||''}
+        </div>
+        ${ev.nota ? `<div class="tl-nota">${ev.nota}</div>` : ''}
+        ${ev.valor ? `<div class="tl-nota" style="color:var(--amber);">Valor: +${ev.valor} $</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// initial render
-render();
+// ── SECÇÃO 3: Stats ──
+function mktStats(tipo) {
+  const m = {EUR:0, USD:0};
+  allEvents.filter(e=>e.tipo===tipo).forEach(e => { if(e.mkt && m[e.mkt]!==undefined) m[e.mkt]++; });
+  return m;
+}
+
+function renderMktBars(id, tipo) {
+  const m = mktStats(tipo);
+  const max = Math.max(m.EUR, m.USD, 1);
+  setHTML(id, ['EUR','USD'].map(k => {
+    const pct = Math.round(m[k]/max*100);
+    const col = k==='EUR'?'var(--accent1)':'var(--accent2)';
+    return `<div class="stat-bar-wrap">
+      <div class="stat-bar-label"><span style="color:${col}">${k}</span><span>${m[k]}</span></div>
+      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${col};"></div></div>
+    </div>`;
+  }).join(''));
+}
+renderMktBars('stat-entradas','entrada');
+renderMktBars('stat-saidas','saida');
+
+// motivos de saída
+const saidasComNota = allEvents.filter(e=>e.tipo==='saida' && e.nota);
+setText('motivos-tag', saidasComNota.length+' notas');
+const notasEl = $('saidas-notas');
+if (!saidasComNota.length) {
+  notasEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem notas de saída registadas</div>';
+} else {
+  notasEl.innerHTML = saidasComNota.map(ev => {
+    const fd = fmtDate(ev.date);
+    return `<div class="saida-item"><strong>${ev.ativo||'?'} · ${fd.short}</strong> — ${ev.nota}</div>`;
+  }).join('');
+}
+
+// aportes
+const aportesEvs = allEvents.filter(e => e.tipo==='aporte');
+// also scan usd.aporte field if not in eventos
+ALL_D.forEach(d => {
+  const day = TRADING_DATA[d];
+  if (day.usd && day.usd.aporte && !aportesEvs.find(a=>a.date===d)) {
+    aportesEvs.push({date:d, tipo:'aporte', valor:day.usd.aporte});
+  }
+});
+setText('aportes-tag', aportesEvs.length+' aportes');
+let cumAporte = 0;
+const aportesListEl = $('aportes-lista');
+if (!aportesEvs.length) {
+  aportesListEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem aportes registados</div>';
+} else {
+  aportesListEl.innerHTML = aportesEvs.map(ev => {
+    cumAporte += (ev.valor||0);
+    const fd = fmtDate(ev.date);
+    return `<div class="aporte-row">
+      <span style="color:var(--txt-2);font-size:10px;">${fd.full}</span>
+      <span style="color:var(--amber);">+${(ev.valor||0).toFixed(2)} $</span>
+      <span style="color:var(--txt-3);font-size:10px;">∑ ${cumAporte.toFixed(2)} $</span>
+    </div>`;
+  }).join('');
+}
+
+// ── SECÇÃO 4: Checklist ──
+const TODAY = todayKey();
+const TODAY_FMT = fmtDate(TODAY);
+const CL_KEY = 'gov_checklist_'+TODAY;
+setText('checklist-date-tag', TODAY_FMT.short);
+setText('checklist-date-label', 'Hoje: '+TODAY_FMT.full);
+
+const CHECKS = {
+  EUR: ['Revisão de posições EUR','Stop-loss verificado EUR','Eventos EUR registados','Push EUR feito'],
+  USD: ['Revisão de posições USD','Stop-loss verificado USD','Eventos USD registados','Push USD feito'],
+  Geral: ['Registo diário completo','Data atualizada','data.js atualizado','Commit feito'],
+};
+
+function loadChecklist() {
+  try { return JSON.parse(localStorage.getItem(CL_KEY)||'{}'); } catch(e) { return {}; }
+}
+function saveChecklist(state) {
+  localStorage.setItem(CL_KEY, JSON.stringify(state));
+}
+
+let clState = loadChecklist();
+const clGrid = $('checklist-grid');
+const COL_COLORS = {EUR:'var(--accent1)', USD:'var(--accent2)', Geral:'var(--amber)'};
+
+clGrid.innerHTML = Object.entries(CHECKS).map(([col, items]) => {
+  const itemsHtml = items.map((label,i) => {
+    const key = col+'_'+i;
+    const checked = clState[key] ? 'checked' : '';
+    return `<div class="check-item">
+      <input type="checkbox" id="chk_${col}_${i}" data-key="${key}" ${checked}>
+      <label for="chk_${col}_${i}">${label}</label>
+    </div>`;
+  }).join('');
+  return `<div class="checklist-col">
+    <div class="checklist-col-title" style="color:${COL_COLORS[col]}">${col}</div>
+    ${itemsHtml}
+  </div>`;
+}).join('');
+
+clGrid.querySelectorAll('input[type=checkbox]').forEach(cb => {
+  cb.addEventListener('change', () => {
+    clState[cb.dataset.key] = cb.checked;
+    saveChecklist(clState);
+  });
+});
+
+// ── SECÇÃO 5: Notas ──
+const NOTA_KEY = 'gov_nota_'+TODAY;
+setText('nota-date-tag', TODAY_FMT.short);
+const notaTA = $('nota-textarea');
+notaTA.value = localStorage.getItem(NOTA_KEY)||'';
+
+$('btn-guardar').addEventListener('click', () => {
+  localStorage.setItem(NOTA_KEY, notaTA.value);
+  const st = $('nota-status');
+  st.textContent = 'Guardado às '+new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  st.className = 'nota-status nota-saved';
+  setTimeout(()=>{ st.textContent=''; st.className='nota-status'; }, 3000);
+});
+
+// auto-save on input (debounce)
+let saveTimer;
+notaTA.addEventListener('input', ()=>{
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{ localStorage.setItem(NOTA_KEY, notaTA.value); }, 1500);
+});
 </script>
 </body>
 </html>
