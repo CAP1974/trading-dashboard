@@ -228,18 +228,28 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
 /* ── KPIs topo ── */
 (function(){
+  const CAP_EUR_INICIAL = 62.00;   // capital inicial EUR em 09 Abr 2025
+  const CAP_USD_INICIAL = 133.00;  // capital inicial USD em 09 Abr 2025
+
   const first = DATES[0];
   const last  = DATES[DATES.length - 1];
-  const firstEur = TRADING_DATA[first].eur.lucro;
-  const firstUsd = TRADING_DATA[first].usd.lucro;
-  const lastEur  = TRADING_DATA[last].eur.lucro;
-  const lastUsd  = TRADING_DATA[last].usd.lucro;
 
-  const retEurPct = ((lastEur - firstEur) / Math.abs(firstEur) * 100).toFixed(1);
-  const retUsdPct = ((lastUsd - firstUsd) / Math.abs(firstUsd) * 100).toFixed(1);
+  // Soma acumulada de todos os lucros diários
+  let acumEur = 0, acumUsd = 0;
+  DATES.forEach(d => {
+    acumEur += TRADING_DATA[d].eur.lucro;
+    acumUsd += TRADING_DATA[d].usd.lucro;
+  });
+  acumEur = parseFloat(acumEur.toFixed(2));
+  acumUsd = parseFloat(acumUsd.toFixed(2));
 
-  let bestEurDate = first, bestEurVal = firstEur;
-  let bestUsdDate = first, bestUsdVal = firstUsd;
+  // Retorno = lucro acumulado / capital inicial × 100
+  const retEurPct = (acumEur / CAP_EUR_INICIAL * 100).toFixed(1);
+  const retUsdPct = (acumUsd / CAP_USD_INICIAL * 100).toFixed(1);
+
+  // Melhor sessão = dia com maior lucro diário
+  let bestEurDate = first, bestEurVal = TRADING_DATA[first].eur.lucro;
+  let bestUsdDate = first, bestUsdVal = TRADING_DATA[first].usd.lucro;
   DATES.forEach(d => {
     if (TRADING_DATA[d].eur.lucro > bestEurVal) { bestEurVal = TRADING_DATA[d].eur.lucro; bestEurDate = d; }
     if (TRADING_DATA[d].usd.lucro > bestUsdVal) { bestUsdVal = TRADING_DATA[d].usd.lucro; bestUsdDate = d; }
@@ -248,9 +258,9 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
 
   set('kpi-ret-eur-val', (retEurPct >= 0 ? '+' : '') + retEurPct + '%');
-  set('kpi-ret-eur-sub', firstEur.toFixed(2) + '€ → ' + lastEur.toFixed(2) + '€/sessão');
+  set('kpi-ret-eur-sub', CAP_EUR_INICIAL.toFixed(2) + '€ → ' + acumEur.toFixed(2) + '€ acumulado');
   set('kpi-ret-usd-val', (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%');
-  set('kpi-ret-usd-sub', firstUsd.toFixed(2) + '$ → ' + lastUsd.toFixed(2) + '$/sessão');
+  set('kpi-ret-usd-sub', CAP_USD_INICIAL.toFixed(2) + '$ → ' + acumUsd.toFixed(2) + '$ acumulado');
   set('kpi-best-eur-val', '+' + bestEurVal.toFixed(2) + ' €');
   set('kpi-best-eur-sub', fmtDate(bestEurDate));
   set('kpi-best-usd-val', '+' + bestUsdVal.toFixed(2) + ' $');
