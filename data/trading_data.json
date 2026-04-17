@@ -1271,5 +1271,204 @@
         }
       ]
     }
+  },
+  "2025-04-17": {
+    "date": "2025-04-17",
+    "eventos": [
+      {
+        "tipo": "caixa",
+        "conta": "EUR",
+        "valor": 9.95,
+        "nota": "Aporte caixa EUR (total 10,21€)"
+      },
+      {
+        "tipo": "caixa",
+        "conta": "USD",
+        "valor": 23.26,
+        "nota": "Aporte caixa USD (total 8,54$)"
+      },
+      {
+        "tipo": "aporte",
+        "conta": "USD",
+        "valor": 14.02,
+        "ativo": "Micron",
+        "nota": "Aporte Micron 14,02$"
+      },
+      {
+        "tipo": "entrada",
+        "conta": "USD",
+        "valor": 17.38,
+        "ativo": "STM",
+        "nota": "Entrada STM 17,38$"
+      }
+    ],
+    "eur": {
+      "lucro": 3.41,
+      "positions": [
+        {
+          "name": "Ericsson",
+          "mkt": "EUR",
+          "pct": -2.41,
+          "lucro": -0.24,
+          "vol": 1,
+          "valor": 9.7,
+          "atual": 105,
+          "abertura": 107.6,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 6.79,
+          "lucro": 0.68,
+          "vol": 0.0881,
+          "valor": 10.7,
+          "atual": 121.5,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Saga",
+          "mkt": "EUR",
+          "pct": -1.99,
+          "lucro": -0.29,
+          "vol": 2,
+          "valor": 14.26,
+          "atual": 6.24,
+          "abertura": 6.29,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Saipem",
+          "mkt": "EUR",
+          "pct": -7.19,
+          "lucro": -0.72,
+          "vol": 2.3907,
+          "valor": 9.29,
+          "atual": 3.886,
+          "abertura": 4.1868,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Samsung",
+          "mkt": "EUR",
+          "pct": 19.74,
+          "lucro": 3.98,
+          "vol": 0.0075,
+          "valor": 24.14,
+          "atual": 3826,
+          "abertura": 3105.07,
+          "trust": "v",
+          "delta": null
+        }
+      ],
+      "caixa": 10.21
+    },
+    "usd": {
+      "lucro": 11.3,
+      "positions": [
+        {
+          "name": "Casey's",
+          "mkt": "USD",
+          "pct": -0.09,
+          "lucro": -0.02,
+          "vol": 0.029,
+          "valor": 21.87,
+          "atual": 754.1,
+          "abertura": 754.77,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Celestica Inc",
+          "mkt": "USD",
+          "pct": 2.28,
+          "lucro": 0.15,
+          "vol": 0.017,
+          "valor": 6.73,
+          "atual": 395.96,
+          "abertura": 387.34,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Dell",
+          "mkt": "USD",
+          "pct": 6.92,
+          "lucro": 0.89,
+          "vol": 0.07,
+          "valor": 13.75,
+          "atual": 196.47,
+          "abertura": 183.78,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Equinix",
+          "mkt": "USD",
+          "pct": 7.04,
+          "lucro": 1.94,
+          "vol": 0.0272,
+          "valor": 29.51,
+          "atual": 1085.12,
+          "abertura": 1013.2,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": 7.03,
+          "lucro": 1.24,
+          "vol": 0.3,
+          "valor": 18.88,
+          "atual": 62.93,
+          "abertura": 58.8,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Micron",
+          "mkt": "USD",
+          "pct": 5.68,
+          "lucro": 2.1,
+          "vol": 0.0859,
+          "valor": 39.06,
+          "atual": 454.75,
+          "abertura": 430.29,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": 28.62,
+          "lucro": 4.69,
+          "vol": 0.0229,
+          "valor": 21.08,
+          "atual": 921,
+          "abertura": 715.74,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "STMicroelectronics",
+          "mkt": "USD",
+          "pct": 1.78,
+          "lucro": 0.31,
+          "vol": 0.4,
+          "valor": 17.69,
+          "atual": 44.22,
+          "abertura": 43.44,
+          "trust": "v",
+          "delta": null
+        }
+      ],
+      "caixa": 8.54
+    }
   }
 }
