@@ -70,6 +70,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .metric-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 .metric-title{font-family:var(--display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-2);}
 .badge-principal{background:linear-gradient(135deg,rgba(61,255,176,.2),rgba(0,200,255,.2));color:var(--accent1);border:1px solid rgba(61,255,176,.35);font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:.07em;font-weight:700;text-transform:uppercase;}
+.rr-line{margin-bottom:12px;}
+.rr-line:last-child{margin-bottom:0;}
+.rr-line-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;}
+.rr-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);}
+.rr-val{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;}
+.rr-pct{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:5px;}
+.rr-note{font-size:9px;color:var(--txt-3);margin-top:3px;letter-spacing:.04em;}
+.rr-divider{border:none;border-top:1px solid var(--border);margin:10px 0;}
 .badge-metric{background:var(--bg-04);color:var(--txt-3);border:1px solid var(--border);font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:.06em;font-weight:500;text-transform:uppercase;}
 .metric-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
 .metric-sym{font-size:9px;color:var(--txt-3);letter-spacing:.06em;text-transform:uppercase;}
@@ -260,10 +268,14 @@ const SALDO_USD    = 168.33;
 const APORTES_USD  = 12.90;
 const CAP_EUR_INI  = 62.00;
 const CAP_USD_INI  = 125.87;
-const lucroRealEur = SALDO_EUR - CAP_EUR_INI;
-const lucroRealUsd = SALDO_USD - CAP_USD_INI - APORTES_USD;
-const retRealEur   = lucroRealEur / CAP_EUR_INI * 100;
-const retRealUsd   = lucroRealUsd / CAP_USD_INI * 100;
+const lucroRealEur = SALDO_EUR - CAP_EUR_INI;                      // 3.20€
+const lucroRealUsd = SALDO_USD - CAP_USD_INI - APORTES_USD;       // 29.56$
+const retRealEur   = lucroRealEur / CAP_EUR_INI * 100;             // 5.16%
+const retRealUsd   = lucroRealUsd / CAP_USD_INI * 100;             // 23.48%
+const consLucroEur = lucroRealEur + lucroRealUsd * EUR_RATE;       // 3.20 + 27.20 = 30.40€
+const consBaseEur  = CAP_EUR_INI  + CAP_USD_INI  * EUR_RATE;       // 62.00 + 115.80 = 177.80€
+const retConsEur   = consLucroEur / consBaseEur * 100;              // ~17.1%
+function colorRR(v){ return v>10?'var(--green)':v>5?'var(--amber)':'var(--red)'; }
 
 // ── SECÇÃO 1: Meta mensal — 3 métricas ──
 function miniBar(pctFill, pctNr, color) {
@@ -317,18 +329,42 @@ const metricB = `<div class="metric-card">
 </div>`;
 
 // Métrica C — Retorno Real
-const pC_Eur = retRealEur / META_PCT * 100;
-const pC_Usd = retRealUsd / META_PCT * 100;
 const metricC = `<div class="metric-card principal">
   <div class="metric-header">
     <span class="metric-title">Retorno Real</span>
     <span class="badge-principal">Métrica Principal</span>
   </div>
-  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(lucroRealEur)}">${s(lucroRealEur,'€')} <span style="font-size:10px;color:var(--txt-3);">(${retRealEur.toFixed(2)}%)</span></span></div>
-  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(lucroRealUsd)}">${s(lucroRealUsd,'$')} <span style="font-size:10px;color:var(--txt-3);">(${retRealUsd.toFixed(2)}%)</span></span></div>
-  ${miniBar(Math.min(retRealEur/META_PCT*100,100), 0, 'var(--accent1)')}
-  <div class="metric-pct-big" style="color:${colorPct(retRealEur)};">${retRealEur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
-  <div class="metric-note">EUR · USD ${retRealUsd.toFixed(1)}% · sem aportes · vs capital inicial</div>
+
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">EUR · 8MSN</span>
+      <span class="rr-val ${cls(lucroRealEur)}">${s(lucroRealEur,'€')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(retRealEur)};">${retRealEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.min(retRealEur/META_PCT*100,100), 0, 'var(--accent1)')}
+    <div class="rr-note">(${SALDO_EUR} − ${CAP_EUR_INI}) / ${CAP_EUR_INI} × 100</div>
+  </div>
+
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">USD · OMV</span>
+      <span class="rr-val ${cls(lucroRealUsd)}">${s(lucroRealUsd,'$')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(retRealUsd)};">${retRealUsd.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.min(retRealUsd/META_PCT*100,100), 0, 'var(--accent2)')}
+    <div class="rr-note">inclui aporte ${APORTES_USD}$ — (${SALDO_USD} − ${CAP_USD_INI} − ${APORTES_USD}) / ${CAP_USD_INI} × 100</div>
+  </div>
+
+  <hr class="rr-divider">
+
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">Consolidado ~EUR</span>
+      <span class="rr-val ${cls(consLucroEur)}">${s(consLucroEur,'€')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(retConsEur)};">${retConsEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    <div class="rr-note">(${lucroRealEur.toFixed(2)} + ${lucroRealUsd.toFixed(2)} × ${EUR_RATE}) / (${CAP_EUR_INI} + ${CAP_USD_INI} × ${EUR_RATE}) × 100</div>
+  </div>
 </div>`;
 
 $('meta-section').innerHTML = `<div class="meta-3grid">${metricA}${metricB}${metricC}</div>`;
@@ -373,9 +409,9 @@ $('kpi-grid').innerHTML = `
     <div class="kpi-mini-sub">meta: ${META_PCT}% = ${s(META_EUR,'€')}</div>
   </div>
   <div class="kpi-mini" style="border-color:rgba(61,255,176,.25);">
-    <div class="kpi-mini-label" style="color:var(--accent1);">Retorno Real %</div>
-    <div class="kpi-mini-value" style="color:${rrColor};">${retRealEur.toFixed(2)}%</div>
-    <div class="kpi-mini-sub">EUR · USD ${retRealUsd.toFixed(2)}%</div>
+    <div class="kpi-mini-label" style="color:var(--accent1);">Retorno Real</div>
+    <div class="kpi-mini-value" style="color:${colorRR(retConsEur)};font-size:16px;">${retConsEur.toFixed(1)}%</div>
+    <div class="kpi-mini-sub" style="line-height:1.7;">EUR <span style="color:${colorRR(retRealEur)};">${retRealEur.toFixed(1)}%</span> · USD <span style="color:${colorRR(retRealUsd)};">${retRealUsd.toFixed(1)}%</span></div>
   </div>`;
 
 setText('page-sub', 'Triple Seven Capital · ' + fmtMo(curYM) + ' · Meta ' + META_PCT + '%/mês');
