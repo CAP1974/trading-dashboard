@@ -277,7 +277,7 @@ const retRealUsd    = REAL_USD  / BASE_USD * 100;                     // +5.04%
 const consLucroEur  = REAL_EUR + REAL_USD * EUR_RATE;                 // -0.98 + 7.82 = 6.84€
 const consBaseEur   = CAP_EUR  + BASE_USD * EUR_RATE;                 // 79.39 + 155.12 = 234.51€
 const retConsEur    = consLucroEur / consBaseEur * 100;               // ~2.92%
-function colorRR(v){ return v>10?'var(--green)':v>5?'var(--amber)':'var(--red)'; }
+function colorRR(v){ return v>0?'var(--green)':v===0?'var(--txt-3)':'var(--red)'; }
 
 // ── SECÇÃO 1: Meta mensal — 3 métricas ──
 function miniBar(pctFill, pctNr, color) {
