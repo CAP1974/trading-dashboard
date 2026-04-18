@@ -117,7 +117,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   </div>
 
   <!-- SECÇÃO 1 — Meta mensal -->
-  <div class="zone-label">Meta Mensal</div>
+  <div class="zone-label" id="zone-meta">Meta Mensal</div>
   <div class="meta-card" id="meta-section"></div>
 
   <!-- SECÇÃO 2 — KPIs -->
@@ -198,6 +198,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
+  <!-- RODAPÉ -->
+  <div id="page-footer" style="font-size:10px;color:var(--txt-3);text-align:center;padding:12px 0 4px;letter-spacing:.05em;"></div>
+
 </div>
 
 <script src="data.js"></script>
@@ -211,13 +214,23 @@ setInterval(()=>{
   setText('clock',[n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+' UTC');
 },1000);
 
-// ── constants ──
-const CAP_EUR  = 79.39;   // capital base EUR (oficial desde 09 Abr)
-const BASE_USD = 176.67;  // capital base USD = saldo - realizado
+// ── meses dinâmicos (juros compostos) ──
 const META_PCT = 10;
-const META_EUR = CAP_EUR  * META_PCT / 100;  // 7.939
-const META_USD = BASE_USD * META_PCT / 100;  // 16.861
 const EUR_RATE = 0.92;
+const MO_PT_P  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const curYM_m  = LATEST_DATE.slice(0,7);
+const MESES    = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
+const mesKeys  = Object.keys(MESES).sort();
+const mesKey   = MESES[curYM_m] ? curYM_m : (mesKeys.length ? mesKeys[mesKeys.length-1] : null);
+const mesData  = mesKey ? MESES[mesKey] : {};
+const CAP_EUR  = mesData.base_eur  || 79.39;
+const BASE_USD = mesData.base_usd  || 176.67;
+const META_EUR = mesData.meta_eur  || (CAP_EUR  * META_PCT / 100);
+const META_USD = mesData.meta_usd  || (BASE_USD * META_PCT / 100);
+// próxima actualização = 1º dia do mês seguinte
+const [_y, _m] = curYM_m.split('-').map(Number);
+const nextMo   = new Date(_y, _m, 1);
+const nextMoStr = '01 ' + MO_PT_P[nextMo.getMonth()] + ' ' + nextMo.getFullYear();
 
 const MO_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function fmtMo(ym){ const [y,m]=ym.split('-').map(Number); return MO_PT[m-1]+' '+y; }
@@ -440,6 +453,22 @@ $('kpi-grid').innerHTML = `
   </div>`;
 
 setText('page-sub', 'Triple Seven Capital · ' + fmtMo(curYM) + ' · Meta ' + META_PCT + '%/mês');
+// zone-label com base do mês
+const mesLabelStr = (mesKey || curYM);
+const [mlY,mlM] = mesLabelStr.split('-').map(Number);
+const mesNome = MO_PT_P[mlM-1] + ' ' + mlY;
+setHTML('zone-meta',
+  `Meta Mensal · <span style="color:var(--txt-2);font-weight:500;">${mesNome}</span>` +
+  ` · Base EUR <span style="color:var(--accent1);">${CAP_EUR.toFixed(2)}€</span>` +
+  ` · Meta <span style="color:var(--accent1);">+${META_EUR.toFixed(2)}€</span>` +
+  ` · Base USD <span style="color:var(--accent2);">${BASE_USD.toFixed(2)}$</span>` +
+  ` · Meta <span style="color:var(--accent2);">+${META_USD.toFixed(2)}$</span>`
+);
+// footer
+setText('page-footer',
+  'Meta ajusta no início de cada mês sobre o saldo real (juros compostos 10%/mês). ' +
+  'Próxima actualização: ' + nextMoStr + '.'
+);
 
 // ── SECÇÃO 3: fechadas mês actual ──
 const fechadasCur = [];
