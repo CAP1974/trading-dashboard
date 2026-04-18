@@ -339,32 +339,32 @@ body{
 <div class="fund-header">
   <div class="fh-item">
     <div class="fh-label">Capital EUR</div>
-    <div class="fh-value up" id="fh-cap-eur">65,20 €</div>
-    <div class="fh-sub" id="fh-cap-eur-sub">64,94€ posições + 0,26€ caixa</div>
+    <div class="fh-value up" id="fh-cap-eur">78,41 €</div>
+    <div class="fh-sub" id="fh-cap-eur-sub">base 79,39€ · lucro real -0,98€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Capital USD</div>
-    <div class="fh-value up" id="fh-cap-usd">168,33 $</div>
-    <div class="fh-sub" id="fh-cap-usd-sub">151,95$ posições + 16,38$ caixa</div>
+    <div class="fh-value up" id="fh-cap-usd">177,11 $</div>
+    <div class="fh-sub" id="fh-cap-usd-sub">base 168,61$ · lucro real +8,50$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno EUR</div>
-    <div class="fh-value grad" id="fh-ret-eur">+5,2%</div>
-    <div class="fh-sub">vs 62,00€ inicial</div>
+    <div class="fh-value dn" id="fh-ret-eur">-1,2%</div>
+    <div class="fh-sub">vs 79,39€ inicial</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno USD</div>
-    <div class="fh-value grad" id="fh-ret-usd">+21,3%</div>
-    <div class="fh-sub">vs 138,77$ base</div>
+    <div class="fh-value ac" id="fh-ret-usd">+5,0%</div>
+    <div class="fh-sub">vs 168,61$ base</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">AUM Total ~EUR</div>
-    <div class="fh-value grad" id="fh-aum">≈ 220 €</div>
+    <div class="fh-value grad" id="fh-aum">≈ 241 €</div>
     <div class="fh-sub">EUR + USD convertido</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Dias Activos</div>
-    <div class="fh-value ac" id="fh-dias">6</div>
+    <div class="fh-value ac" id="fh-dias">9</div>
     <div class="fh-sub" id="fh-inicio">Início: 09 Abr 2025</div>
   </div>
 </div>
@@ -580,10 +580,10 @@ body{
   <div>
     <div class="zone-label">Fluxo de capital</div>
     <div class="flow-grid">
-      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">65,20 €</div></div>
-      <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac">0,26 €</div></div>
-      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">168,33 $</div></div>
-      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">16,38 $</div></div>
+      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">78,41 €</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac">10,21 €</div></div>
+      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">177,11 $</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">8,54 $</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje EUR</div><div class="flow-val up" id="fl-eur">—</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje USD</div><div class="flow-val up" id="fl-usd">—</div></div>
     </div>
@@ -828,8 +828,160 @@ function exportExcel(){
     ['Data de exportação',new Date().toLocaleDateString('pt-PT'),'',''],
     ['','','',''],
     ['CAPITAL ACTUAL','','',''],
-    ['Conta EUR (8MSN)','65.20 €','Caixa EUR','0.26 €'],
-    ['Conta USD (OMV)','168.33 $','Caixa USD','16.38 $'],
+    ['Conta EUR (8MSN)','78.41 €','Caixa EUR','10.21 €'],
+    ['Conta USD (OMV)','177.11 ,
+    ['AUM Total ~EUR','≈ 241 €','',''],
+    ['','','',''],
+    ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
+    ['Retorno EUR','-1.2%','',''],
+    ['Retorno USD','+5.0%','',''],
+    ['Dias activos',ALL_DATES.length,'',''],
+  ];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(resumo),'Resumo');
+
+  // Aba 2: Histórico diário
+  const histHeader=['Data','Lucro EUR (€)','Lucro USD ($)','Total ~EUR','Nº Pos EUR','Nº Pos USD','Eventos'];
+  const histRows=ALL_DATES.map(d=>{
+    const day=DATA[d];
+    return[d,day.eur.lucro,day.usd.lucro,(day.eur.lucro+day.usd.lucro*0.92).toFixed(2),
+      day.eur.positions.length,day.usd.positions.length,(day.eventos||[]).length];
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([histHeader,...histRows]),'Histórico Diário');
+
+  // Aba 3: Posições actuais (dia seleccionado)
+  const d=DATA[currentDay];
+  const posHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust','Δ D-1 %'];
+  const posRows=[...d.eur.positions,...d.usd.positions].map(p=>[
+    currentDay,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+    p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho',p.delta?p.delta.pct:null
+  ]);
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([posHeader,...posRows]),'Posições');
+
+  // Aba 4: Eventos
+  const evHeader=['Data','Tipo','Activo','Mercado','Nota','Valor'];
+  const evRows=[];
+  ALL_DATES.forEach(dt=>{
+    (DATA[dt].eventos||[]).forEach(ev=>{
+      evRows.push([dt,ev.tipo,ev.ativo||'—',ev.mkt,ev.nota,ev.valor||'—']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([evHeader,...evRows]),'Eventos');
+
+  // Todas as posições históricas
+  const allPosHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust'];
+  const allPosRows=[];
+  ALL_DATES.forEach(dt=>{
+    const day=DATA[dt];
+    [...day.eur.positions,...day.usd.positions].forEach(p=>{
+      allPosRows.push([dt,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+        p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([allPosHeader,...allPosRows]),'Histórico Posições');
+
+  XLSX.writeFile(wb,'TripleSevenCapital_'+currentDay+'.xlsx');
+}
+
+/* ── CONTROLS ── */
+function setDay(date){
+  currentDay=date;buildDateTabs();renderKPIs();renderTable();renderEventos();
+}
+function setAccount(a){
+  currentAccount=a;
+  ['all','eur','usd'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===a));
+  renderTable();
+}
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  if(!ALL_DATES.length){document.getElementById('date-info').textContent='Sem dados.';return;}
+  buildDateTabs();buildSparklines();renderKPIs();renderTable();renderEventos();
+});
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>,'Caixa USD','8.54 ,
+    ['AUM Total ~EUR','≈ 220 €','',''],
+    ['','','',''],
+    ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
+    ['Retorno EUR','+5.2%','',''],
+    ['Retorno USD','+21.3%','',''],
+    ['Dias activos',ALL_DATES.length,'',''],
+  ];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(resumo),'Resumo');
+
+  // Aba 2: Histórico diário
+  const histHeader=['Data','Lucro EUR (€)','Lucro USD ($)','Total ~EUR','Nº Pos EUR','Nº Pos USD','Eventos'];
+  const histRows=ALL_DATES.map(d=>{
+    const day=DATA[d];
+    return[d,day.eur.lucro,day.usd.lucro,(day.eur.lucro+day.usd.lucro*0.92).toFixed(2),
+      day.eur.positions.length,day.usd.positions.length,(day.eventos||[]).length];
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([histHeader,...histRows]),'Histórico Diário');
+
+  // Aba 3: Posições actuais (dia seleccionado)
+  const d=DATA[currentDay];
+  const posHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust','Δ D-1 %'];
+  const posRows=[...d.eur.positions,...d.usd.positions].map(p=>[
+    currentDay,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+    p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho',p.delta?p.delta.pct:null
+  ]);
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([posHeader,...posRows]),'Posições');
+
+  // Aba 4: Eventos
+  const evHeader=['Data','Tipo','Activo','Mercado','Nota','Valor'];
+  const evRows=[];
+  ALL_DATES.forEach(dt=>{
+    (DATA[dt].eventos||[]).forEach(ev=>{
+      evRows.push([dt,ev.tipo,ev.ativo||'—',ev.mkt,ev.nota,ev.valor||'—']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([evHeader,...evRows]),'Eventos');
+
+  // Todas as posições históricas
+  const allPosHeader=['Data','Activo','Mercado','Lucro %','Lucro','Volume','Valor','Preço Actual','Preço Abertura','Trust'];
+  const allPosRows=[];
+  ALL_DATES.forEach(dt=>{
+    const day=DATA[dt];
+    [...day.eur.positions,...day.usd.positions].forEach(p=>{
+      allPosRows.push([dt,p.name,p.mkt,p.pct,p.lucro,p.vol,p.valor,p.atual,p.abertura,
+        p.trust==='v'?'Verde':p.trust==='a'?'Amarelo':'Vermelho']);
+    });
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([allPosHeader,...allPosRows]),'Histórico Posições');
+
+  XLSX.writeFile(wb,'TripleSevenCapital_'+currentDay+'.xlsx');
+}
+
+/* ── CONTROLS ── */
+function setDay(date){
+  currentDay=date;buildDateTabs();renderKPIs();renderTable();renderEventos();
+}
+function setAccount(a){
+  currentAccount=a;
+  ['all','eur','usd'].forEach(x=>document.getElementById('btn-'+x).classList.toggle('active',x===a));
+  renderTable();
+}
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  if(!ALL_DATES.length){document.getElementById('date-info').textContent='Sem dados.';return;}
+  buildDateTabs();buildSparklines();renderKPIs();renderTable();renderEventos();
+});
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>],
     ['AUM Total ~EUR','≈ 220 €','',''],
     ['','','',''],
     ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],

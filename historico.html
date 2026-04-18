@@ -274,8 +274,8 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 /* ── KPIs topo ── */
 (function(){
   // Constantes fixas do fundo (actualizar quando o capital mudar)
-  const CAP_EUR_INICIAL = 62.00;   // capital inicial EUR — 09 Abr 2025
-  const BASE_USD        = 138.77;  // capital USD inicial (125.87) + aporte (12.90)
+  const CAP_EUR_INICIAL = 79.39;   // capital base EUR — 09 Abr 2025
+  const BASE_USD        = 168.61;  // capital base USD oficial
 
   const first   = DATES[0];
   const last    = DATES[DATES.length - 1];
@@ -407,8 +407,8 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 /* ── Análise Mensal ── */
 (function(){
   const EUR_RATE = 0.93;
-  const CAP_EUR  = 62.00;
-  const BASE_USD = 138.77;
+  const CAP_EUR  = 79.39;
+  const BASE_USD = 168.61;
   const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
   // group by YYYY-MM

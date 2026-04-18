@@ -212,11 +212,11 @@ setInterval(()=>{
 },1000);
 
 // ── constants ──
-const CAP_EUR  = 62.00;
-const BASE_USD = 138.77;
+const CAP_EUR  = 79.39;   // capital base EUR (oficial desde 09 Abr)
+const BASE_USD = 168.61;  // capital base USD (oficial desde 09 Abr)
 const META_PCT = 10;
-const META_EUR = CAP_EUR  * META_PCT / 100;  // 6.20
-const META_USD = BASE_USD * META_PCT / 100;  // 13.877
+const META_EUR = CAP_EUR  * META_PCT / 100;  // 7.939
+const META_USD = BASE_USD * META_PCT / 100;  // 16.861
 const EUR_RATE = 0.92;
 
 const MO_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -262,19 +262,21 @@ function monthStats(ym) {
 const allMonths = Object.keys(byMonth).sort().reverse();
 const curStats  = monthStats(curYM);
 
-// ── constants retorno real ──
-const SALDO_EUR    = 65.20;
-const SALDO_USD    = 168.33;
-const APORTES_USD  = 12.90;
-const CAP_EUR_INI  = 62.00;
-const CAP_USD_INI  = 125.87;
-const lucroRealEur = SALDO_EUR - CAP_EUR_INI;                      // 3.20€
-const lucroRealUsd = SALDO_USD - CAP_USD_INI - APORTES_USD;       // 29.56$
-const retRealEur   = lucroRealEur / CAP_EUR_INI * 100;             // 5.16%
-const retRealUsd   = lucroRealUsd / CAP_USD_INI * 100;             // 23.48%
-const consLucroEur = lucroRealEur + lucroRealUsd * EUR_RATE;       // 3.20 + 27.20 = 30.40€
-const consBaseEur  = CAP_EUR_INI  + CAP_USD_INI  * EUR_RATE;       // 62.00 + 115.80 = 177.80€
-const retConsEur   = consLucroEur / consBaseEur * 100;              // ~17.1%
+// ── constantes oficiais (reset 18 Abr) ──
+const REAL_EUR      = -0.98;   // lucro realizado EUR (plataforma)
+const REAL_USD      =  8.50;   // lucro realizado USD (plataforma)
+const LUCRO_ABT_EUR =  3.52;   // lucro aberto EUR
+const LUCRO_ABT_USD = 11.30;   // lucro aberto USD
+const SALDO_EUR     = 78.41;   // saldo actual EUR
+const SALDO_USD     = 177.11;  // saldo actual USD
+// Retorno real
+const lucroRealEur  = REAL_EUR;                                       // -0.98€
+const lucroRealUsd  = REAL_USD;                                       // +8.50$
+const retRealEur    = REAL_EUR  / CAP_EUR  * 100;                     // -1.23%
+const retRealUsd    = REAL_USD  / BASE_USD * 100;                     // +5.04%
+const consLucroEur  = REAL_EUR + REAL_USD * EUR_RATE;                 // -0.98 + 7.82 = 6.84€
+const consBaseEur   = CAP_EUR  + BASE_USD * EUR_RATE;                 // 79.39 + 155.12 = 234.51€
+const retConsEur    = consLucroEur / consBaseEur * 100;               // ~2.92%
 function colorRR(v){ return v>10?'var(--green)':v>5?'var(--amber)':'var(--red)'; }
 
 // ── SECÇÃO 1: Meta mensal — 3 métricas ──
@@ -292,30 +294,28 @@ function colorPct(v) {
   return v > 10 ? 'var(--green)' : v > 0 ? 'var(--amber)' : 'var(--red)';
 }
 
-// Métrica A — Realizado
-const pA_Eur = curStats.realEur / META_EUR * 100;
-const pA_Usd = curStats.realUsd / META_USD * 100;
+// Métrica A — Realizado (official constants)
+const pA_Eur = REAL_EUR / META_EUR * 100;
+const pA_Usd = REAL_USD / META_USD * 100;
 const metricA = `<div class="metric-card">
   <div class="metric-header">
     <span class="metric-title">Realizado</span>
     <span class="badge-metric">Meta Realizada</span>
   </div>
-  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(curStats.realEur)}">${s(curStats.realEur,'€')}</span></div>
-  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(curStats.realUsd)}">${s(curStats.realUsd,'$')}</span></div>
-  ${miniBar(pA_Eur, 0, 'var(--accent1)')}
+  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</span></div>
+  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(REAL_USD)}">${s(REAL_USD,'$')}</span></div>
+  ${miniBar(Math.max(pA_Eur,0), 0, 'var(--accent1)')}
   <div class="metric-pct-big" style="color:${colorPct(pA_Eur)};">${pA_Eur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
   <div class="metric-note">EUR · ${pA_Usd.toFixed(1)}% USD · só lucro fechado</div>
 </div>`;
 
-// Métrica B — Equity
-const nrEurL = LATEST.eur?.lucro || 0;
-const nrUsdL = LATEST.usd?.lucro || 0;
-const eqEur  = curStats.realEur + nrEurL;
-const eqUsd  = curStats.realUsd + nrUsdL;
+// Métrica B — Equity (official constants)
+const eqEur  = REAL_EUR + LUCRO_ABT_EUR;   // -0.98 + 3.52 = +2.54
+const eqUsd  = REAL_USD + LUCRO_ABT_USD;   // 8.50 + 11.30 = +19.80
 const pB_Eur = eqEur / META_EUR * 100;
 const pB_Usd = eqUsd / META_USD * 100;
-const pBfill = curStats.realEur / META_EUR * 100;
-const pBnr   = nrEurL / META_EUR * 100;
+const pBfill = Math.max(REAL_EUR / META_EUR * 100, 0);
+const pBnr   = Math.max(LUCRO_ABT_EUR / META_EUR * 100, 0);
 const metricB = `<div class="metric-card">
   <div class="metric-header">
     <span class="metric-title">Equity</span>
@@ -342,7 +342,7 @@ const metricC = `<div class="metric-card principal">
     </div>
     <div class="rr-pct" style="color:${colorRR(retRealEur)};">${retRealEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
     ${miniBar(Math.min(retRealEur/META_PCT*100,100), 0, 'var(--accent1)')}
-    <div class="rr-note">(${SALDO_EUR} − ${CAP_EUR_INI}) / ${CAP_EUR_INI} × 100</div>
+    <div class="rr-note">(${SALDO_EUR} − ${CAP_EUR}) / ${CAP_EUR} × 100</div>
   </div>
 
   <div class="rr-line">
@@ -352,7 +352,7 @@ const metricC = `<div class="metric-card principal">
     </div>
     <div class="rr-pct" style="color:${colorRR(retRealUsd)};">${retRealUsd.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
     ${miniBar(Math.min(retRealUsd/META_PCT*100,100), 0, 'var(--accent2)')}
-    <div class="rr-note">inclui aporte ${APORTES_USD}$ — (${SALDO_USD} − ${CAP_USD_INI} − ${APORTES_USD}) / ${CAP_USD_INI} × 100</div>
+    <div class="rr-note">(${SALDO_USD} − ${BASE_USD}) / ${BASE_USD} × 100 · base inclui todos os aportes</div>
   </div>
 
   <hr class="rr-divider">
@@ -363,39 +363,36 @@ const metricC = `<div class="metric-card principal">
       <span class="rr-val ${cls(consLucroEur)}">${s(consLucroEur,'€')}</span>
     </div>
     <div class="rr-pct" style="color:${colorRR(retConsEur)};">${retConsEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    <div class="rr-note">(${lucroRealEur.toFixed(2)} + ${lucroRealUsd.toFixed(2)} × ${EUR_RATE}) / (${CAP_EUR_INI} + ${CAP_USD_INI} × ${EUR_RATE}) × 100</div>
+    <div class="rr-note">(${lucroRealEur.toFixed(2)} + ${lucroRealUsd.toFixed(2)} × ${EUR_RATE}) / (${CAP_EUR} + ${BASE_USD} × ${EUR_RATE}) × 100</div>
   </div>
 </div>`;
 
 $('meta-section').innerHTML = `<div class="meta-3grid">${metricA}${metricB}${metricC}</div>`;
 
-// ── SECÇÃO 2: KPIs ──
-const nrEurCur  = LATEST.eur?.lucro || 0;
-const nrUsdCur  = LATEST.usd?.lucro || 0;
-const totalCurEur = (curStats.realEur + curStats.realUsd*EUR_RATE) + (nrEurCur + nrUsdCur*EUR_RATE);
-const metaPctEur  = ((curStats.realEur + nrEurCur) / META_EUR * 100);
+// ── SECÇÃO 2: KPIs (official constants) ──
+const totalCurEur = (REAL_EUR + REAL_USD*EUR_RATE) + (LUCRO_ABT_EUR + LUCRO_ABT_USD*EUR_RATE);
+const metaPctEur  = (REAL_EUR + LUCRO_ABT_EUR) / META_EUR * 100;
 const metaColor   = metaPctEur >= 100 ? 'var(--green)' : metaPctEur >= 50 ? 'var(--amber)' : 'var(--red)';
-const rrColor     = retRealEur >= META_PCT ? 'var(--green)' : retRealEur > 0 ? 'var(--amber)' : 'var(--red)';
 
 $('kpi-grid').innerHTML = `
   <div class="kpi-mini">
     <div class="kpi-mini-label">Realizado EUR</div>
-    <div class="kpi-mini-value ${cls(curStats.realEur)}">${s(curStats.realEur,'€')}</div>
-    <div class="kpi-mini-sub">${pctStr(curStats.realEur/CAP_EUR*100)} sobre capital</div>
+    <div class="kpi-mini-value ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</div>
+    <div class="kpi-mini-sub">${pctStr(REAL_EUR/CAP_EUR*100)} sobre capital</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Realizado USD</div>
-    <div class="kpi-mini-value ${cls(curStats.realUsd)}">${s(curStats.realUsd,'$')}</div>
-    <div class="kpi-mini-sub">${pctStr(curStats.realUsd/BASE_USD*100)} sobre capital</div>
+    <div class="kpi-mini-value ${cls(REAL_USD)}">${s(REAL_USD,'$')}</div>
+    <div class="kpi-mini-sub">${pctStr(REAL_USD/BASE_USD*100)} sobre capital</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Não realizado EUR</div>
-    <div class="kpi-mini-value ${cls(nrEurCur)}" style="color:var(--txt-2);">${s(nrEurCur,'€')}</div>
+    <div class="kpi-mini-value ${cls(LUCRO_ABT_EUR)}" style="color:var(--txt-2);">${s(LUCRO_ABT_EUR,'€')}</div>
     <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Não realizado USD</div>
-    <div class="kpi-mini-value ${cls(nrUsdCur)}" style="color:var(--txt-2);">${s(nrUsdCur,'$')}</div>
+    <div class="kpi-mini-value ${cls(LUCRO_ABT_USD)}" style="color:var(--txt-2);">${s(LUCRO_ABT_USD,'$')}</div>
     <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
   </div>
   <div class="kpi-mini">
@@ -406,7 +403,7 @@ $('kpi-grid').innerHTML = `
   <div class="kpi-mini">
     <div class="kpi-mini-label">% Meta Equity</div>
     <div class="kpi-mini-value" style="color:${metaColor};">${pctStr(metaPctEur)}</div>
-    <div class="kpi-mini-sub">meta: ${META_PCT}% = ${s(META_EUR,'€')}</div>
+    <div class="kpi-mini-sub">meta: ${META_PCT}% = ${META_EUR.toFixed(2)}€</div>
   </div>
   <div class="kpi-mini" style="border-color:rgba(61,255,176,.25);">
     <div class="kpi-mini-label" style="color:var(--accent1);">Retorno Real</div>

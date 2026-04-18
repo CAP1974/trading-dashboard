@@ -1,5 +1,3 @@
-// AUTO-GENERATED — DO NOT EDIT MANUALLY
-// Updated: 2026-04-18T11:09:26.235Z
 const TRADING_DATA = {
   "2025-04-09": {
     "date": "2025-04-09",
@@ -919,12 +917,6 @@ const TRADING_DATA = {
         "nota": "Entrada no ativo Dell"
       },
       {
-        "tipo": "aporte",
-        "mkt": "USD",
-        "valor": 12.9,
-        "nota": "Aporte de 12,90$"
-      },
-      {
         "tipo": "caixa",
         "mkt": "USD",
         "nota": "Valor em caixa ao fim do dia: 18,08$"
@@ -1011,7 +1003,6 @@ const TRADING_DATA = {
     "usd": {
       "lucro": 7.34,
       "caixa": 18.08,
-      "aporte": 12.9,
       "positions": [
         {
           "name": "Casey's",
@@ -1157,14 +1148,7 @@ const TRADING_DATA = {
   },
   "2025-04-16": {
     "date": "2025-04-16",
-    "eventos": [
-      {
-        "tipo": "aporte",
-        "ativo": "SAGA",
-        "mkt": "EUR",
-        "nota": "Aporte extra SAGA"
-      }
-    ],
+    "eventos": [],
     "eur": {
       "lucro": 2.79,
       "positions": [
@@ -1334,13 +1318,6 @@ const TRADING_DATA = {
         "conta": "USD",
         "valor": 23.26,
         "nota": "Aporte caixa USD (total 8,54$)"
-      },
-      {
-        "tipo": "aporte",
-        "conta": "USD",
-        "valor": 14.02,
-        "ativo": "Micron",
-        "nota": "Aporte Micron 14,02$"
       },
       {
         "tipo": "entrada",
@@ -1520,5 +1497,5 @@ const TRADING_DATA = {
     }
   }
 };
-const DATA_DATES   = ["2025-04-09","2025-04-10","2025-04-13","2025-04-14","2025-04-15","2025-04-16","2025-04-17"];
-const LATEST_DATE  = "2025-04-17";
+const DATA_DATES = ["2025-04-09","2025-04-10","2025-04-13","2025-04-14","2025-04-15","2025-04-16","2025-04-17"];
+const LATEST_DATE = "2025-04-17";

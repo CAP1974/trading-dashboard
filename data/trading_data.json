@@ -917,12 +917,6 @@
         "nota": "Entrada no ativo Dell"
       },
       {
-        "tipo": "aporte",
-        "mkt": "USD",
-        "valor": 12.9,
-        "nota": "Aporte de 12,90$"
-      },
-      {
         "tipo": "caixa",
         "mkt": "USD",
         "nota": "Valor em caixa ao fim do dia: 18,08$"
@@ -1009,7 +1003,6 @@
     "usd": {
       "lucro": 7.34,
       "caixa": 18.08,
-      "aporte": 12.9,
       "positions": [
         {
           "name": "Casey's",
@@ -1155,14 +1148,7 @@
   },
   "2025-04-16": {
     "date": "2025-04-16",
-    "eventos": [
-      {
-        "tipo": "aporte",
-        "ativo": "SAGA",
-        "mkt": "EUR",
-        "nota": "Aporte extra SAGA"
-      }
-    ],
+    "eventos": [],
     "eur": {
       "lucro": 2.79,
       "positions": [
@@ -1332,13 +1318,6 @@
         "conta": "USD",
         "valor": 23.26,
         "nota": "Aporte caixa USD (total 8,54$)"
-      },
-      {
-        "tipo": "aporte",
-        "conta": "USD",
-        "valor": 14.02,
-        "ativo": "Micron",
-        "nota": "Aporte Micron 14,02$"
       },
       {
         "tipo": "entrada",
