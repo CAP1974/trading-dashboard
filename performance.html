@@ -63,17 +63,23 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .badge-a{background:var(--amber-d);color:var(--amber);border:1px solid var(--amber-b);}
 .badge-meta{background:linear-gradient(135deg,rgba(61,255,176,.15),rgba(0,200,255,.15));color:var(--accent1);border:1px solid rgba(61,255,176,.3);font-size:9px;padding:2px 8px;border-radius:3px;letter-spacing:.06em;font-weight:700;}
 
-/* meta bar */
-.meta-card{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;}
-.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-.meta-item{}
-.meta-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:8px;}
-.meta-values{display:flex;justify-content:space-between;font-size:11px;color:var(--txt-2);margin-bottom:6px;}
-.meta-track{background:var(--bg-04);border-radius:4px;height:8px;overflow:hidden;position:relative;}
-.meta-fill{height:100%;border-radius:4px;transition:width .6s ease;position:relative;}
-.meta-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,.25);border-radius:1px;}
-.meta-pct-label{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:6px;}
-.meta-breakdown{font-size:10px;color:var(--txt-3);margin-top:3px;}
+/* meta metrics */
+.meta-3grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.metric-card{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;}
+.metric-card.principal{border-color:rgba(61,255,176,.28);box-shadow:0 0 0 1px rgba(61,255,176,.08);}
+.metric-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.metric-title{font-family:var(--display);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-2);}
+.badge-principal{background:linear-gradient(135deg,rgba(61,255,176,.2),rgba(0,200,255,.2));color:var(--accent1);border:1px solid rgba(61,255,176,.35);font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:.07em;font-weight:700;text-transform:uppercase;}
+.badge-metric{background:var(--bg-04);color:var(--txt-3);border:1px solid var(--border);font-size:8px;padding:2px 7px;border-radius:3px;letter-spacing:.06em;font-weight:500;text-transform:uppercase;}
+.metric-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.metric-sym{font-size:9px;color:var(--txt-3);letter-spacing:.06em;text-transform:uppercase;}
+.metric-val{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;}
+.metric-pct-big{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;margin:10px 0 6px;}
+.meta-track{background:var(--bg-04);border-radius:4px;height:6px;overflow:visible;position:relative;margin-bottom:4px;}
+.meta-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+.meta-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,.22);border-radius:1px;}
+.metric-note{font-size:9px;color:var(--txt-3);margin-top:4px;letter-spacing:.04em;}
+.grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
 </style>
 </head>
 <body>
@@ -108,7 +114,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 
   <!-- SECÇÃO 2 — KPIs -->
   <div class="zone-label">Resumo</div>
-  <div class="grid-6" id="kpi-grid"></div>
+  <div class="grid-7" id="kpi-grid"></div>
 
   <!-- SECÇÃO 3 — Posições fechadas mês actual -->
   <div class="zone-label">Posições Fechadas · <span id="mes-label-3">—</span></div>
@@ -248,43 +254,92 @@ function monthStats(ym) {
 const allMonths = Object.keys(byMonth).sort().reverse();
 const curStats  = monthStats(curYM);
 
-// ── SECÇÃO 1: Meta mensal ──
-function metaBar(realVal, nrVal, meta, sym, color) {
-  const total   = realVal + nrVal;
-  const pctMeta = Math.min((total / meta) * 100, 120);
-  const pctReal = Math.min((realVal / meta) * 100, 100);
-  const pctNr   = Math.min((nrVal   / meta) * 100, 100 - pctReal);
-  const metaColor = total >= meta ? 'var(--green)' : total >= meta*0.5 ? 'var(--amber)' : 'var(--red)';
-  return `<div class="meta-item">
-    <div class="meta-label">${sym === '€' ? 'EUR' : 'USD'} · Meta ${META_PCT}% = ${s(meta,sym)}</div>
-    <div class="meta-values">
-      <span>Realizado: <span class="${cls(realVal)}">${s(realVal,sym)}</span></span>
-      <span>Não realizado: <span style="color:var(--txt-2);">${s(nrVal,sym)}</span></span>
-      <span>Total: <span class="${cls(total)}">${s(total,sym)}</span></span>
-    </div>
-    <div class="meta-track">
-      <div class="meta-fill" style="width:${Math.max(0,pctReal).toFixed(1)}%;background:${color};"></div>
-      <div style="position:absolute;top:0;left:${Math.max(0,pctReal).toFixed(1)}%;width:${Math.max(0,pctNr).toFixed(1)}%;height:100%;background:${color};opacity:0.35;"></div>
-      <div class="meta-target" style="left:calc(100% * 1)"></div>
-    </div>
-    <div class="meta-pct-label" style="color:${metaColor};">${pctStr(total/meta*100)} da meta</div>
-    <div class="meta-breakdown" style="font-size:10px;color:var(--txt-3);margin-top:2px;">
-      Barra sólida = realizado · transparente = não realizado · linha = 100% meta
-    </div>
+// ── constants retorno real ──
+const SALDO_EUR    = 65.20;
+const SALDO_USD    = 168.33;
+const APORTES_USD  = 12.90;
+const CAP_EUR_INI  = 62.00;
+const CAP_USD_INI  = 125.87;
+const lucroRealEur = SALDO_EUR - CAP_EUR_INI;
+const lucroRealUsd = SALDO_USD - CAP_USD_INI - APORTES_USD;
+const retRealEur   = lucroRealEur / CAP_EUR_INI * 100;
+const retRealUsd   = lucroRealUsd / CAP_USD_INI * 100;
+
+// ── SECÇÃO 1: Meta mensal — 3 métricas ──
+function miniBar(pctFill, pctNr, color) {
+  const f = Math.min(Math.max(pctFill,0),100).toFixed(1);
+  const n = Math.min(Math.max(pctNr,0), 100-parseFloat(f)).toFixed(1);
+  return `<div class="meta-track">
+    <div class="meta-fill" style="width:${f}%;background:${color};"></div>
+    <div style="position:absolute;top:0;left:${f}%;width:${n}%;height:100%;background:${color};opacity:0.32;"></div>
+    <div class="meta-target" style="left:100%;transform:translateX(-1px);"></div>
   </div>`;
 }
 
-$('meta-section').innerHTML = `<div class="meta-grid">
-  ${metaBar(curStats.realEur, curStats.nrEur, META_EUR, '€', 'var(--accent1)')}
-  ${metaBar(curStats.realUsd, curStats.nrUsd, META_USD, '$', 'var(--accent2)')}
+function colorPct(v) {
+  return v > 10 ? 'var(--green)' : v > 0 ? 'var(--amber)' : 'var(--red)';
+}
+
+// Métrica A — Realizado
+const pA_Eur = curStats.realEur / META_EUR * 100;
+const pA_Usd = curStats.realUsd / META_USD * 100;
+const metricA = `<div class="metric-card">
+  <div class="metric-header">
+    <span class="metric-title">Realizado</span>
+    <span class="badge-metric">Meta Realizada</span>
+  </div>
+  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(curStats.realEur)}">${s(curStats.realEur,'€')}</span></div>
+  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(curStats.realUsd)}">${s(curStats.realUsd,'$')}</span></div>
+  ${miniBar(pA_Eur, 0, 'var(--accent1)')}
+  <div class="metric-pct-big" style="color:${colorPct(pA_Eur)};">${pA_Eur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
+  <div class="metric-note">EUR · ${pA_Usd.toFixed(1)}% USD · só lucro fechado</div>
 </div>`;
 
+// Métrica B — Equity
+const nrEurL = LATEST.eur?.lucro || 0;
+const nrUsdL = LATEST.usd?.lucro || 0;
+const eqEur  = curStats.realEur + nrEurL;
+const eqUsd  = curStats.realUsd + nrUsdL;
+const pB_Eur = eqEur / META_EUR * 100;
+const pB_Usd = eqUsd / META_USD * 100;
+const pBfill = curStats.realEur / META_EUR * 100;
+const pBnr   = nrEurL / META_EUR * 100;
+const metricB = `<div class="metric-card">
+  <div class="metric-header">
+    <span class="metric-title">Equity</span>
+    <span class="badge-metric">Meta em Equity</span>
+  </div>
+  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(eqEur)}">${s(eqEur,'€')}</span></div>
+  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(eqUsd)}">${s(eqUsd,'$')}</span></div>
+  ${miniBar(pBfill, pBnr, 'var(--accent2)')}
+  <div class="metric-pct-big" style="color:${colorPct(pB_Eur)};">${pB_Eur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
+  <div class="metric-note">EUR · ${pB_Usd.toFixed(1)}% USD · inclui não realizado</div>
+</div>`;
+
+// Métrica C — Retorno Real
+const pC_Eur = retRealEur / META_PCT * 100;
+const pC_Usd = retRealUsd / META_PCT * 100;
+const metricC = `<div class="metric-card principal">
+  <div class="metric-header">
+    <span class="metric-title">Retorno Real</span>
+    <span class="badge-principal">Métrica Principal</span>
+  </div>
+  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(lucroRealEur)}">${s(lucroRealEur,'€')} <span style="font-size:10px;color:var(--txt-3);">(${retRealEur.toFixed(2)}%)</span></span></div>
+  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(lucroRealUsd)}">${s(lucroRealUsd,'$')} <span style="font-size:10px;color:var(--txt-3);">(${retRealUsd.toFixed(2)}%)</span></span></div>
+  ${miniBar(Math.min(retRealEur/META_PCT*100,100), 0, 'var(--accent1)')}
+  <div class="metric-pct-big" style="color:${colorPct(retRealEur)};">${retRealEur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
+  <div class="metric-note">EUR · USD ${retRealUsd.toFixed(1)}% · sem aportes · vs capital inicial</div>
+</div>`;
+
+$('meta-section').innerHTML = `<div class="meta-3grid">${metricA}${metricB}${metricC}</div>`;
+
 // ── SECÇÃO 2: KPIs ──
-const nrEurCur = LATEST.eur?.lucro || 0;
-const nrUsdCur = LATEST.usd?.lucro || 0;
+const nrEurCur  = LATEST.eur?.lucro || 0;
+const nrUsdCur  = LATEST.usd?.lucro || 0;
 const totalCurEur = (curStats.realEur + curStats.realUsd*EUR_RATE) + (nrEurCur + nrUsdCur*EUR_RATE);
 const metaPctEur  = ((curStats.realEur + nrEurCur) / META_EUR * 100);
 const metaColor   = metaPctEur >= 100 ? 'var(--green)' : metaPctEur >= 50 ? 'var(--amber)' : 'var(--red)';
+const rrColor     = retRealEur >= META_PCT ? 'var(--green)' : retRealEur > 0 ? 'var(--amber)' : 'var(--red)';
 
 $('kpi-grid').innerHTML = `
   <div class="kpi-mini">
@@ -313,9 +368,14 @@ $('kpi-grid').innerHTML = `
     <div class="kpi-mini-sub">real + não real · ×${EUR_RATE}</div>
   </div>
   <div class="kpi-mini">
-    <div class="kpi-mini-label">% Meta mês</div>
+    <div class="kpi-mini-label">% Meta Equity</div>
     <div class="kpi-mini-value" style="color:${metaColor};">${pctStr(metaPctEur)}</div>
     <div class="kpi-mini-sub">meta: ${META_PCT}% = ${s(META_EUR,'€')}</div>
+  </div>
+  <div class="kpi-mini" style="border-color:rgba(61,255,176,.25);">
+    <div class="kpi-mini-label" style="color:var(--accent1);">Retorno Real %</div>
+    <div class="kpi-mini-value" style="color:${rrColor};">${retRealEur.toFixed(2)}%</div>
+    <div class="kpi-mini-sub">EUR · USD ${retRealUsd.toFixed(2)}%</div>
   </div>`;
 
 setText('page-sub', 'Triple Seven Capital · ' + fmtMo(curYM) + ' · Meta ' + META_PCT + '%/mês');
