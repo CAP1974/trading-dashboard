@@ -294,38 +294,66 @@ function colorPct(v) {
   return v > 10 ? 'var(--green)' : v > 0 ? 'var(--amber)' : 'var(--red)';
 }
 
-// Métrica A — Realizado (official constants)
-const pA_Eur = REAL_EUR / META_EUR * 100;
-const pA_Usd = REAL_USD / META_USD * 100;
+// Métrica A — Realizado
+const pA_Eur = REAL_EUR / META_EUR * 100;   // -12.3%
+const pA_Usd = REAL_USD / META_USD * 100;   // +2.5%
 const metricA = `<div class="metric-card">
   <div class="metric-header">
     <span class="metric-title">Realizado</span>
     <span class="badge-metric">Meta Realizada</span>
   </div>
-  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</span></div>
-  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(REAL_USD)}">${s(REAL_USD,'$')}</span></div>
-  ${miniBar(Math.max(pA_Eur,0), 0, 'var(--accent1)')}
-  <div class="metric-pct-big" style="color:${colorPct(pA_Eur)};">${pA_Eur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
-  <div class="metric-note">EUR · ${pA_Usd.toFixed(1)}% USD · só lucro fechado</div>
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">EUR · 8MSN</span>
+      <span class="rr-val ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(REAL_EUR)};">${pA_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pA_Eur,0), 0, 'var(--accent1)')}
+    <div class="rr-note">vs meta ${META_EUR.toFixed(2)}€</div>
+  </div>
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">USD · OMV</span>
+      <span class="rr-val ${cls(REAL_USD)}">${s(REAL_USD,'$')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(REAL_USD)};">${pA_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pA_Usd,0), 0, 'var(--accent2)')}
+    <div class="rr-note">vs meta ${META_USD.toFixed(2)}$</div>
+  </div>
 </div>`;
 
-// Métrica B — Equity (official constants)
+// Métrica B — Equity
 const eqEur  = REAL_EUR + LUCRO_ABT_EUR;   // -0.98 + 3.52 = +2.54
-const eqUsd  = REAL_USD + LUCRO_ABT_USD;   // 8.50 + 11.30 = +19.80
-const pB_Eur = eqEur / META_EUR * 100;
-const pB_Usd = eqUsd / META_USD * 100;
-const pBfill = Math.max(REAL_EUR / META_EUR * 100, 0);
-const pBnr   = Math.max(LUCRO_ABT_EUR / META_EUR * 100, 0);
+const eqUsd  = REAL_USD + LUCRO_ABT_USD;   //  0.44 + 11.30 = +11.74
+const pB_Eur = eqEur / META_EUR * 100;     // +32.0%
+const pB_Usd = eqUsd / META_USD * 100;     // +66.5%
+const pBfillE = Math.max(REAL_EUR  / META_EUR * 100, 0);
+const pBnrE   = Math.max(LUCRO_ABT_EUR / META_EUR * 100, 0);
+const pBfillU = Math.max(REAL_USD  / META_USD * 100, 0);
+const pBnrU   = Math.max(LUCRO_ABT_USD / META_USD * 100, 0);
 const metricB = `<div class="metric-card">
   <div class="metric-header">
     <span class="metric-title">Equity</span>
     <span class="badge-metric">Meta em Equity</span>
   </div>
-  <div class="metric-row"><span class="metric-sym">EUR</span><span class="metric-val ${cls(eqEur)}">${s(eqEur,'€')}</span></div>
-  <div class="metric-row"><span class="metric-sym">USD</span><span class="metric-val ${cls(eqUsd)}">${s(eqUsd,'$')}</span></div>
-  ${miniBar(pBfill, pBnr, 'var(--accent2)')}
-  <div class="metric-pct-big" style="color:${colorPct(pB_Eur)};">${pB_Eur.toFixed(1)}<span style="font-size:14px;font-weight:400;">%</span></div>
-  <div class="metric-note">EUR · ${pB_Usd.toFixed(1)}% USD · inclui não realizado</div>
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">EUR · 8MSN</span>
+      <span class="rr-val ${cls(eqEur)}">${s(eqEur,'€')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(eqEur)};">${pB_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(pBfillE, pBnrE, 'var(--accent1)')}
+    <div class="rr-note">vs meta ${META_EUR.toFixed(2)}€ · sólido=real · transp.=aberto</div>
+  </div>
+  <div class="rr-line">
+    <div class="rr-line-top">
+      <span class="rr-label">USD · OMV</span>
+      <span class="rr-val ${cls(eqUsd)}">${s(eqUsd,'$')}</span>
+    </div>
+    <div class="rr-pct" style="color:${colorRR(eqUsd)};">${pB_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(pBfillU, pBnrU, 'var(--accent2)')}
+    <div class="rr-note">vs meta ${META_USD.toFixed(2)}$ · sólido=real · transp.=aberto</div>
+  </div>
 </div>`;
 
 // Métrica C — Retorno Real
