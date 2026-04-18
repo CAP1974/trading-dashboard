@@ -213,7 +213,7 @@ setInterval(()=>{
 
 // ── constants ──
 const CAP_EUR  = 79.39;   // capital base EUR (oficial desde 09 Abr)
-const BASE_USD = 168.61;  // capital base USD (oficial desde 09 Abr)
+const BASE_USD = 176.67;  // capital base USD = saldo - realizado
 const META_PCT = 10;
 const META_EUR = CAP_EUR  * META_PCT / 100;  // 7.939
 const META_USD = BASE_USD * META_PCT / 100;  // 16.861
@@ -264,7 +264,7 @@ const curStats  = monthStats(curYM);
 
 // ── constantes oficiais (reset 18 Abr) ──
 const REAL_EUR      = -0.98;   // lucro realizado EUR (plataforma)
-const REAL_USD      =  8.50;   // lucro realizado USD (plataforma)
+const REAL_USD      =  0.44;   // lucro realizado USD (posicoes_fechadas)
 const LUCRO_ABT_EUR =  3.52;   // lucro aberto EUR
 const LUCRO_ABT_USD = 11.30;   // lucro aberto USD
 const SALDO_EUR     = 78.41;   // saldo actual EUR

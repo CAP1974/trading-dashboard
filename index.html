@@ -345,7 +345,7 @@ body{
   <div class="fh-item">
     <div class="fh-label">Capital USD</div>
     <div class="fh-value up" id="fh-cap-usd">177,11 $</div>
-    <div class="fh-sub" id="fh-cap-usd-sub">base 168,61$ · lucro real +8,50$</div>
+    <div class="fh-sub" id="fh-cap-usd-sub">base 176,67$ · lucro real +0,44$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno EUR</div>
@@ -354,8 +354,8 @@ body{
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno USD</div>
-    <div class="fh-value ac" id="fh-ret-usd">+5,0%</div>
-    <div class="fh-sub">vs 168,61$ base</div>
+    <div class="fh-value dn" id="fh-ret-usd">+0,2%</div>
+    <div class="fh-sub">vs 176,67$ base</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">AUM Total ~EUR</div>
@@ -834,7 +834,7 @@ function exportExcel(){
     ['','','',''],
     ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
     ['Retorno EUR','-1.2%','',''],
-    ['Retorno USD','+5.0%','',''],
+    ['Retorno USD','+0.2%','',''],
     ['Dias activos',ALL_DATES.length,'',''],
   ];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(resumo),'Resumo');
