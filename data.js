@@ -1505,6 +1505,8 @@ const MESES_DATA = {
     "base_usd": 176.67,
     "meta_eur": 7.939,
     "meta_usd": 17.667,
-    "inicio": "2025-04-09"
+    "inicio": "2025-04-09",
+    "saldo_fim_eur": null,
+    "saldo_fim_usd": null
   }
 };
