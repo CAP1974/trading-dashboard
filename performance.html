@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Posições · Triple Seven Capital</title>
+<title>Performance · Triple Seven Capital</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -14,7 +14,7 @@
   --green:#1eff8e;--green-d:rgba(30,255,142,0.10);--green-b:rgba(30,255,142,0.22);
   --red:#ff4d6a;--red-d:rgba(255,77,106,0.10);--red-b:rgba(255,77,106,0.22);
   --amber:#ffb340;--amber-d:rgba(255,179,64,0.10);--amber-b:rgba(255,179,64,0.22);
-  --blue:#4da6ff;--blue-d:rgba(77,166,255,0.10);
+  --blue:#4da6ff;--blue-d:rgba(77,166,255,0.10);--blue-b:rgba(77,166,255,0.22);
   --accent1:#3dffb0;--accent2:#00c8ff;
   --accent-g:linear-gradient(135deg,#3dffb0,#00c8ff);
   --mono:'JetBrains Mono',monospace;--display:'Syne',sans-serif;
@@ -43,43 +43,37 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .card-tag{font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:2px 7px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;}
 .card-body{padding:16px;}
 .up{color:var(--green);} .dn{color:var(--red);} .neu{color:var(--txt-3);} .ac{color:var(--accent2);}
+.grad{background:var(--accent-g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .kpi-mini{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;}
 .kpi-mini-label{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);margin-bottom:6px;}
 .kpi-mini-value{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;}
 .kpi-mini-sub{font-size:10px;color:var(--txt-2);margin-top:3px;}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.grid-6{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
 .tbl{width:100%;border-collapse:collapse;}
-.tbl th{padding:8px 10px;text-align:left;font-size:9px;font-weight:400;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;white-space:nowrap;}
-.tbl th:hover{color:var(--txt-2);}
+.tbl th{padding:8px 10px;text-align:left;font-size:9px;font-weight:400;text-transform:uppercase;letter-spacing:.08em;color:var(--txt-3);border-bottom:1px solid var(--border);}
 .tbl th.r,.tbl td.r{text-align:right;}
-.tbl td{padding:8px 10px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.025);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.tbl td{padding:8px 10px;font-size:11px;border-bottom:1px solid rgba(255,255,255,.025);font-variant-numeric:tabular-nums;}
 .tbl tr:last-child td{border-bottom:none;}
 .tbl tbody tr:hover td{background:rgba(255,255,255,.02);}
+.tbl tfoot td{border-top:1px solid var(--border);font-weight:600;color:var(--txt);}
 .badge{display:inline-block;border-radius:3px;padding:2px 7px;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
 .badge-g{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
 .badge-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
 .badge-a{background:var(--amber-d);color:var(--amber);border:1px solid var(--amber-b);}
+.badge-meta{background:linear-gradient(135deg,rgba(61,255,176,.15),rgba(0,200,255,.15));color:var(--accent1);border:1px solid rgba(61,255,176,.3);font-size:9px;padding:2px 8px;border-radius:3px;letter-spacing:.06em;font-weight:700;}
 
-/* filtros */
-.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.filter-sep{width:1px;height:20px;background:var(--border);margin:0 4px;}
-.fbtn{font-family:var(--mono);font-size:10px;padding:4px 11px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--txt-3);cursor:pointer;transition:all .15s;letter-spacing:.04em;}
-.fbtn:hover{border-color:var(--border-hi);color:var(--txt-2);}
-.fbtn.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
-.fbtn.active-r{background:var(--red-d);border-color:var(--red-b);color:var(--red);}
-.fbtn.active-a{background:var(--amber-d);border-color:var(--amber-b);color:var(--amber);}
-.search-input{font-family:var(--mono);font-size:11px;padding:4px 10px;background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);color:var(--txt);outline:none;width:140px;}
-.search-input:focus{border-color:rgba(61,255,176,.3);}
-.search-input::placeholder{color:var(--txt-3);}
-
-/* sort arrow */
-.sort-arrow{margin-left:4px;opacity:.4;}
-.tbl th.sort-asc .sort-arrow::after{content:'▲';}
-.tbl th.sort-desc .sort-arrow::after{content:'▼';}
-.tbl th.sort-asc,.tbl th.sort-desc{color:var(--accent1);}
-
-/* chart */
-.chart-wrap{position:relative;width:100%;}
+/* meta bar */
+.meta-card{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.meta-item{}
+.meta-label{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--txt-3);margin-bottom:8px;}
+.meta-values{display:flex;justify-content:space-between;font-size:11px;color:var(--txt-2);margin-bottom:6px;}
+.meta-track{background:var(--bg-04);border-radius:4px;height:8px;overflow:hidden;position:relative;}
+.meta-fill{height:100%;border-radius:4px;transition:width .6s ease;position:relative;}
+.meta-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,.25);border-radius:1px;}
+.meta-pct-label{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:6px;}
+.meta-breakdown{font-size:10px;color:var(--txt-3);margin-top:3px;}
 </style>
 </head>
 <body>
@@ -95,376 +89,312 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 <div class="nav">
   <a class="nav-item" href="index.html">Vista Consolidada</a>
   <a class="nav-item" href="contas.html">Contas</a>
-  <a class="nav-item active" href="posicoes.html">Posições</a>
+  <a class="nav-item" href="posicoes.html">Posições</a>
   <a class="nav-item" href="risco.html">Risco</a>
   <a class="nav-item" href="historico.html">Histórico</a>
-  <a class="nav-item" href="performance.html">Performance</a>
+  <a class="nav-item active" href="performance.html">Performance</a>
   <a class="nav-item" href="governanca.html">Governança</a>
 </div>
 
 <div class="main">
   <div>
-    <div class="page-title">Posições</div>
-    <div class="page-sub" id="page-sub">Triple Seven Capital · Carteira actual</div>
+    <div class="page-title">Performance</div>
+    <div class="page-sub" id="page-sub">Triple Seven Capital · Realizado vs Não Realizado</div>
   </div>
 
-  <!-- SECÇÃO 1 — Filtros -->
-  <div class="zone-label">Filtros</div>
-  <div style="background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 16px;">
-    <div class="filter-bar">
-      <!-- Date tabs -->
-      <div id="date-tabs" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
-      <div class="filter-sep"></div>
-      <!-- Conta -->
-      <button class="fbtn active" data-grp="conta" data-val="all">Todas</button>
-      <button class="fbtn" data-grp="conta" data-val="EUR">EUR</button>
-      <button class="fbtn" data-grp="conta" data-val="USD">USD</button>
-      <div class="filter-sep"></div>
-      <!-- Trust -->
-      <button class="fbtn active" data-grp="trust" data-val="all">Todos</button>
-      <button class="fbtn" data-grp="trust" data-val="v" style="color:var(--green);">Verde</button>
-      <button class="fbtn" data-grp="trust" data-val="a" style="color:var(--amber);">Amarelo</button>
-      <button class="fbtn" data-grp="trust" data-val="r" style="color:var(--red);">Vermelho</button>
-      <div class="filter-sep"></div>
-      <!-- Search -->
-      <input class="search-input" id="search-input" placeholder="Pesquisar activo…" type="text">
-    </div>
-  </div>
+  <!-- SECÇÃO 1 — Meta mensal -->
+  <div class="zone-label">Meta Mensal</div>
+  <div class="meta-card" id="meta-section"></div>
 
   <!-- SECÇÃO 2 — KPIs -->
-  <div class="grid-4">
-    <div class="kpi-mini">
-      <div class="kpi-mini-label">Total Posições</div>
-      <div class="kpi-mini-value grad" id="kpi-total">—</div>
-      <div class="kpi-mini-sub" id="kpi-total-sub">—</div>
-    </div>
-    <div class="kpi-mini">
-      <div class="kpi-mini-label">Em Ganho</div>
-      <div class="kpi-mini-value up" id="kpi-ganho">—</div>
-      <div class="kpi-mini-sub" id="kpi-ganho-sub">—</div>
-    </div>
-    <div class="kpi-mini">
-      <div class="kpi-mini-label">Em Perda</div>
-      <div class="kpi-mini-value dn" id="kpi-perda">—</div>
-      <div class="kpi-mini-sub" id="kpi-perda-sub">—</div>
-    </div>
-    <div class="kpi-mini">
-      <div class="kpi-mini-label">Maior Posição</div>
-      <div class="kpi-mini-value" style="color:var(--amber);" id="kpi-maior">—</div>
-      <div class="kpi-mini-sub" id="kpi-maior-sub">—</div>
-    </div>
-  </div>
+  <div class="zone-label">Resumo</div>
+  <div class="grid-6" id="kpi-grid"></div>
 
-  <!-- SECÇÃO 3 — Tabela principal -->
-  <div class="zone-label">Carteira</div>
+  <!-- SECÇÃO 3 — Posições fechadas mês actual -->
+  <div class="zone-label">Posições Fechadas · <span id="mes-label-3">—</span></div>
   <div class="card">
     <div class="card-header">
-      <span class="card-title">Posições Abertas</span>
-      <span class="card-tag" id="tbl-tag">—</span>
-    </div>
-    <div style="overflow-x:auto;">
-      <table class="tbl" id="pos-table">
-        <thead>
-          <tr>
-            <th data-col="name">Activo <span class="sort-arrow"></span></th>
-            <th data-col="mkt">Mkt <span class="sort-arrow"></span></th>
-            <th data-col="pct" class="r">Lucro% <span class="sort-arrow"></span></th>
-            <th data-col="lucro" class="r">Lucro€/$ <span class="sort-arrow"></span></th>
-            <th data-col="vol" class="r">Volume <span class="sort-arrow"></span></th>
-            <th data-col="valor" class="r">Valor <span class="sort-arrow"></span></th>
-            <th data-col="atual" class="r">Actual <span class="sort-arrow"></span></th>
-            <th data-col="abertura" class="r">Abertura <span class="sort-arrow"></span></th>
-            <th data-col="trust">Trust <span class="sort-arrow"></span></th>
-            <th data-col="delta" class="r">ΔD-1 <span class="sort-arrow"></span></th>
-            <th>Acção</th>
-          </tr>
-        </thead>
-        <tbody id="pos-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- SECÇÃO 4 — Gráfico top 10 -->
-  <div class="zone-label">Top 10 por Lucro%</div>
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Distribuição de Performance</span>
-      <span class="card-tag" id="chart-tag">—</span>
-    </div>
-    <div class="card-body">
-      <div class="chart-wrap" style="height:280px;">
-        <canvas id="top10Chart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECÇÃO 5 — Posições fechadas -->
-  <div class="zone-label">Histórico de Saídas</div>
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">Posições Fechadas</span>
-      <span class="card-tag" id="saidas-tag">—</span>
+      <span class="card-title">Realizado</span>
+      <span class="card-tag" id="fechadas-tag">—</span>
     </div>
     <div style="overflow-x:auto;">
       <table class="tbl">
         <thead>
           <tr>
-            <th>Data</th>
             <th>Activo</th>
             <th>Mkt</th>
-            <th>Motivo / Nota</th>
+            <th class="r">Resultado</th>
+            <th>Tipo</th>
+            <th>Data Fecho</th>
           </tr>
         </thead>
-        <tbody id="saidas-tbody"></tbody>
+        <tbody id="fechadas-tbody"></tbody>
+        <tfoot id="fechadas-tfoot"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 4 — Posições abertas -->
+  <div class="zone-label">Posições Abertas · Não Realizado</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Carteira Actual</span>
+      <span class="card-tag" id="abertas-tag">—</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Activo</th>
+            <th>Mkt</th>
+            <th class="r">Lucro%</th>
+            <th class="r">Lucro</th>
+            <th>Trust</th>
+          </tr>
+        </thead>
+        <tbody id="abertas-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECÇÃO 5 — Histórico mensal -->
+  <div class="zone-label">Histórico Mensal</div>
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Performance por Mês</span>
+      <span class="card-tag" id="hist-tag">—</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Mês</th>
+            <th class="r">Realizado EUR</th>
+            <th class="r">Realizado USD</th>
+            <th class="r">Não realizado EUR</th>
+            <th class="r">Não realizado USD</th>
+            <th class="r">Total ~€</th>
+            <th class="r">% Meta EUR</th>
+            <th class="r">% Meta USD</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="hist-tbody"></tbody>
       </table>
     </div>
   </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="data.js"></script>
 <script>
-// ── helpers ──
 const $ = id => document.getElementById(id);
-const setText = (id, t) => { const e = $(id); if(e) e.textContent = t; };
-const setHTML = (id, h) => { const e = $(id); if(e) e.innerHTML = h; };
-function fmtDate(d) {
-  const mo = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const dt = new Date(d + 'T12:00:00Z');
-  return dt.getDate() + ' ' + mo[dt.getMonth()];
+const setText = (id,t) => { const e=$(id); if(e) e.textContent=t; };
+const setHTML = (id,h) => { const e=$(id); if(e) e.innerHTML=h; };
+
+setInterval(()=>{
+  const n=new Date();
+  setText('clock',[n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':')+' UTC');
+},1000);
+
+// ── constants ──
+const CAP_EUR  = 62.00;
+const BASE_USD = 138.77;
+const META_PCT = 10;
+const META_EUR = CAP_EUR  * META_PCT / 100;  // 6.20
+const META_USD = BASE_USD * META_PCT / 100;  // 13.877
+const EUR_RATE = 0.92;
+
+const MO_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function fmtMo(ym){ const [y,m]=ym.split('-').map(Number); return MO_PT[m-1]+' '+y; }
+function fmtDate(d){
+  const [y,m,day]=d.split('-').map(Number);
+  return String(day).padStart(2,'0')+' '+MO_PT[m-1];
 }
+function s(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+(sym?' '+sym:''); }
+function cls(v){ return v>0?'up':v<0?'dn':'neu'; }
+function pctStr(v){ return (v>=0?'+':'')+v.toFixed(1)+'%'; }
 
-// ── clock ──
-setInterval(() => {
-  const n = new Date();
-  setText('clock', [n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(v=>String(v).padStart(2,'0')).join(':') + ' UTC');
-}, 1000);
+const ALL_D  = Object.keys(TRADING_DATA).sort();
+const LATEST = TRADING_DATA[LATEST_DATE];
+const curYM  = LATEST_DATE.slice(0,7);
 
-// ── state ──
-let selDate  = LATEST_DATE;
-let selConta = 'all';
-let selTrust = 'all';
-let selSearch = '';
-let sortCol  = 'valor';
-let sortDir  = -1; // -1 desc, 1 asc
-let top10Chart = null;
-
-const ALL_D = Object.keys(TRADING_DATA).sort();
-
-// ── SECÇÃO 1: date tabs ──
-const dateTabsEl = $('date-tabs');
-DATA_DATES.forEach(d => {
-  const b = document.createElement('button');
-  b.className = 'fbtn' + (d === selDate ? ' active' : '');
-  b.textContent = fmtDate(d);
-  b.dataset.date = d;
-  b.addEventListener('click', () => { selDate = d; render(); });
-  dateTabsEl.appendChild(b);
-});
-
-// filter buttons
-document.querySelectorAll('[data-grp]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const grp = btn.dataset.grp, val = btn.dataset.val;
-    document.querySelectorAll(`[data-grp="${grp}"]`).forEach(b => {
-      b.classList.remove('active','active-r','active-a');
-    });
-    if (grp === 'trust' && val === 'v') btn.classList.add('active');
-    else if (grp === 'trust' && val === 'a') btn.classList.add('active-a');
-    else if (grp === 'trust' && val === 'r') btn.classList.add('active-r');
-    else btn.classList.add('active');
-    if (grp === 'conta') selConta = val;
-    else selTrust = val;
-    render();
-  });
-});
-
-$('search-input').addEventListener('input', e => { selSearch = e.target.value.toLowerCase(); render(); });
-
-// ── sort ──
-document.querySelectorAll('#pos-table th[data-col]').forEach(th => {
-  th.addEventListener('click', () => {
-    const col = th.dataset.col;
-    if (sortCol === col) sortDir *= -1;
-    else { sortCol = col; sortDir = -1; }
-    render();
-  });
-});
-
-// ── data helpers ──
-function getPositions(date) {
-  const day = TRADING_DATA[date];
-  if (!day) return [];
-  const eurPos = (day.eur?.positions || []).map(p => ({...p, _conta:'EUR', _sym:'€'}));
-  const usdPos = (day.usd?.positions || []).map(p => ({...p, _conta:'USD', _sym:'$'}));
-  return [...eurPos, ...usdPos];
-}
-
-function trustBadge(t) {
-  if (t === 'v') return '<span class="badge badge-g">Verde</span>';
-  if (t === 'a') return '<span class="badge badge-a">Amarelo</span>';
-  return '<span class="badge badge-r">Vermelho</span>';
-}
-
-function deltaCell(delta, sym) {
-  if (!delta) return '<td class="r neu">—</td>';
-  const pct = delta.pct ?? 0;
-  const arrow = pct >= 0 ? '▲' : '▼';
-  const cls = pct >= 0 ? 'up' : 'dn';
-  return `<td class="r ${cls}">${arrow} ${Math.abs(pct).toFixed(2)}%</td>`;
-}
-
-// ── render ──
-function render() {
-  // update date tab active states
-  document.querySelectorAll('#date-tabs .fbtn').forEach(b => {
-    b.classList.toggle('active', b.dataset.date === selDate);
-  });
-
-  let positions = getPositions(selDate);
-
-  // filters
-  if (selConta !== 'all') positions = positions.filter(p => p._conta === selConta);
-  if (selTrust !== 'all') positions = positions.filter(p => p.trust === selTrust);
-  if (selSearch) positions = positions.filter(p => (p.name||'').toLowerCase().includes(selSearch));
-
-  // sort
-  positions.sort((a,b) => {
-    let va = a[sortCol], vb = b[sortCol];
-    if (sortCol === 'delta') { va = a.delta?.pct ?? -Infinity; vb = b.delta?.pct ?? -Infinity; }
-    if (sortCol === 'name' || sortCol === 'mkt' || sortCol === 'trust') {
-      va = (va||'').toString(); vb = (vb||'').toString();
-      return sortDir * va.localeCompare(vb);
-    }
-    return sortDir * ((va||0) - (vb||0));
-  });
-
-  // sort indicators
-  document.querySelectorAll('#pos-table th[data-col]').forEach(th => {
-    th.classList.remove('sort-asc','sort-desc');
-    if (th.dataset.col === sortCol) th.classList.add(sortDir === -1 ? 'sort-desc' : 'sort-asc');
-  });
-
-  // KPIs
-  const ganho = positions.filter(p => (p.lucro||0) > 0);
-  const perda  = positions.filter(p => (p.lucro||0) < 0);
-  const maior  = positions.reduce((m,p) => (p.valor||0) > (m.valor||0) ? p : m, {});
-  const totalVal = positions.reduce((s,p) => s + (p.valor||0), 0);
-
-  setText('kpi-total', positions.length);
-  setText('kpi-total-sub', 'valor total: ' + totalVal.toFixed(2));
-  setText('kpi-ganho', ganho.length);
-  setText('kpi-ganho-sub', '+' + ganho.reduce((s,p)=>s+(p.lucro||0),0).toFixed(2));
-  setText('kpi-perda', perda.length);
-  setText('kpi-perda-sub', perda.reduce((s,p)=>s+(p.lucro||0),0).toFixed(2));
-  setText('kpi-maior', maior.name || '—');
-  setText('kpi-maior-sub', maior.valor ? maior.valor.toFixed(2) + ' ' + (maior._sym||'') : '—');
-
-  setText('tbl-tag', positions.length + ' posições · ' + fmtDate(selDate));
-  setText('page-sub', 'Triple Seven Capital · ' + fmtDate(selDate));
-
-  // table rows
-  const tbody = $('pos-tbody');
-  if (!positions.length) {
-    tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--txt-3);padding:20px;">Sem posições para os filtros seleccionados</td></tr>';
-  } else {
-    tbody.innerHTML = positions.map(p => {
-      const lucroSign = (p.lucro||0) >= 0 ? 'up' : 'dn';
-      const pctSign   = (p.pct||0) >= 0 ? 'up' : 'dn';
-      const mktColor  = p._conta === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
-      return `<tr>
-        <td style="font-weight:600;">${p.name||'—'}</td>
-        <td style="color:${mktColor};">${p.mkt||p._conta}</td>
-        <td class="r ${pctSign}">${(p.pct||0) >= 0 ? '+' : ''}${(p.pct||0).toFixed(2)}%</td>
-        <td class="r ${lucroSign}">${(p.lucro||0) >= 0 ? '+' : ''}${(p.lucro||0).toFixed(2)} ${p._sym}</td>
-        <td class="r">${(p.vol||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td class="r">${(p.valor||0).toFixed(2)} ${p._sym}</td>
-        <td class="r">${(p.atual||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td class="r neu">${(p.abertura||0).toLocaleString('pt-PT',{maximumFractionDigits:4})}</td>
-        <td>${trustBadge(p.trust)}</td>
-        ${deltaCell(p.delta, p._sym)}
-        <td><span style="font-size:9px;color:var(--txt-3);">—</span></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // ── SECÇÃO 4: top 10 chart ──
-  const sorted = [...positions].sort((a,b) => (b.pct||0) - (a.pct||0));
-  const top10  = sorted.slice(0,10);
-  setText('chart-tag', fmtDate(selDate));
-
-  const labels = top10.map(p => p.name||'?');
-  const data   = top10.map(p => p.pct||0);
-  const colors = data.map(v => v >= 0 ? 'rgba(30,255,142,0.7)' : 'rgba(255,77,106,0.7)');
-  const borders= data.map(v => v >= 0 ? '#1eff8e' : '#ff4d6a');
-
-  if (top10Chart) top10Chart.destroy();
-  top10Chart = new Chart($('top10Chart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data,
-        backgroundColor: colors,
-        borderColor: borders,
-        borderWidth: 1,
-        borderRadius: 3,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#0f1923',
-          borderColor: 'rgba(255,255,255,.08)',
-          borderWidth: 1,
-          titleColor: '#ddeaf7',
-          bodyColor: '#6b8aaa',
-          callbacks: { label: ctx => ` ${ctx.parsed.x >= 0 ? '+' : ''}${ctx.parsed.x.toFixed(2)}%` }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color:'#334455', font:{family:"'JetBrains Mono'",size:10}, callback: v => v+'%' },
-          grid:  { color:'rgba(255,255,255,.03)' }
-        },
-        y: {
-          ticks: { color:'#6b8aaa', font:{family:"'JetBrains Mono'",size:10} },
-          grid:  { display:false }
-        }
-      }
-    }
-  });
-}
-
-// ── SECÇÃO 5: saídas ──
-const saidas = [];
+// ── group days by month ──
+const byMonth = {};
 ALL_D.forEach(d => {
-  (TRADING_DATA[d].eventos || []).forEach(ev => {
-    if (ev.tipo === 'saida') saidas.push({ date: d, ...ev });
-  });
+  const ym = d.slice(0,7);
+  if(!byMonth[ym]) byMonth[ym]=[];
+  byMonth[ym].push(d);
 });
 
-setText('saidas-tag', saidas.length + ' saídas');
-const saidasTbody = $('saidas-tbody');
-if (!saidas.length) {
-  saidasTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--txt-3);padding:20px;">Sem saídas registadas</td></tr>';
-} else {
-  const mktColor = m => m === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
-  saidasTbody.innerHTML = saidas.map(s => `<tr>
-    <td>${fmtDate(s.date)}</td>
-    <td style="font-weight:600;">${s.ativo||'—'}</td>
-    <td style="color:${mktColor(s.mkt)}">${s.mkt||'—'}</td>
-    <td style="color:var(--txt-2);font-size:10px;">${s.nota||'—'}</td>
-  </tr>`).join('');
+// ── build monthly stats ──
+function monthStats(ym) {
+  const days = byMonth[ym] || [];
+  let realEur=0, realUsd=0;
+  days.forEach(d => {
+    (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
+      if (p.mkt === 'EUR') realEur += p.lucro || 0;
+      else                 realUsd += p.lucro || 0;
+    });
+  });
+  // unrealized = latest day of month
+  const lastDay = days[days.length-1];
+  const dayData = TRADING_DATA[lastDay];
+  const nrEur = dayData?.eur?.lucro || 0;
+  const nrUsd = dayData?.usd?.lucro || 0;
+  return { ym, realEur, realUsd, nrEur, nrUsd };
 }
 
-// initial render
-render();
+const allMonths = Object.keys(byMonth).sort().reverse();
+const curStats  = monthStats(curYM);
+
+// ── SECÇÃO 1: Meta mensal ──
+function metaBar(realVal, nrVal, meta, sym, color) {
+  const total   = realVal + nrVal;
+  const pctMeta = Math.min((total / meta) * 100, 120);
+  const pctReal = Math.min((realVal / meta) * 100, 100);
+  const pctNr   = Math.min((nrVal   / meta) * 100, 100 - pctReal);
+  const metaColor = total >= meta ? 'var(--green)' : total >= meta*0.5 ? 'var(--amber)' : 'var(--red)';
+  return `<div class="meta-item">
+    <div class="meta-label">${sym === '€' ? 'EUR' : 'USD'} · Meta ${META_PCT}% = ${s(meta,sym)}</div>
+    <div class="meta-values">
+      <span>Realizado: <span class="${cls(realVal)}">${s(realVal,sym)}</span></span>
+      <span>Não realizado: <span style="color:var(--txt-2);">${s(nrVal,sym)}</span></span>
+      <span>Total: <span class="${cls(total)}">${s(total,sym)}</span></span>
+    </div>
+    <div class="meta-track">
+      <div class="meta-fill" style="width:${Math.max(0,pctReal).toFixed(1)}%;background:${color};"></div>
+      <div style="position:absolute;top:0;left:${Math.max(0,pctReal).toFixed(1)}%;width:${Math.max(0,pctNr).toFixed(1)}%;height:100%;background:${color};opacity:0.35;"></div>
+      <div class="meta-target" style="left:calc(100% * 1)"></div>
+    </div>
+    <div class="meta-pct-label" style="color:${metaColor};">${pctStr(total/meta*100)} da meta</div>
+    <div class="meta-breakdown" style="font-size:10px;color:var(--txt-3);margin-top:2px;">
+      Barra sólida = realizado · transparente = não realizado · linha = 100% meta
+    </div>
+  </div>`;
+}
+
+$('meta-section').innerHTML = `<div class="meta-grid">
+  ${metaBar(curStats.realEur, curStats.nrEur, META_EUR, '€', 'var(--accent1)')}
+  ${metaBar(curStats.realUsd, curStats.nrUsd, META_USD, '$', 'var(--accent2)')}
+</div>`;
+
+// ── SECÇÃO 2: KPIs ──
+const nrEurCur = LATEST.eur?.lucro || 0;
+const nrUsdCur = LATEST.usd?.lucro || 0;
+const totalCurEur = (curStats.realEur + curStats.realUsd*EUR_RATE) + (nrEurCur + nrUsdCur*EUR_RATE);
+const metaPctEur  = ((curStats.realEur + nrEurCur) / META_EUR * 100);
+const metaColor   = metaPctEur >= 100 ? 'var(--green)' : metaPctEur >= 50 ? 'var(--amber)' : 'var(--red)';
+
+$('kpi-grid').innerHTML = `
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">Realizado EUR</div>
+    <div class="kpi-mini-value ${cls(curStats.realEur)}">${s(curStats.realEur,'€')}</div>
+    <div class="kpi-mini-sub">${pctStr(curStats.realEur/CAP_EUR*100)} sobre capital</div>
+  </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">Realizado USD</div>
+    <div class="kpi-mini-value ${cls(curStats.realUsd)}">${s(curStats.realUsd,'$')}</div>
+    <div class="kpi-mini-sub">${pctStr(curStats.realUsd/BASE_USD*100)} sobre capital</div>
+  </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">Não realizado EUR</div>
+    <div class="kpi-mini-value ${cls(nrEurCur)}" style="color:var(--txt-2);">${s(nrEurCur,'€')}</div>
+    <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
+  </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">Não realizado USD</div>
+    <div class="kpi-mini-value ${cls(nrUsdCur)}" style="color:var(--txt-2);">${s(nrUsdCur,'$')}</div>
+    <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
+  </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">Total ~EUR</div>
+    <div class="kpi-mini-value grad">${s(totalCurEur,'€')}</div>
+    <div class="kpi-mini-sub">real + não real · ×${EUR_RATE}</div>
+  </div>
+  <div class="kpi-mini">
+    <div class="kpi-mini-label">% Meta mês</div>
+    <div class="kpi-mini-value" style="color:${metaColor};">${pctStr(metaPctEur)}</div>
+    <div class="kpi-mini-sub">meta: ${META_PCT}% = ${s(META_EUR,'€')}</div>
+  </div>`;
+
+setText('page-sub', 'Triple Seven Capital · ' + fmtMo(curYM) + ' · Meta ' + META_PCT + '%/mês');
+
+// ── SECÇÃO 3: fechadas mês actual ──
+const fechadasCur = [];
+(byMonth[curYM] || []).forEach(d => {
+  (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => fechadasCur.push(p));
+});
+
+setText('mes-label-3', fmtMo(curYM));
+setText('fechadas-tag', fechadasCur.length + ' operações');
+
+const tbody3 = $('fechadas-tbody');
+if (!fechadasCur.length) {
+  tbody3.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--txt-3);padding:20px;">Sem posições fechadas este mês</td></tr>';
+} else {
+  const mktColor = m => m==='EUR'?'var(--accent1)':'var(--accent2)';
+  const sym      = m => m==='EUR'?'€':'$';
+  tbody3.innerHTML = fechadasCur.map(p => `<tr>
+    <td style="font-weight:600;">${p.nome}</td>
+    <td style="color:${mktColor(p.mkt)}">${p.mkt}</td>
+    <td class="r ${cls(p.lucro)}">${s(p.lucro, sym(p.mkt))}</td>
+    <td><span class="badge ${p.tipo==='lucro'?'badge-g':'badge-r'}">${p.tipo}</span></td>
+    <td style="color:var(--txt-3);">${fmtDate(p.data_saida)}</td>
+  </tr>`).join('');
+
+  const totEur = fechadasCur.filter(p=>p.mkt==='EUR').reduce((a,p)=>a+p.lucro,0);
+  const totUsd = fechadasCur.filter(p=>p.mkt==='USD').reduce((a,p)=>a+p.lucro,0);
+  $('fechadas-tfoot').innerHTML = `<tr>
+    <td colspan="2" style="color:var(--txt-3);font-size:10px;">TOTAL</td>
+    <td class="r ${cls(totEur+totUsd*EUR_RATE)}">${s(totEur,'€')} / ${s(totUsd,'$')}</td>
+    <td colspan="2" style="color:var(--txt-3);font-size:10px;">~${s(totEur+totUsd*EUR_RATE,'€')}</td>
+  </tr>`;
+}
+
+// ── SECÇÃO 4: abertas ──
+const allPos = [
+  ...(LATEST.eur?.positions||[]).map(p=>({...p,_sym:'€'})),
+  ...(LATEST.usd?.positions||[]).map(p=>({...p,_sym:'$'}))
+].sort((a,b)=>(b.lucro||0)-(a.lucro||0));
+
+setText('abertas-tag', allPos.length + ' posições · ' + fmtDate(LATEST_DATE));
+const mktColor = m => m==='EUR'?'var(--accent1)':'var(--accent2)';
+const trustBadge = t => t==='v'?'<span class="badge badge-g">Verde</span>':t==='a'?'<span class="badge badge-a">Amarelo</span>':'<span class="badge badge-r">Vermelho</span>';
+
+$('abertas-tbody').innerHTML = allPos.length ? allPos.map(p=>`<tr>
+  <td style="font-weight:600;">${p.name}</td>
+  <td style="color:${mktColor(p.mkt)}">${p.mkt}</td>
+  <td class="r ${cls(p.pct||0)}">${(p.pct>=0?'+':'')+p.pct.toFixed(2)}%</td>
+  <td class="r ${cls(p.lucro||0)}">${s(p.lucro,p._sym)}</td>
+  <td>${trustBadge(p.trust)}</td>
+</tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--txt-3);padding:16px;">Sem posições</td></tr>';
+
+// ── SECÇÃO 5: histórico mensal ──
+setText('hist-tag', allMonths.length + ' meses');
+$('hist-tbody').innerHTML = allMonths.map(ym => {
+  const st = monthStats(ym);
+  const lastD = (byMonth[ym]||[]).slice(-1)[0];
+  const nrE = TRADING_DATA[lastD]?.eur?.lucro || 0;
+  const nrU = TRADING_DATA[lastD]?.usd?.lucro || 0;
+  const tot = (st.realEur + st.realUsd*EUR_RATE) + (nrE + nrU*EUR_RATE);
+  const pE  = (st.realEur + nrE) / META_EUR * 100;
+  const pU  = (st.realUsd + nrU) / META_USD * 100;
+  const metaOk = pE >= 100 && pU >= 100;
+  const metaEurColor = pE>=100?'var(--green)':pE>=50?'var(--amber)':'var(--red)';
+  const metaUsdColor = pU>=100?'var(--green)':pU>=50?'var(--amber)':'var(--red)';
+  return `<tr>
+    <td style="font-weight:600;color:var(--accent2);">${fmtMo(ym)}</td>
+    <td class="r ${cls(st.realEur)}">${s(st.realEur,'€')}</td>
+    <td class="r ${cls(st.realUsd)}">${s(st.realUsd,'$')}</td>
+    <td class="r neu">${s(nrE,'€')}</td>
+    <td class="r neu">${s(nrU,'$')}</td>
+    <td class="r ${cls(tot)}">${s(tot,'€')}</td>
+    <td class="r" style="color:${metaEurColor};">${pctStr(pE)}</td>
+    <td class="r" style="color:${metaUsdColor};">${pctStr(pU)}</td>
+    <td>${metaOk?'<span class="badge-meta">META ATINGIDA</span>':'<span style="color:var(--txt-3);font-size:10px;">em curso</span>'}</td>
+  </tr>`;
+}).join('');
 </script>
 </body>
 </html>
