@@ -273,23 +273,32 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
 /* ── KPIs topo ── */
 (function(){
-  // Constantes fixas do fundo (actualizar quando o capital mudar)
-  const CAP_EUR_INICIAL = 79.39;   // capital base EUR — 09 Abr 2025
-  const BASE_USD        = 176.67;  // capital base USD = saldo - realizado
+  const EUR_RATE     = 0.92;
+  const FALLBACK_EUR = 79.39;
+  const FALLBACK_USD = 176.67;
+  // Saldo actual — actualizar quando houver novo extracto mensal
+  const SALDO_EUR    = 78.41;
+  const SALDO_USD    = 177.11;
 
-  const first   = DATES[0];
-  const last    = DATES[DATES.length - 1];
-  const latestD = TRADING_DATA[last];
+  // Bases do mês actual via MESES_DATA
+  const MESES   = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
+  const curYM   = LATEST_DATE.slice(0, 7);
+  const mesKeys = Object.keys(MESES).sort();
+  const mesKey  = MESES[curYM] ? curYM : (mesKeys.length ? mesKeys[mesKeys.length - 1] : null);
+  const mesInfo = mesKey ? MESES[mesKey] : {};
+  const baseEur = mesInfo.base_eur || FALLBACK_EUR;
+  const baseUsd = mesInfo.base_usd || FALLBACK_USD;
 
-  // Lucro total acumulado = soma de eur.lucro / usd.lucro de todos os dias
-  const totalEurLucro = DATES.reduce((a,d) => a + (TRADING_DATA[d].eur?.lucro || 0), 0);
-  const totalUsdLucro = DATES.reduce((a,d) => a + (TRADING_DATA[d].usd?.lucro || 0), 0);
+  // Lucro = saldo_fim - base (mês fechado) ou SALDO_ATUAL - base (mês em curso)
+  const isClosed = mesInfo.saldo_fim_eur != null;
+  const lucroEur = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (SALDO_EUR - baseEur);
+  const lucroUsd = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (SALDO_USD - baseUsd);
+  const retEurPct = (lucroEur / baseEur * 100).toFixed(1);
+  const retUsdPct = (lucroUsd / baseUsd * 100).toFixed(1);
 
-  // Retorno = lucro acumulado / capital base × 100
-  const retEurPct = (totalEurLucro / CAP_EUR_INICIAL * 100).toFixed(1);
-  const retUsdPct = (totalUsdLucro / BASE_USD        * 100).toFixed(1);
-
-  // Melhor sessão = dia com maior lucro diário
+  // Melhor sessão = dia com P&L snapshot mais alto (mantém)
+  const first = DATES[0];
+  const last  = DATES[DATES.length - 1];
   let bestEurDate = first, bestEurVal = TRADING_DATA[first].eur.lucro;
   let bestUsdDate = first, bestUsdVal = TRADING_DATA[first].usd.lucro;
   DATES.forEach(d => {
@@ -299,10 +308,10 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
   const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
 
-  set('kpi-ret-eur-val', (retEurPct >= 0 ? '+' : '') + retEurPct + '%');
-  set('kpi-ret-eur-sub', 'lucro ' + (totalEurLucro >= 0 ? '+' : '') + totalEurLucro.toFixed(2) + '€ sobre ' + CAP_EUR_INICIAL.toFixed(2) + '€ base');
-  set('kpi-ret-usd-val', (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%');
-  set('kpi-ret-usd-sub', 'lucro ' + (totalUsdLucro >= 0 ? '+' : '') + totalUsdLucro.toFixed(2) + '$ sobre ' + BASE_USD.toFixed(2) + '$ base');
+  set('kpi-ret-eur-val', (lucroEur >= 0 ? '+' : '') + lucroEur.toFixed(2) + '€');
+  set('kpi-ret-eur-sub', (retEurPct >= 0 ? '+' : '') + retEurPct + '% sobre ' + baseEur.toFixed(2) + '€ base');
+  set('kpi-ret-usd-val', (lucroUsd >= 0 ? '+' : '') + lucroUsd.toFixed(2) + '$');
+  set('kpi-ret-usd-sub', (retUsdPct >= 0 ? '+' : '') + retUsdPct + '% sobre ' + baseUsd.toFixed(2) + '$ base');
   set('kpi-best-eur-val', '+' + bestEurVal.toFixed(2) + ' €');
   set('kpi-best-eur-sub', fmtDate(bestEurDate));
   set('kpi-best-usd-val', '+' + bestUsdVal.toFixed(2) + ' $');
@@ -404,9 +413,13 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 
 /* ── Análise Mensal ── */
 (function(){
-  const EUR_RATE = 0.93;
-  const CAP_EUR  = 79.39;
-  const BASE_USD = 176.67;
+  const EUR_RATE  = 0.92;
+  const CAP_EUR   = 79.39;
+  const BASE_USD  = 176.67;
+  // Saldo actual — actualizar quando houver novo extracto mensal
+  const SALDO_EUR = 78.41;
+  const SALDO_USD = 177.11;
+  const MESES     = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
   const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
   // group by YYYY-MM
@@ -419,27 +432,36 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 
   const monthKeys = Object.keys(byMonth).sort().reverse();
 
-  // build stats per month — usa só eur.lucro / usd.lucro (P&L posições), nunca eventos
+  // build stats per month
   const stats = monthKeys.map(ym => {
-    const days = byMonth[ym];
-    let eurLucro=0, usdLucro=0;
+    const days    = byMonth[ym];
+    const mesInfo = MESES[ym] || {};
+    const baseEur = mesInfo.base_eur || CAP_EUR;
+    const baseUsd = mesInfo.base_usd || BASE_USD;
+
+    // Lucro correcto: saldo_fim - base (mês fechado) ou SALDO_ATUAL - base (mês em curso)
+    // NÃO soma eur.lucro diários — esses são snapshots flutuantes, não P&L realizável
+    const isClosed = mesInfo.saldo_fim_eur != null;
+    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (SALDO_EUR - baseEur);
+    const usdLucro = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (SALDO_USD - baseUsd);
+
+    // Melhor/pior sessão — usa P&L snapshot diário combinado (mantém)
     let bestDay={v:-Infinity,d:''}, worstDay={v:Infinity,d:''};
     days.forEach(d => {
       const el = TRADING_DATA[d].eur?.lucro || 0;
       const ul = TRADING_DATA[d].usd?.lucro || 0;
-      eurLucro += el;
-      usdLucro += ul;
       const combined = el + ul * EUR_RATE;
       if (combined > bestDay.v)  bestDay  = {v:combined, vEur:el, vUsd:ul, d};
       if (combined < worstDay.v) worstDay = {v:combined, vEur:el, vUsd:ul, d};
     });
-    const retEur  = (eurLucro / CAP_EUR  * 100);
-    const retUsd  = (usdLucro / BASE_USD * 100);
+
+    const retEur   = (eurLucro / baseEur * 100);
+    const retUsd   = (usdLucro / baseUsd * 100);
     const totalEur = (eurLucro + usdLucro * EUR_RATE);
-    const [y,m] = ym.split('-').map(Number);
+    const [y,m]    = ym.split('-').map(Number);
     return {ym, label: MONTHS_PT[m-1]+' '+y, sessions:days.length,
-            eurLucro, usdLucro, totalEur, retEur, retUsd,
-            bestDay, worstDay};
+            eurLucro, usdLucro, totalEur, retEur, retUsd, baseEur, baseUsd,
+            bestDay, worstDay, isClosed};
   });
 
   function fmtL(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+' '+sym; }
@@ -467,17 +489,17 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Lucro EUR · ${cur.label}</div>
         <div class="kpi-mini-value ${cls(cur.eurLucro)}">${fmtL(cur.eurLucro,'€')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre ${CAP_EUR.toFixed(2)}€ base</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre ${cur.baseEur.toFixed(2)}€ base</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Lucro USD · ${cur.label}</div>
         <div class="kpi-mini-value ${cls(cur.usdLucro)}">${fmtL(cur.usdLucro,'$')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre ${BASE_USD.toFixed(2)}$ base</div>
+        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre ${cur.baseUsd.toFixed(2)}$ base</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Sessões · ${cur.label}</div>
         <div class="kpi-mini-value" style="color:var(--amber);">${cur.sessions}</div>
-        <div class="kpi-mini-sub">média EUR ${(cur.eurLucro/cur.sessions).toFixed(2)}€ · USD ${(cur.usdLucro/cur.sessions).toFixed(2)}$</div>
+        <div class="kpi-mini-sub">total ~EUR ${fmtL(cur.totalEur,'€')}</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Melhor sessão</div>
