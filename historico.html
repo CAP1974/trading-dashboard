@@ -142,16 +142,51 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- Saldo Chart -->
+  <!-- Saldo Charts — EUR e USD separados -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">EUR · 8MSN</span>
+        <span class="card-tag" id="saldo-eur-tag">—</span>
+      </div>
+      <div class="card-body" style="padding-bottom:8px;">
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="saldoEurChart" role="img" aria-label="Evolução saldo EUR"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">USD · OMV</span>
+        <span class="card-tag" id="saldo-usd-tag">—</span>
+      </div>
+      <div class="card-body" style="padding-bottom:8px;">
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="saldoUsdChart" role="img" aria-label="Evolução saldo USD"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabela saldo diário -->
   <div class="card">
     <div class="card-header">
-      <span class="card-title">Evolução do Saldo · EUR + USD</span>
-      <span class="card-tag">Saldo vs base · eixos independentes</span>
+      <span class="card-title">Saldo diário</span>
+      <span class="card-tag">vs capital base</span>
     </div>
-    <div class="card-body">
-      <div class="chart-wrap" style="height:220px;">
-        <canvas id="acumChart" role="img" aria-label="Evolução do saldo EUR e USD"></canvas>
-      </div>
+    <div class="card-body" style="padding:0;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th class="r">Saldo EUR</th>
+            <th class="r">vs Base</th>
+            <th class="r">Saldo USD</th>
+            <th class="r">vs Base</th>
+          </tr>
+        </thead>
+        <tbody id="saldo-tbody"></tbody>
+      </table>
     </div>
   </div>
 
@@ -345,12 +380,12 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
   }
 });
 
-/* ── Saldo Chart (Evolução do Saldo) ── */
+/* ── Saldo Charts — EUR e USD separados ── */
 (function(){
-  const BASE_EUR_S  = 79.39;   // capital base EUR
-  const BASE_USD_S  = 176.67;  // capital base USD
-  const SALDO_EUR_S = 78.41;   // saldo actual EUR
-  const SALDO_USD_S = 177.11;  // saldo actual USD
+  const BASE_EUR_S  = 79.39;
+  const BASE_USD_S  = 176.67;
+  const SALDO_EUR_S = 78.41;
+  const SALDO_USD_S = 177.11;
 
   // Labels: Início → datas → Actual
   const saldoLabels = [
@@ -359,151 +394,134 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
     'Actual'
   ];
 
-  // EUR: base → base + lucro diário → saldo actual
+  // Séries de saldo: base → base+lucro_dia → saldo_actual
   const eurSaldo = [
     BASE_EUR_S,
     ...DATES.map(d => parseFloat((BASE_EUR_S + (TRADING_DATA[d].eur?.lucro || 0)).toFixed(2))),
     SALDO_EUR_S
   ];
-
-  // USD: base → base + lucro diário → saldo actual
   const usdSaldo = [
     BASE_USD_S,
     ...DATES.map(d => parseFloat((BASE_USD_S + (TRADING_DATA[d].usd?.lucro || 0)).toFixed(2))),
     SALDO_USD_S
   ];
 
-  // Linha base tracejada (constante)
-  const eurBaseline = new Array(saldoLabels.length).fill(BASE_EUR_S);
-  const usdBaseline = new Array(saldoLabels.length).fill(BASE_USD_S);
+  // Tags do header (valor actual + retorno %)
+  const retEurPct = ((SALDO_EUR_S - BASE_EUR_S) / BASE_EUR_S * 100);
+  const retUsdPct = ((SALDO_USD_S - BASE_USD_S) / BASE_USD_S * 100);
+  const setTag = (id, val, ret, sym) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val.toFixed(2) + sym + '  (' + (ret >= 0 ? '+' : '') + ret.toFixed(1) + '% vs base)';
+  };
+  setTag('saldo-eur-tag', SALDO_EUR_S, retEurPct, '€');
+  setTag('saldo-usd-tag', SALDO_USD_S, retUsdPct, '$');
 
-  // Min Y por eixo: mínimo dos dados - margem
-  const eurMin = Math.floor(Math.min(...eurSaldo) - 1.5);
-  const usdMin = Math.floor(Math.min(...usdSaldo) - 1.5);
+  // Função genérica para criar um gráfico de saldo
+  function makeSaldoChart(canvasId, saldoData, base, lineColor, fillColor, sym, yMin, yMax) {
+    const n        = saldoLabels.length;
+    const baseline = new Array(n).fill(base);
+    const ptColors = saldoData.map(v => v >= base ? lineColor : '#ff4d6a');
 
-  // Cor por ponto: verde se ≥ base, vermelho se < base
-  const ptColorEur = eurSaldo.map(v => v >= BASE_EUR_S ? '#1eff8e' : '#ff4d6a');
-  const ptColorUsd = usdSaldo.map(v => v >= BASE_USD_S ? '#00c8ff' : '#ff4d6a');
-
-  new Chart(document.getElementById('acumChart').getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: saldoLabels,
-      datasets: [
-        // EUR saldo
-        {
-          label: 'EUR (€)',
-          data: eurSaldo,
-          borderWidth: 2,
-          pointRadius: 4,
-          tension: 0.3,
-          yAxisID: 'yEUR',
-          fill: false,
-          pointBackgroundColor: ptColorEur,
-          segment: {
-            borderColor: ctx => ctx.p1.parsed.y < BASE_EUR_S ? '#ff4d6a' : '#1eff8e'
+    new Chart(document.getElementById(canvasId).getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: saldoLabels,
+        datasets: [
+          // 0 — linha base tracejada (referência para fill)
+          {
+            label: '_base',
+            data: baseline,
+            borderColor: 'rgba(255,255,255,0.18)',
+            borderWidth: 1,
+            borderDash: [5, 4],
+            pointRadius: 0,
+            fill: false,
+            tension: 0,
+            order: 2
+          },
+          // 1 — saldo real (fill relativo ao dataset 0)
+          {
+            label: sym === '€' ? 'EUR' : 'USD',
+            data: saldoData,
+            borderWidth: 2.5,
+            pointRadius: 4.5,
+            pointHoverRadius: 6,
+            tension: 0.25,
+            pointBackgroundColor: ptColors,
+            pointBorderColor: 'transparent',
+            fill: { target: 0, above: fillColor, below: 'rgba(255,77,106,0.12)' },
+            segment: {
+              borderColor: ctx => ctx.p1.parsed.y < base ? '#ff4d6a' : lineColor
+            },
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0f1923',
+            borderColor: 'rgba(255,255,255,.08)',
+            borderWidth: 1,
+            titleColor: '#ddeaf7',
+            bodyColor: '#6b8aaa',
+            padding: 10,
+            callbacks: {
+              label: ctx => {
+                if (ctx.dataset.label === '_base') return null;
+                const delta = ctx.parsed.y - base;
+                const sign  = delta >= 0 ? '+' : '';
+                return ` ${ctx.parsed.y.toFixed(2)}${sym}  (${sign}${delta.toFixed(2)}${sym} vs base)`;
+              }
+            }
           }
         },
-        // EUR base tracejada
-        {
-          label: '_eurBase',
-          data: eurBaseline,
-          borderColor: 'rgba(30,255,142,0.28)',
-          borderWidth: 1,
-          borderDash: [5, 4],
-          pointRadius: 0,
-          yAxisID: 'yEUR',
-          fill: false,
-          tension: 0
-        },
-        // USD saldo
-        {
-          label: 'USD ($)',
-          data: usdSaldo,
-          borderWidth: 2,
-          pointRadius: 4,
-          tension: 0.3,
-          yAxisID: 'yUSD',
-          fill: false,
-          pointBackgroundColor: ptColorUsd,
-          segment: {
-            borderColor: ctx => ctx.p1.parsed.y < BASE_USD_S ? '#ff4d6a' : '#00c8ff'
-          }
-        },
-        // USD base tracejada
-        {
-          label: '_usdBase',
-          data: usdBaseline,
-          borderColor: 'rgba(0,200,255,0.28)',
-          borderWidth: 1,
-          borderDash: [5, 4],
-          pointRadius: 0,
-          yAxisID: 'yUSD',
-          fill: false,
-          tension: 0
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#6b8aaa',
-            font: { size: 11 },
-            filter: item => !item.text.startsWith('_')
-          }
-        },
-        tooltip: {
-          backgroundColor: '#0f1923',
-          borderColor: 'rgba(255,255,255,.08)',
-          borderWidth: 1,
-          titleColor: '#ddeaf7',
-          bodyColor: '#6b8aaa',
-          callbacks: {
-            label: ctx => {
-              if (ctx.dataset.label.startsWith('_')) return null;
-              const sym = ctx.dataset.yAxisID === 'yEUR' ? '€' : '$';
-              const base = ctx.dataset.yAxisID === 'yEUR' ? BASE_EUR_S : BASE_USD_S;
-              const delta = ctx.parsed.y - base;
-              const sign  = delta >= 0 ? '+' : '';
-              return ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}${sym}  (${sign}${delta.toFixed(2)}${sym} vs base)`;
+        scales: {
+          x: {
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: { color: '#6b8aaa', font: { size: 10 } }
+          },
+          y: {
+            min: yMin,
+            max: yMax,
+            grid: { color: 'rgba(255,255,255,0.04)' },
+            ticks: {
+              color: '#6b8aaa',
+              font: { size: 10 },
+              callback: v => v.toFixed(0) + sym
             }
           }
         }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#6b8aaa', font: { size: 10 } }
-        },
-        yEUR: {
-          type: 'linear',
-          position: 'left',
-          min: eurMin,
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: {
-            color: '#1eff8e',
-            font: { size: 10 },
-            callback: v => v.toFixed(1) + '€'
-          }
-        },
-        yUSD: {
-          type: 'linear',
-          position: 'right',
-          min: usdMin,
-          grid: { drawOnChartArea: false },
-          ticks: {
-            color: '#00c8ff',
-            font: { size: 10 },
-            callback: v => v.toFixed(1) + '$'
-          }
-        }
       }
-    }
-  });
+    });
+  }
+
+  makeSaldoChart('saldoEurChart', eurSaldo, BASE_EUR_S, '#1eff8e', 'rgba(30,255,142,0.10)', '€', 77, 85);
+  makeSaldoChart('saldoUsdChart', usdSaldo, BASE_USD_S, '#00c8ff', 'rgba(0,200,255,0.10)', '$', 174, 190);
+
+  // Tabela saldo diário
+  function cls(v)       { return v >= 0 ? 'up' : 'dn'; }
+  function fmtDelta(v, sym) {
+    return `<span class="${cls(v)}">${v >= 0 ? '+' : ''}${v.toFixed(2)} ${sym}</span>`;
+  }
+  const tbody = document.getElementById('saldo-tbody');
+  if (tbody) {
+    tbody.innerHTML = DATES.map(d => {
+      const eS = parseFloat((BASE_EUR_S + (TRADING_DATA[d].eur?.lucro || 0)).toFixed(2));
+      const uS = parseFloat((BASE_USD_S + (TRADING_DATA[d].usd?.lucro || 0)).toFixed(2));
+      return `<tr>
+        <td style="color:var(--accent2);font-weight:500;">${fmtDate(d)}</td>
+        <td class="r">${eS.toFixed(2)} €</td>
+        <td class="r">${fmtDelta(eS - BASE_EUR_S, '€')}</td>
+        <td class="r">${uS.toFixed(2)} $</td>
+        <td class="r">${fmtDelta(uS - BASE_USD_S, '$')}</td>
+      </tr>`;
+    }).join('');
+  }
 })();
 
 /* ── Tabela histórico ── */
