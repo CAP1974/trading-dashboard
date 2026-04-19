@@ -387,23 +387,20 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
   const SALDO_EUR_S = 78.41;
   const SALDO_USD_S = 177.11;
 
-  // Labels: Início → datas → Actual
+  // Labels: Início → datas (sem ponto "Actual" extra)
   const saldoLabels = [
     'Início',
-    ...DATES.map(d => { const[,m,dd]=d.split('-'); return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0'); }),
-    'Actual'
+    ...DATES.map(d => { const[,m,dd]=d.split('-'); return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0'); })
   ];
 
-  // Séries de saldo: base → base+lucro_dia → saldo_actual
+  // Séries de saldo: base → base+lucro_dia (último dia = ponto actual)
   const eurSaldo = [
     BASE_EUR_S,
-    ...DATES.map(d => parseFloat((BASE_EUR_S + (TRADING_DATA[d].eur?.lucro || 0)).toFixed(2))),
-    SALDO_EUR_S
+    ...DATES.map(d => parseFloat((BASE_EUR_S + (TRADING_DATA[d].eur?.lucro || 0)).toFixed(2)))
   ];
   const usdSaldo = [
     BASE_USD_S,
-    ...DATES.map(d => parseFloat((BASE_USD_S + (TRADING_DATA[d].usd?.lucro || 0)).toFixed(2))),
-    SALDO_USD_S
+    ...DATES.map(d => parseFloat((BASE_USD_S + (TRADING_DATA[d].usd?.lucro || 0)).toFixed(2)))
   ];
 
   // Tags do header (valor actual + retorno %)
