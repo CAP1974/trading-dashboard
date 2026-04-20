@@ -1,5 +1,4 @@
-// AUTO-GENERATED — DO NOT EDIT MANUALLY
-// Updated: 2026-04-20T20:36:45.304Z
+// AUTO-GENERATED — do not edit manually
 const TRADING_DATA = {
   "2025-04-09": {
     "date": "2025-04-09",
@@ -1711,15 +1710,27 @@ const TRADING_DATA = {
     }
   }
 };
-const DATA_DATES   = ["2025-04-10","2025-04-13","2025-04-14","2025-04-15","2025-04-16","2025-04-17","2026-04-20"];
-const LATEST_DATE  = "2026-04-20";
-const MESES_DATA   = {
+
+const DATA_DATES = ["2025-04-10","2025-04-13","2025-04-14","2025-04-15","2025-04-16","2025-04-17","2026-04-20"];
+
+const LATEST_DATE = "2026-04-20";
+
+const MESES_DATA = {
   "2025-04": {
     "base_eur": 79.39,
     "base_usd": 176.67,
     "meta_eur": 7.939,
     "meta_usd": 17.667,
     "inicio": "2025-04-09",
+    "saldo_fim_eur": null,
+    "saldo_fim_usd": null
+  },
+  "2026-04": {
+    "base_eur": 78.41,
+    "base_usd": 177.11,
+    "meta_eur": 7.841,
+    "meta_usd": 17.711,
+    "inicio": "2026-04-20",
     "saldo_fim_eur": null,
     "saldo_fim_usd": null
   }
