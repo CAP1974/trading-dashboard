@@ -308,12 +308,14 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
 /* ── KPIs topo ── */
 (function(){
-  const EUR_RATE     = 0.92;
-  const FALLBACK_EUR = 79.39;
-  const FALLBACK_USD = 176.67;
-  // Saldo actual — actualizar quando houver novo extracto mensal
-  const SALDO_EUR    = 78.41;
-  const SALDO_USD    = 177.11;
+  const EUR_RATE      = 0.92;
+  const FALLBACK_EUR  = 79.39;
+  const FALLBACK_USD  = 176.67;
+  // Constantes oficiais do mês actual (actualizar a cada fechamento)
+  const LUCRO_ABT_EUR = 3.40;   // lucro aberto EUR
+  const LUCRO_ABT_USD = 10.73;  // lucro aberto USD
+  const REAL_EUR      = -1.46;  // realizado EUR
+  const REAL_USD      =  1.93;  // realizado USD
 
   // Bases do mês actual via MESES_DATA
   const MESES   = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
@@ -324,10 +326,10 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const baseEur = mesInfo.base_eur || FALLBACK_EUR;
   const baseUsd = mesInfo.base_usd || FALLBACK_USD;
 
-  // Lucro = saldo_fim - base (mês fechado) ou SALDO_ATUAL - base (mês em curso)
+  // Lucro = saldo_fim - base (mês fechado) ou lucro_aberto + realizado (mês em curso)
   const isClosed = mesInfo.saldo_fim_eur != null;
-  const lucroEur = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (SALDO_EUR - baseEur);
-  const lucroUsd = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (SALDO_USD - baseUsd);
+  const lucroEur = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (LUCRO_ABT_EUR + REAL_EUR);
+  const lucroUsd = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (LUCRO_ABT_USD + REAL_USD);
   const retEurPct = (lucroEur / baseEur * 100).toFixed(1);
   const retUsdPct = (lucroUsd / baseUsd * 100).toFixed(1);
 
@@ -352,10 +354,7 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   set('kpi-best-usd-val', '+' + bestUsdVal.toFixed(2) + ' $');
   set('kpi-best-usd-sub', fmtDate(bestUsdDate));
 
-  const [,fm,fd] = first.split('-').map(Number);
-  const [,lm,ld] = last.split('-').map(Number);
-  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  set('equity-range', String(fd).padStart(2,'0') + '–' + String(ld).padStart(2,'0') + ' ' + MONTHS_PT[lm-1] + ' 2025');
+  set('equity-range', fmtDate(first) + ' – ' + fmtDate(last));
   set('hist-page-sub', 'Triple Seven Capital · Início: ' + fmtDate(first) + ' · ' + DATES.length + ' sessões registadas');
 })();
 
@@ -567,14 +566,17 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 
 /* ── Análise Mensal ── */
 (function(){
-  const EUR_RATE  = 0.92;
-  const CAP_EUR   = 79.39;
-  const BASE_USD  = 176.67;
-  // Saldo actual — actualizar quando houver novo extracto mensal
-  const SALDO_EUR = 78.41;
-  const SALDO_USD = 177.11;
-  const MESES     = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
-  const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const EUR_RATE      = 0.92;
+  const CAP_EUR       = 79.39;
+  const BASE_USD      = 176.67;
+  // Constantes oficiais do mês actual (actualizar a cada fechamento)
+  const LUCRO_ABT_EUR = 3.40;
+  const LUCRO_ABT_USD = 10.73;
+  const REAL_EUR      = -1.46;
+  const REAL_USD      =  1.93;
+  const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
+  const MONTHS_PT     = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const curYM_m       = LATEST_DATE.slice(0, 7);
 
   // group by YYYY-MM
   const byMonth = {};
@@ -584,7 +586,8 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     byMonth[ym].push(d);
   });
 
-  const monthKeys = Object.keys(byMonth).sort().reverse();
+  // Só meses 2026+ (2025 foi período de calibração)
+  const monthKeys = Object.keys(byMonth).filter(ym => ym >= '2026').sort().reverse();
 
   // build stats per month
   const stats = monthKeys.map(ym => {
@@ -593,11 +596,11 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     const baseEur = mesInfo.base_eur || CAP_EUR;
     const baseUsd = mesInfo.base_usd || BASE_USD;
 
-    // Lucro correcto: saldo_fim - base (mês fechado) ou SALDO_ATUAL - base (mês em curso)
-    // NÃO soma eur.lucro diários — esses são snapshots flutuantes, não P&L realizável
+    // Lucro: saldo_fim - base (mês fechado) ou lucro_aberto + realizado (mês actual em curso)
     const isClosed = mesInfo.saldo_fim_eur != null;
-    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (SALDO_EUR - baseEur);
-    const usdLucro = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (SALDO_USD - baseUsd);
+    const isCur    = ym === curYM_m;
+    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (isCur ? (LUCRO_ABT_EUR + REAL_EUR) : 0);
+    const usdLucro = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (isCur ? (LUCRO_ABT_USD + REAL_USD) : 0);
 
     // Melhor/pior sessão — usa P&L snapshot diário combinado (mantém)
     let bestDay={v:-Infinity,d:''}, worstDay={v:Infinity,d:''};
