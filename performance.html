@@ -605,34 +605,49 @@ if (trajMeses.length) {
   const firstMes = MESES[trajMeses[0]];
   const [fy, fm] = trajMeses[0].split('-').map(Number);
 
-  // build series — index 0 = "Início"
-  const labels        = ['Início (' + fmtDate(firstMes.inicio) + ')'];
-  const metaEurPts    = [firstMes.base_eur];
-  const metaUsdPts    = [firstMes.base_usd];
-  const realEurPts    = [firstMes.base_eur];
-  const realUsdPts    = [firstMes.base_usd];
-  const progEurPts    = [null];
-  const progUsdPts    = [null];
+  // ── Série diária: index 0 = "Início", depois um ponto por dia de trading ──
+  const days2026   = ALL_D.filter(d => d >= '2026').sort();
+  const lastDay    = days2026[days2026.length - 1];
 
-  trajMeses.forEach(ym => {
-    const mes = MESES[ym];
-    const [y, m] = ym.split('-').map(Number);
-    const n = (y - fy) * 12 + (m - fm) + 1;
-    labels.push(MO_PT_P[m-1] + ' ' + y);
-    metaEurPts.push(+(firstMes.base_eur * Math.pow(1.10, n)).toFixed(2));
-    metaUsdPts.push(+(firstMes.base_usd * Math.pow(1.10, n)).toFixed(2));
-    const isCur = ym === curYM;
-    if (!isCur && mes.saldo_fim_eur !== null) {
-      realEurPts.push(mes.saldo_fim_eur);
-      realUsdPts.push(mes.saldo_fim_usd);
-      progEurPts.push(null);
-      progUsdPts.push(null);
+  const labels      = ['Início (' + fmtDate(firstMes.inicio) + ')'];
+  const metaEurPts  = [firstMes.base_eur];
+  const metaUsdPts  = [firstMes.base_usd];
+  const saldoEurPts = [firstMes.base_eur];
+  const saldoUsdPts = [firstMes.base_usd];
+
+  let cumRealEur = 0, cumRealUsd = 0;
+
+  days2026.forEach(d => {
+    const ym      = d.slice(0, 7);
+    const mesInfo = MESES[ym] || {};
+    const baseEur = mesInfo.base_eur || CAP_EUR;
+    const baseUsd = mesInfo.base_usd || BASE_USD;
+    const [y, m]  = ym.split('-').map(Number);
+    const monthIdx = (y - fy) * 12 + (m - fm) + 1;
+
+    let saldoE, saldoU;
+    if (d === lastDay && ym === curYM) {
+      // último dia do mês actual: usa constantes oficiais
+      saldoE = baseEur + LUCRO_ABT_EUR + REAL_EUR;
+      saldoU = baseUsd + LUCRO_ABT_USD + REAL_USD;
     } else {
-      realEurPts.push(null);
-      realUsdPts.push(null);
-      progEurPts.push(SALDO_EUR);
-      progUsdPts.push(SALDO_USD);
+      // dias anteriores: base + não-realizado snapshot + realizado acumulado
+      (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
+        if (p.mkt === 'EUR') cumRealEur += p.lucro || 0;
+        else                  cumRealUsd += p.lucro || 0;
+      });
+      const dayData = TRADING_DATA[d];
+      saldoE = baseEur + (dayData?.eur?.lucro || 0) + cumRealEur;
+      saldoU = baseUsd + (dayData?.usd?.lucro || 0) + cumRealUsd;
     }
+
+    const lbl = d === lastDay ? 'Actual (' + fmtDate(d) + ')' : fmtDate(d);
+    labels.push(lbl);
+    // meta ideal = fim do mês corrente (target flat dentro do mês, sobe a cada mês)
+    metaEurPts.push(+(firstMes.base_eur * Math.pow(1.10, monthIdx)).toFixed(2));
+    metaUsdPts.push(+(firstMes.base_usd * Math.pow(1.10, monthIdx)).toFixed(2));
+    saldoEurPts.push(+saldoE.toFixed(2));
+    saldoUsdPts.push(+saldoU.toFixed(2));
   });
 
   const chartDefaults = {
@@ -647,7 +662,7 @@ if (trajMeses.length) {
     }
   };
 
-  function mkCurve(id, metaPts, realPts, progPts, color) {
+  function mkCurve(id, metaPts, saldoPts, color) {
     new Chart(document.getElementById(id), {
       type: 'line',
       data: {
@@ -655,27 +670,26 @@ if (trajMeses.length) {
         datasets: [
           { label: 'Meta Ideal', data: metaPts, borderColor: color, borderDash: [5,5],
             borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: color, tension: 0.3, fill: false },
-          { label: 'Real', data: realPts, borderColor: '#1eff8e', borderWidth: 2,
+          { label: 'Saldo', data: saldoPts, borderColor: '#1eff8e', borderWidth: 2,
             pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
-            fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } },
-          { label: 'Em progresso', data: progPts, borderColor: 'rgba(255,255,255,.35)',
-            borderDash: [3,3], borderWidth: 1.5, pointRadius: 5,
-            pointBackgroundColor: 'rgba(255,255,255,.55)', tension: 0, fill: false }
+            segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
+            fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } }
         ]
       },
       options: chartDefaults
     });
   }
 
-  mkCurve('chartEurCurve', metaEurPts, realEurPts, progEurPts, '#3dffb0');
-  mkCurve('chartUsdCurve', metaUsdPts, realUsdPts, progUsdPts, '#00c8ff');
+  mkCurve('chartEurCurve', metaEurPts, saldoEurPts, '#3dffb0');
+  mkCurve('chartUsdCurve', metaUsdPts, saldoUsdPts, '#00c8ff');
 
-  // Tabela
+  // ── Tabela Histórico de Meses ──
   document.getElementById('traj-tbody').innerHTML = trajMeses.map(ym => {
     const mes   = MESES[ym];
     const isCur = ym === curYM;
-    const realE = isCur ? SALDO_EUR : mes.saldo_fim_eur;
-    const realU = isCur ? SALDO_USD : mes.saldo_fim_usd;
+    // saldo actual = base + aberto + realizado (oficial); fechado = saldo_fim
+    const realE = isCur ? (mes.base_eur + LUCRO_ABT_EUR + REAL_EUR) : mes.saldo_fim_eur;
+    const realU = isCur ? (mes.base_usd + LUCRO_ABT_USD + REAL_USD) : mes.saldo_fim_usd;
     const pctE  = realE !== null ? (realE - mes.base_eur) / mes.meta_eur * 100 : null;
     const pctU  = realU !== null ? (realU - mes.base_usd) / mes.meta_usd * 100 : null;
     const [_y,_m] = ym.split('-').map(Number);
@@ -703,12 +717,14 @@ if (trajMeses.length) {
     </tr>`;
   }).join('');
 
-  // Footer acumulado
+  // ── Footer desvio (só 2026) ──
   const nM     = trajMeses.length;
   const mAcEur = (Math.pow(1.10, nM) - 1) * 100;
   const mAcUsd = mAcEur;
-  const rAcEur = (SALDO_EUR - firstMes.base_eur) / firstMes.base_eur * 100;
-  const rAcUsd = (SALDO_USD - firstMes.base_usd) / firstMes.base_usd * 100;
+  const lastSaldoE = saldoEurPts[saldoEurPts.length - 1];
+  const lastSaldoU = saldoUsdPts[saldoUsdPts.length - 1];
+  const rAcEur = (lastSaldoE - firstMes.base_eur) / firstMes.base_eur * 100;
+  const rAcUsd = (lastSaldoU - firstMes.base_usd) / firstMes.base_usd * 100;
   const dEur   = rAcEur - mAcEur;
   const dUsd   = rAcUsd - mAcUsd;
   const fA = (v,c) => `<span class="${c||v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
