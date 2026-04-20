@@ -322,8 +322,8 @@ const allMonths = Object.keys(byMonth).sort().reverse();
 const curStats  = monthStats(curYM);
 
 // ── constantes oficiais (reset 20 Abr 2026) ──
-const REAL_EUR      = -0.48;   // lucro realizado EUR (plataforma)
-const REAL_USD      =  1.49;   // lucro realizado USD (posicoes_fechadas)
+const REAL_EUR      = -1.46;   // lucro realizado EUR (plataforma)
+const REAL_USD      =  1.93;   // lucro realizado USD (posicoes_fechadas)
 const LUCRO_ABT_EUR =  3.40;   // lucro aberto EUR
 const LUCRO_ABT_USD = 10.73;   // lucro aberto USD
 const SALDO_EUR     = 78.41;   // saldo actual EUR
@@ -566,34 +566,39 @@ $('abertas-tbody').innerHTML = allPos.length ? allPos.map(p=>`<tr>
   <td>${trustBadge(p.trust)}</td>
 </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--txt-3);padding:16px;">Sem posições</td></tr>';
 
-// ── SECÇÃO 5: histórico mensal ──
-setText('hist-tag', allMonths.length + ' meses');
-$('hist-tbody').innerHTML = allMonths.map(ym => {
+// ── SECÇÃO 5: histórico mensal (só 2026+) ──
+const months2026 = allMonths.filter(ym => ym >= '2026');
+setText('hist-tag', months2026.length + ' meses');
+$('hist-tbody').innerHTML = months2026.map(ym => {
   const st = monthStats(ym);
   const lastD = (byMonth[ym]||[]).slice(-1)[0];
   const nrE = TRADING_DATA[lastD]?.eur?.lucro || 0;
   const nrU = TRADING_DATA[lastD]?.usd?.lucro || 0;
-  const tot = (st.realEur + st.realUsd*EUR_RATE) + (nrE + nrU*EUR_RATE);
-  const pE  = (st.realEur + nrE) / META_EUR * 100;
-  const pU  = (st.realUsd + nrU) / META_USD * 100;
+  // usar constantes oficiais para o mês actual
+  const realEur = ym === curYM ? REAL_EUR : st.realEur;
+  const realUsd = ym === curYM ? REAL_USD : st.realUsd;
+  const tot = (realEur + realUsd*EUR_RATE) + (nrE + nrU*EUR_RATE);
+  const pE  = (realEur + nrE) / META_EUR * 100;
+  const pU  = (realUsd + nrU) / META_USD * 100;
   const metaOk = pE >= 100 && pU >= 100;
   const metaEurColor = pE>=100?'var(--green)':pE>=50?'var(--amber)':'var(--red)';
   const metaUsdColor = pU>=100?'var(--green)':pU>=50?'var(--amber)':'var(--red)';
+  const isCur = ym === curYM;
   return `<tr>
     <td style="font-weight:600;color:var(--accent2);">${fmtMo(ym)}</td>
-    <td class="r ${cls(st.realEur)}">${s(st.realEur,'€')}</td>
-    <td class="r ${cls(st.realUsd)}">${s(st.realUsd,'$')}</td>
+    <td class="r ${cls(realEur)}">${s(realEur,'€')}</td>
+    <td class="r ${cls(realUsd)}">${s(realUsd,'$')}</td>
     <td class="r neu">${s(nrE,'€')}</td>
     <td class="r neu">${s(nrU,'$')}</td>
     <td class="r ${cls(tot)}">${s(tot,'€')}</td>
     <td class="r" style="color:${metaEurColor};">${pctStr(pE)}</td>
     <td class="r" style="color:${metaUsdColor};">${pctStr(pU)}</td>
-    <td>${metaOk?'<span class="badge-meta">META ATINGIDA</span>':'<span style="color:var(--txt-3);font-size:10px;">em curso</span>'}</td>
+    <td>${isCur?'<span style="color:var(--txt-3);font-size:10px;">em curso</span>':(metaOk?'<span class="badge-meta">META ATINGIDA</span>':'<span class="badge badge-r">ABAIXO</span>')}</td>
   </tr>`;
 }).join('');
 
-// ── SECÇÃO 6: Trajectória do Fundo ──
-const trajMeses = Object.keys(MESES).sort();
+// ── SECÇÃO 6: Trajectória do Fundo (só 2026+) ──
+const trajMeses = Object.keys(MESES).sort().filter(ym => ym >= '2026');
 setText('traj-tag', trajMeses.length + (trajMeses.length === 1 ? ' mês' : ' meses'));
 
 if (trajMeses.length) {
