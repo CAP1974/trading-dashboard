@@ -41,12 +41,14 @@ const Anthropic = require('@anthropic-ai/sdk');
 const args    = process.argv.slice(2);
 const get     = flag => { const i = args.indexOf(flag); return i !== -1 ? args[i + 1] : null; };
 
-const date    = get('--date') || new Date().toISOString().slice(0, 10);
-const eurPath = get('--eur');
-const usdPath = get('--usd');
+const date     = get('--date') || new Date().toISOString().slice(0, 10);
+const eurPath  = get('--eur');
+const usdPath  = get('--usd');
+const caixaEurArg = get('--caixa-eur');
+const caixaUsdArg = get('--caixa-usd');
 
 if (!eurPath && !usdPath) {
-  console.error('Usage: node scripts/extract.js --date YYYY-MM-DD [--eur <img>] [--usd <img>]');
+  console.error('Usage: node scripts/extract.js --date YYYY-MM-DD [--eur <img>] [--usd <img>] [--caixa-eur N] [--caixa-usd N]');
   process.exit(1);
 }
 
@@ -168,6 +170,23 @@ async function run() {
     console.log(`Dados carregados: ${Object.keys(data).length} dias`);
   }
 
+  // Caixa — valor anterior como fallback (carry-forward)
+  const prevDates   = Object.keys(data).filter(k => k !== 'meses' && k < date).sort();
+  const prevDate    = prevDates[prevDates.length - 1];
+  const prevEurCaixa = prevDate ? (data[prevDate]?.eur?.caixa ?? null) : null;
+  const prevUsdCaixa = prevDate ? (data[prevDate]?.usd?.caixa ?? null) : null;
+
+  const caixaEur = caixaEurArg !== null ? parseFloat(caixaEurArg) : prevEurCaixa;
+  const caixaUsd = caixaUsdArg !== null ? parseFloat(caixaUsdArg) : prevUsdCaixa;
+
+  if (caixaEurArg !== null) console.log(`Caixa EUR: ${caixaEur} (argumento)`);
+  else if (caixaEur !== null) console.log(`Caixa EUR: ${caixaEur} (carry-forward de ${prevDate})`);
+  else console.log('Caixa EUR: não disponível');
+
+  if (caixaUsdArg !== null) console.log(`Caixa USD: ${caixaUsd} (argumento)`);
+  else if (caixaUsd !== null) console.log(`Caixa USD: ${caixaUsd} (carry-forward de ${prevDate})`);
+  else console.log('Caixa USD: não disponível');
+
   // Dia actual — preserva eventos manuais já existentes
   const existing = data[date] || {};
   const day = {
@@ -187,6 +206,7 @@ async function run() {
     };
     console.log(`  → ${day.eur.positions.length} posições EUR | lucro: ${day.eur.lucro}`);
   }
+  if (caixaEur !== null) day.eur.caixa = caixaEur;
 
   // Extrai USD
   if (usdPath) {
@@ -198,13 +218,16 @@ async function run() {
     };
     console.log(`  → ${day.usd.positions.length} posições USD | lucro: ${day.usd.lucro}`);
   }
+  if (caixaUsd !== null) day.usd.caixa = caixaUsd;
 
   // Guarda o dia
   data[date] = day;
 
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
   console.log(`\nGravado → data/trading_data.json`);
-  console.log(`  EUR: ${day.eur.lucro} | USD: ${day.usd.lucro} | Total: ${Math.round((day.eur.lucro + day.usd.lucro) * 100) / 100}`);
+  const cxE = day.eur.caixa != null ? ` | caixa: ${day.eur.caixa}€` : '';
+  const cxU = day.usd.caixa != null ? ` | caixa: ${day.usd.caixa}$` : '';
+  console.log(`  EUR: ${day.eur.lucro}${cxE} | USD: ${day.usd.lucro}${cxU} | Total: ${Math.round((day.eur.lucro + day.usd.lucro) * 100) / 100}`);
 
   writeDataJs(data);
 }

@@ -28,6 +28,36 @@ Ficheiros grandes:
 - Ler só o necessário (grep/sed em vez de cat completo)
 - Editar só as linhas afectadas
 
+## FECHO DIÁRIO — FORMATO OBRIGATÓRIO
+
+Quando o utilizador apresenta fechos do dia, SEMPRE verificar se forneceu caixa EUR e USD.
+Se não forneceu, perguntar IMEDIATAMENTE antes de correr o pipeline:
+  "Qual o valor de caixa EUR e USD hoje? (senão mantém carry-forward do dia anterior)"
+
+Template completo de fecho diário:
+```
+Fechos de hoje DD/MM/YYYY:
+--eur screenshot/eur_DD_MM.png
+--usd screenshot/usd_DD_MM.png
+Caixa EUR: X.XX€
+Caixa USD: X.XX$
+Realizados EUR: [lista: TICKER ±X.XX€ Venda/Compra]
+Realizados USD: [lista: TICKER ±X.XX$ Venda/Compra]
+Entradas: [lista de novos activos abertos]
+```
+
+Comando pipeline com caixa:
+```
+node scripts/pipeline.js \
+  --eur screenshot/eur_DD_MM.png \
+  --usd screenshot/usd_DD_MM.png \
+  --caixa-eur X.XX \
+  --caixa-usd X.XX
+```
+
+Caixa carry-forward: se --caixa-eur/usd não fornecido, extract.js usa automaticamente
+o valor do dia anterior mais recente. Confirmar no output: "Caixa EUR: X (carry-forward de YYYY-MM-DD)".
+
 ## PROTECÇÃO DE DADOS
 - NUNCA escrever trading_data.json sem backup prévio (extract.js faz isto automaticamente)
 - NUNCA fazer push sem validação passar (deploy.js valida antes do git push)
