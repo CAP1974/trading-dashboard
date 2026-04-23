@@ -2086,13 +2086,13 @@
         "tipo": "entrada",
         "ativo": "Alphabet",
         "mkt": "USD",
-        "nota": "Entrada Alphabet (GOOGL)"
+        "nota": "Entrada Alphabet (GOOGL) — pré-breakout"
       },
       {
         "tipo": "entrada",
         "ativo": "Nvidia",
         "mkt": "USD",
-        "nota": "Entrada Nvidia (NVDA)"
+        "nota": "Entrada Nvidia (NVDA) — pré-breakout"
       }
     ],
     "eur": {
