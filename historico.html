@@ -312,10 +312,10 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const FALLBACK_EUR  = 79.39;
   const FALLBACK_USD  = 176.67;
   // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 3.54;   // lucro aberto EUR
-  const LUCRO_ABT_USD = 13.57;  // lucro aberto USD
+  const LUCRO_ABT_EUR = 3.63;   // lucro aberto EUR
+  const LUCRO_ABT_USD = 12.30;  // lucro aberto USD
   const REAL_EUR      = -1.46;  // realizado EUR
-  const REAL_USD      =  1.93;  // realizado USD
+  const REAL_USD      =  4.95;  // realizado USD
 
   // Bases do mês actual via MESES_DATA
   const MESES   = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
@@ -383,8 +383,8 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
 (function(){
   const BASE_EUR_S  = 79.39;
   const BASE_USD_S  = 176.67;
-  const SALDO_EUR_S = 78.01;
-  const SALDO_USD_S = 180.88;
+  const SALDO_EUR_S = 78.10;
+  const SALDO_USD_S = 182.63;
 
   // Labels: Início → datas (sem ponto "Actual" extra)
   const saldoLabels = [
@@ -570,10 +570,10 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   const CAP_EUR       = 79.39;
   const BASE_USD      = 176.67;
   // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 3.54;
-  const LUCRO_ABT_USD = 13.57;
+  const LUCRO_ABT_EUR = 3.63;
+  const LUCRO_ABT_USD = 12.30;
   const REAL_EUR      = -1.46;
-  const REAL_USD      =  1.93;
+  const REAL_USD      =  4.95;
   const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
   const MONTHS_PT     = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const curYM_m       = LATEST_DATE.slice(0, 7);
