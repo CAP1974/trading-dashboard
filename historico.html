@@ -413,9 +413,11 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
   setTag('saldo-usd-tag', SALDO_USD_S, retUsdPct, '$');
 
   // Função genérica para criar um gráfico de saldo
-  function makeSaldoChart(canvasId, saldoData, base, lineColor, fillColor, sym, yMin, yMax) {
+  function makeSaldoChart(canvasId, saldoData, base, lineColor, fillColor, sym) {
     const n        = saldoLabels.length;
     const baseline = new Array(n).fill(base);
+    const yMin     = Math.min(...saldoData) * 0.995;
+    const yMax     = Math.max(...saldoData) * 1.005;
     const ptColors = saldoData.map(v => v >= base ? lineColor : '#ff4d6a');
 
     new Chart(document.getElementById(canvasId).getContext('2d'), {
@@ -496,8 +498,8 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
     });
   }
 
-  makeSaldoChart('saldoEurChart', eurSaldo, BASE_EUR_S, '#1eff8e', 'rgba(30,255,142,0.10)', '€', 77, 85);
-  makeSaldoChart('saldoUsdChart', usdSaldo, BASE_USD_S, '#00c8ff', 'rgba(0,200,255,0.10)', '$', 174, 190);
+  makeSaldoChart('saldoEurChart', eurSaldo, BASE_EUR_S, '#1eff8e', 'rgba(30,255,142,0.10)', '€');
+  makeSaldoChart('saldoUsdChart', usdSaldo, BASE_USD_S, '#00c8ff', 'rgba(0,200,255,0.10)', '$');
 
   // Tabela saldo diário
   function cls(v)       { return v >= 0 ? 'up' : 'dn'; }
