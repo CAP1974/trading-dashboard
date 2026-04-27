@@ -1508,9 +1508,9 @@
     },
     "2026-04": {
       "base_eur": 78.41,
-      "base_usd": 177.11,
+      "base_usd": 200.47,
       "meta_eur": 7.841,
-      "meta_usd": 17.711,
+      "meta_usd": 20.047,
       "inicio": "2026-04-20",
       "saldo_fim_eur": null,
       "saldo_fim_usd": null
@@ -2497,5 +2497,202 @@
         "data_saida": "2026-04-24"
       }
     ]
+  },
+  "2026-04-27": {
+    "date": "2026-04-27",
+    "eventos": [
+      {
+        "tipo": "saida_capital",
+        "mkt": "EUR",
+        "valor": -20,
+        "nota": "Transferência 20€ para conta USD"
+      },
+      {
+        "tipo": "entrada",
+        "ativo": "Amazon",
+        "mkt": "USD",
+        "nota": "Entrada Amazon"
+      },
+      {
+        "tipo": "entrada",
+        "ativo": "Voya Financial",
+        "mkt": "USD",
+        "nota": "Entrada Voya Financial"
+      },
+      {
+        "tipo": "aporte",
+        "mkt": "USD",
+        "valor": 23.36,
+        "nota": "Transferência 20€ da conta EUR (~23.36$)"
+      }
+    ],
+    "eur": {
+      "lucro": 4.79,
+      "caixa": 0.88,
+      "positions": [
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "pct": -1.52,
+          "lucro": -0.33,
+          "vol": 0.4,
+          "valor": 21.38,
+          "atual": 53.46,
+          "abertura": 54.275,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 9.08,
+          "lucro": 0.91,
+          "vol": 0.0881,
+          "valor": 10.93,
+          "atual": 124.1,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": { "pct": -2.59, "val": -0.29 }
+        },
+        {
+          "name": "Samsung",
+          "mkt": "EUR",
+          "pct": 20.88,
+          "lucro": 4.21,
+          "vol": 0.0075,
+          "valor": 24.37,
+          "atual": 3828.0,
+          "abertura": 3105.07,
+          "trust": "v",
+          "delta": { "pct": 2.74, "val": 0.64 }
+        }
+      ]
+    },
+    "usd": {
+      "lucro": 18.24,
+      "caixa": 6.12,
+      "positions": [
+        {
+          "name": "Alphabet",
+          "mkt": "USD",
+          "pct": 2.82,
+          "lucro": 0.48,
+          "vol": 0.05,
+          "valor": 17.52,
+          "atual": 350.38,
+          "abertura": 340.73,
+          "trust": "v",
+          "delta": { "pct": 1.72, "val": 0.30 }
+        },
+        {
+          "name": "Amazon",
+          "mkt": "USD",
+          "pct": -0.10,
+          "lucro": -0.02,
+          "vol": 0.0765,
+          "valor": 19.97,
+          "atual": 261.01,
+          "abertura": 261.30,
+          "trust": "a",
+          "delta": null
+        },
+        {
+          "name": "Casey's",
+          "mkt": "USD",
+          "pct": 6.26,
+          "lucro": 1.37,
+          "vol": 0.029,
+          "valor": 23.26,
+          "atual": 801.80,
+          "abertura": 754.77,
+          "trust": "v",
+          "delta": { "pct": 0.34, "val": 0.09 }
+        },
+        {
+          "name": "Celestica Inc",
+          "mkt": "USD",
+          "pct": 9.12,
+          "lucro": 0.60,
+          "vol": 0.017,
+          "valor": 7.18,
+          "atual": 422.48,
+          "abertura": 387.34,
+          "trust": "v",
+          "delta": { "pct": 2.91, "val": 0.20 }
+        },
+        {
+          "name": "Dell",
+          "mkt": "USD",
+          "pct": 17.42,
+          "lucro": 2.24,
+          "vol": 0.07,
+          "valor": 15.10,
+          "atual": 215.65,
+          "abertura": 183.78,
+          "trust": "v",
+          "delta": { "pct": -0.22, "val": -0.03 }
+        },
+        {
+          "name": "Equinix",
+          "mkt": "USD",
+          "pct": 7.47,
+          "lucro": 2.06,
+          "vol": 0.0272,
+          "valor": 29.63,
+          "atual": 1089.46,
+          "abertura": 1013.2,
+          "trust": "v",
+          "delta": { "pct": -1.72, "val": -0.51 }
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": 12.53,
+          "lucro": 2.21,
+          "vol": 0.3,
+          "valor": 19.85,
+          "atual": 66.15,
+          "abertura": 58.8,
+          "trust": "v",
+          "delta": { "pct": 0.29, "val": 0.06 }
+        },
+        {
+          "name": "Nvidia",
+          "mkt": "USD",
+          "pct": 4.07,
+          "lucro": 1.27,
+          "vol": 0.15,
+          "valor": 32.48,
+          "atual": 216.53,
+          "abertura": 208.04,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": 49.48,
+          "lucro": 8.11,
+          "vol": 0.0229,
+          "valor": 24.50,
+          "atual": 1069.39,
+          "abertura": 715.74,
+          "trust": "v",
+          "delta": { "pct": 8.10, "val": 1.84 }
+        },
+        {
+          "name": "Voya Financial",
+          "mkt": "USD",
+          "pct": -0.49,
+          "lucro": -0.08,
+          "vol": 0.2,
+          "valor": 16.31,
+          "atual": 81.53,
+          "abertura": 81.94,
+          "trust": "a",
+          "delta": null
+        }
+      ]
+    }
   }
 }
