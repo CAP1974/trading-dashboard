@@ -2878,7 +2878,7 @@
       }
     ],
     "diario": {
-      "nota": "Conclusão final\nTrade SNDK:\nentrada boa\ngestão correta\nsaída excelente",
+      "nota": "✔️ Conclusão final\nTrade SNDK:\nentrada boa\ngestão correta\nsaída excelente\n\n👉 Este é um trade modelo dentro do protocolo.",
       "checklist": { "revisao": true, "stoploss": true, "eventos": true, "push": true }
     }
   }
