@@ -2876,6 +2876,10 @@
         "tipo": "lucro",
         "data_saida": "2026-04-28"
       }
-    ]
+    ],
+    "diario": {
+      "nota": "Conclusão final\nTrade SNDK:\nentrada boa\ngestão correta\nsaída excelente",
+      "checklist": { "revisao": true, "stoploss": true, "eventos": true, "push": true }
+    }
   }
 }

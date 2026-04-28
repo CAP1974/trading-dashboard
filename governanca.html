@@ -104,6 +104,26 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 /* aportes list */
 .aporte-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
 .aporte-row:last-child{border-bottom:none;}
+
+/* prompt-box */
+.prompt-box{display:none;background:var(--bg-04);border:1px solid rgba(61,255,176,.3);border-radius:var(--radius);padding:12px;margin-top:10px;}
+.prompt-box-label{font-size:10px;color:var(--accent1);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;}
+.prompt-textarea{width:100%;min-height:70px;background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);color:var(--txt-2);font-family:var(--mono);font-size:11px;line-height:1.5;padding:10px;resize:vertical;}
+.prompt-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:10px;}
+.btn-copy{font-family:var(--mono);font-size:10px;padding:6px 14px;background:rgba(61,255,176,.08);border:1px solid rgba(61,255,176,.3);border-radius:var(--radius);color:var(--accent1);cursor:pointer;letter-spacing:.06em;transition:all .15s;}
+.btn-copy:hover{background:rgba(61,255,176,.14);}
+.prompt-msg{font-size:10px;color:var(--amber);}
+
+/* diario histórico */
+.diario-entry{background:var(--bg-02);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
+.diario-entry-header{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.diario-entry-date{font-family:var(--display);font-size:12px;font-weight:600;color:var(--txt);}
+.diario-cl{display:flex;gap:5px;flex-wrap:wrap;}
+.cl-tag{font-size:9px;padding:2px 6px;border-radius:3px;letter-spacing:.04em;}
+.cl-ok{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
+.cl-no{background:var(--bg-04);color:var(--txt-3);border:1px solid var(--border);}
+.diario-entry-body{padding:14px 16px;}
+.diario-nota{font-size:12px;color:var(--txt-2);line-height:1.7;white-space:pre-wrap;font-family:var(--mono);}
 </style>
 </head>
 <body>
@@ -242,9 +262,21 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
           <button class="btn-save" id="btn-guardar">Guardar nota do dia</button>
           <span class="nota-status" id="nota-status"></span>
         </div>
+        <div class="prompt-box" id="prompt-box">
+          <div class="prompt-box-label">Envia ao Claude Code para guardar permanentemente</div>
+          <textarea class="prompt-textarea" id="prompt-text" readonly></textarea>
+          <div class="prompt-footer">
+            <button class="btn-copy" id="btn-copy-prompt">Copiar</button>
+            <span class="prompt-msg">📋 Copia este texto e cola no Claude Code</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- SECÇÃO 6 — Histórico do Diário -->
+  <div class="zone-label">Histórico do Diário</div>
+  <div id="diario-historico" style="display:flex;flex-direction:column;gap:10px;"></div>
 
 </div>
 
@@ -441,24 +473,77 @@ clGrid.querySelectorAll('input[type=checkbox]').forEach(cb => {
 
 // ── SECÇÃO 5: Notas ──
 const NOTA_KEY = 'gov_nota_'+TODAY;
-setText('nota-date-tag', TODAY_FMT.short);
+setText('nota-date-tag', fmtDate(LATEST_DATE).short);
+
 const notaTA = $('nota-textarea');
-notaTA.value = localStorage.getItem(NOTA_KEY)||'';
+// carrega de JSON (permanente) → fallback para localStorage (rascunho)
+const jsonNota = (TRADING_DATA[LATEST_DATE]||{}).diario?.nota || '';
+notaTA.value = jsonNota || localStorage.getItem(NOTA_KEY) || '';
+
+// auto-save rascunho em localStorage enquanto escreve
+let saveTimer;
+notaTA.addEventListener('input', () => {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { localStorage.setItem(NOTA_KEY, notaTA.value); }, 1000);
+});
 
 $('btn-guardar').addEventListener('click', () => {
-  localStorage.setItem(NOTA_KEY, notaTA.value);
+  const nota = notaTA.value.trim();
+  if (!nota) return;
+  const promptText = `Adiciona ao diário do dia ${LATEST_DATE} a nota: ${nota}`;
+  const pb = $('prompt-box');
+  $('prompt-text').value = promptText;
+  pb.style.display = 'block';
   const st = $('nota-status');
-  st.textContent = 'Guardado às '+new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  st.textContent = 'Copia o prompt abaixo e envia ao Claude Code';
   st.className = 'nota-status nota-saved';
-  setTimeout(()=>{ st.textContent=''; st.className='nota-status'; }, 3000);
 });
 
-// auto-save on input (debounce)
-let saveTimer;
-notaTA.addEventListener('input', ()=>{
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(()=>{ localStorage.setItem(NOTA_KEY, notaTA.value); }, 1500);
+$('btn-copy-prompt').addEventListener('click', () => {
+  const txt = $('prompt-text');
+  txt.select();
+  navigator.clipboard.writeText(txt.value).then(() => {
+    const btn = $('btn-copy-prompt');
+    btn.textContent = '✓ Copiado!';
+    setTimeout(() => { btn.textContent = 'Copiar'; }, 2000);
+  }).catch(() => {
+    document.execCommand('copy');
+    $('btn-copy-prompt').textContent = '✓ Copiado!';
+    setTimeout(() => { $('btn-copy-prompt').textContent = 'Copiar'; }, 2000);
+  });
 });
+
+// ── SECÇÃO 6: Histórico do Diário ──
+const CL_LABELS = [
+  {k:'revisao', l:'Revisão'},
+  {k:'stoploss', l:'Stop-loss'},
+  {k:'eventos', l:'Eventos'},
+  {k:'push', l:'Push'},
+];
+
+const diarioDays = ALL_D.filter(d => TRADING_DATA[d].diario).reverse();
+const dhEl = $('diario-historico');
+if (!diarioDays.length) {
+  dhEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem entradas no diário</div>';
+} else {
+  dhEl.innerHTML = diarioDays.map(d => {
+    const diar = TRADING_DATA[d].diario;
+    const fd   = fmtDate(d);
+    const cl   = diar.checklist || {};
+    const clHtml = CL_LABELS.map(({k,l}) =>
+      `<span class="cl-tag ${cl[k] ? 'cl-ok' : 'cl-no'}">${cl[k] ? '✓' : '✗'} ${l}</span>`
+    ).join('');
+    return `<div class="diario-entry">
+      <div class="diario-entry-header">
+        <span class="diario-entry-date">${fd.full}</span>
+        <div class="diario-cl">${clHtml}</div>
+      </div>
+      <div class="diario-entry-body">
+        <div class="diario-nota">${(diar.nota||'—').replace(/</g,'&lt;')}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
 </script>
 </body>
 </html>
