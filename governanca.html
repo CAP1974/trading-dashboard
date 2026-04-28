@@ -76,7 +76,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .stat-bar-fill{height:100%;border-radius:3px;}
 
 /* checklist */
-.checklist-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.checklist-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .checklist-col{background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);padding:14px;}
 .checklist-col-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:10px;}
 .check-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
@@ -84,6 +84,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .check-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent1);cursor:pointer;flex-shrink:0;}
 .check-item label{font-size:11px;color:var(--txt-2);cursor:pointer;transition:color .15s;}
 .check-item input:checked + label{color:var(--accent1);}
+.check-auto{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.check-auto:last-child{border-bottom:none;}
+.check-auto-icon{font-size:13px;line-height:1;flex-shrink:0;}
+.check-auto-label{font-size:11px;line-height:1.4;}
+.check-auto.ok .check-auto-label{color:var(--accent1);}
+.check-auto.warn .check-auto-label{color:var(--amber);}
 .checklist-date{font-size:9px;color:var(--txt-3);margin-bottom:10px;letter-spacing:.06em;}
 
 /* notas */
@@ -240,7 +246,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <div class="card">
     <div class="card-header">
       <span class="card-title">Compliance · Verificação Diária</span>
-      <span class="card-tag" id="checklist-date-tag">—</span>
+      <span class="card-tag" id="checklist-badge">—</span>
     </div>
     <div class="card-body">
       <div class="checklist-date" id="checklist-date-label">—</div>
@@ -429,47 +435,83 @@ if (!aportesEvs.length) {
 const TODAY = todayKey();
 const TODAY_FMT = fmtDate(TODAY);
 const CL_KEY = 'gov_checklist_'+TODAY;
-setText('checklist-date-tag', TODAY_FMT.short);
-setText('checklist-date-label', 'Hoje: '+TODAY_FMT.full);
+setText('checklist-date-label', fmtDate(LATEST_DATE).full + ' · ' + (LATEST_DATE === TODAY ? 'Hoje' : 'Último fecho'));
 
-const CHECKS = {
-  EUR: ['Revisão de posições EUR','Stop-loss verificado EUR','Eventos EUR registados','Push EUR feito'],
-  USD: ['Revisão de posições USD','Stop-loss verificado USD','Eventos USD registados','Push USD feito'],
-  Geral: ['Registo diário completo','Data atualizada','data.js atualizado','Commit feito'],
-};
+const latestDay = TRADING_DATA[LATEST_DATE] || {};
+const latestEur = latestDay.eur || {};
+const latestUsd = latestDay.usd || {};
+const isToday   = LATEST_DATE === TODAY;
 
-function loadChecklist() {
-  try { return JSON.parse(localStorage.getItem(CL_KEY)||'{}'); } catch(e) { return {}; }
+// Itens automáticos — derivados dos dados
+const AUTO_CHECKS = [
+  { label: 'Data actualizada',          ok: isToday },
+  { label: 'data.js actualizado',       ok: isToday },
+  { label: 'Commit feito',              ok: isToday },
+  { label: 'Posições EUR registadas',   ok: (latestEur.positions||[]).length > 0 },
+  { label: 'Posições USD registadas',   ok: (latestUsd.positions||[]).length > 0 },
+  { label: 'Eventos registados',        ok: Array.isArray(latestDay.eventos) },
+  { label: 'Caixa EUR registada',       ok: latestEur.caixa != null && latestEur.caixa >= 0 },
+  { label: 'Caixa USD registada',       ok: latestUsd.caixa != null && latestUsd.caixa >= 0 },
+];
+
+// Itens manuais — decisão humana, localStorage
+const MANUAL_CHECKS = [
+  'Stop-loss verificado EUR',
+  'Stop-loss verificado USD',
+  'Revisão de posições concluída',
+  'Registo diário completo',
+];
+
+function loadCL() { try { return JSON.parse(localStorage.getItem(CL_KEY)||'{}'); } catch(e) { return {}; } }
+function saveCL(s) { localStorage.setItem(CL_KEY, JSON.stringify(s)); }
+let clState = loadCL();
+
+const autoOk  = AUTO_CHECKS.filter(c => c.ok).length;
+const manOk   = MANUAL_CHECKS.filter((_,i) => clState['m'+i]).length;
+const total_c = AUTO_CHECKS.length + MANUAL_CHECKS.length;
+
+function updateBadge() {
+  const mo = MANUAL_CHECKS.filter((_,i) => clState['m'+i]).length;
+  const done = autoOk + mo;
+  const pct  = Math.round(done / total_c * 100);
+  const col  = pct === 100 ? 'var(--green)' : pct >= 75 ? 'var(--amber)' : 'var(--txt-3)';
+  const el   = $('checklist-badge');
+  if (el) { el.textContent = done+'/'+total_c+' · '+pct+'%'; el.style.color = col; }
 }
-function saveChecklist(state) {
-  localStorage.setItem(CL_KEY, JSON.stringify(state));
-}
 
-let clState = loadChecklist();
-const clGrid = $('checklist-grid');
-const COL_COLORS = {EUR:'var(--accent1)', USD:'var(--accent2)', Geral:'var(--amber)'};
+const autoHtml = AUTO_CHECKS.map(c => `
+  <div class="check-auto ${c.ok ? 'ok' : 'warn'}">
+    <span class="check-auto-icon">${c.ok ? '✅' : '⚠️'}</span>
+    <span class="check-auto-label">${c.label}</span>
+  </div>`).join('');
 
-clGrid.innerHTML = Object.entries(CHECKS).map(([col, items]) => {
-  const itemsHtml = items.map((label,i) => {
-    const key = col+'_'+i;
-    const checked = clState[key] ? 'checked' : '';
-    return `<div class="check-item">
-      <input type="checkbox" id="chk_${col}_${i}" data-key="${key}" ${checked}>
-      <label for="chk_${col}_${i}">${label}</label>
-    </div>`;
-  }).join('');
-  return `<div class="checklist-col">
-    <div class="checklist-col-title" style="color:${COL_COLORS[col]}">${col}</div>
-    ${itemsHtml}
+const manHtml = MANUAL_CHECKS.map((label,i) => {
+  const checked = clState['m'+i] ? 'checked' : '';
+  return `<div class="check-item">
+    <input type="checkbox" id="mchk_${i}" data-key="m${i}" ${checked}>
+    <label for="mchk_${i}">${label}</label>
   </div>`;
 }).join('');
 
-clGrid.querySelectorAll('input[type=checkbox]').forEach(cb => {
+$('checklist-grid').innerHTML = `
+  <div class="checklist-col">
+    <div class="checklist-col-title" style="color:var(--accent1)">Automático</div>
+    ${autoHtml}
+  </div>
+  <div class="checklist-col">
+    <div class="checklist-col-title" style="color:var(--amber)">Manual</div>
+    ${manHtml}
+  </div>`;
+
+$('checklist-grid').querySelectorAll('input[type=checkbox]').forEach(cb => {
   cb.addEventListener('change', () => {
     clState[cb.dataset.key] = cb.checked;
-    saveChecklist(clState);
+    saveCL(clState);
+    updateBadge();
   });
 });
+
+updateBadge();
 
 // ── SECÇÃO 5: Notas ──
 const NOTA_KEY = 'gov_nota_'+TODAY;
