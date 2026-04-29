@@ -11,11 +11,34 @@ const sorted = Object.keys(dateData);
 const latest = sorted[sorted.length - 1];
 const last7  = sorted.slice(-7);
 
-// Flatten all posicoes_fechadas into a single array
+// ── RATING AUTOMÁTICO ──
+// Perdas: máx 3 estrelas.  Ganhos: 2-5 estrelas por lucro_pct.
+// O campo "rating" em trading_data.json é ignorado — calculado sempre aqui.
+function calcRating(t) {
+  const pct = (t.lucro_pct != null) ? t.lucro_pct : null;
+  if (pct === null) return 1;   // sem dados → 1 estrela por defeito
+
+  if (t.lucro < 0) {
+    // ────────── PERDAS ──────────
+    if (pct > -2)  return 3;    // perda controlada  (0% a -2%)
+    if (pct > -5)  return 2;    // perda moderada    (-2% a -5%)
+    return 1;                   // perda elevada      (< -5%)
+  }
+
+  // ────────── GANHOS ──────────
+  if (pct >= 30)  return 5;     // excepcional  ≥ 30%
+  if (pct >= 15)  return 4;     // muito bom    15-29.9%
+  if (pct >= 5)   return 3;     // bom          5-14.9%
+  return 2;                     // aceitável    0-4.9%
+}
+
+// Flatten all posicoes_fechadas into a single array (rating calculado aqui)
 const tradesData = [];
 sorted.forEach(k => {
   const pf = dateData[k].posicoes_fechadas;
-  if (Array.isArray(pf)) pf.forEach(t => tradesData.push(t));
+  if (Array.isArray(pf)) pf.forEach(t => {
+    tradesData.push(Object.assign({}, t, { rating: calcRating(t) }));
+  });
 });
 
 const lines = [

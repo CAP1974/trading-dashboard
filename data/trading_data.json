@@ -2292,7 +2292,6 @@
         "setup": "Momentum",
         "nota_entrada": "Breakout limpo",
         "nota_saida": "Ativo esticado — saída CTM",
-        "rating": 4,
         "imagem_setup": null
       }
     ]
@@ -2496,7 +2495,6 @@
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
-        "rating": 2,
         "imagem_setup": null
       },
       {
@@ -2515,7 +2513,6 @@
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
-        "rating": 2,
         "imagem_setup": null
       },
       {
@@ -2534,7 +2531,6 @@
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
-        "rating": 2,
         "imagem_setup": null
       },
       {
@@ -2553,7 +2549,6 @@
         "setup": "Pullback",
         "nota_entrada": "Pullback sobre suporte",
         "nota_saida": "Falha breakout — saída stop",
-        "rating": 2,
         "imagem_setup": null
       },
       {
@@ -2572,7 +2567,6 @@
         "setup": "Pullback",
         "nota_entrada": "Adição ao lote 1",
         "nota_saida": "Falha breakout — saída stop",
-        "rating": 2,
         "imagem_setup": null
       }
     ]
@@ -2964,7 +2958,6 @@
         "setup": "VCP",
         "nota_entrada": "VCP clássico — compressão de volatilidade",
         "nota_saida": "Ativo esticado — saída excelente",
-        "rating": 5,
         "imagem_setup": null
       }
     ],
