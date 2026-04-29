@@ -582,11 +582,17 @@ body{
       <div class="hero-metric-sub">${m.sub}</div>
     </div>`).join('');
 
-  // Hero sub — período
+  // Hero sub — período + dias activos
   if (trades.length) {
-    const dates = trades.map(t => t.data_saida).sort();
+    const exitDates   = trades.map(t => t.data_saida).filter(Boolean).sort();
+    const entryDates  = trades.map(t => t.data_entrada).filter(Boolean).sort();
+    const firstDate   = entryDates[0] || exitDates[0];
+    const lastDate    = exitDates[exitDates.length - 1];
+    const spanDays    = Math.round((new Date(lastDate) - new Date(firstDate)) / (1000*60*60*24)) + 1;
     document.getElementById('heroSub').innerHTML =
-      `Todas as posições fechadas desde o início da conta.<br>Dados reais, sem filtros · ${dates[0]} → ${dates[dates.length-1]}`;
+      `Todas as posições fechadas desde o início da conta. Dados reais, sem filtros.<br>`+
+      `<span style="color:var(--accent1);font-weight:600;">${firstDate} → ${lastDate}</span>`+
+      `<span style="color:var(--txt-3);"> · ${spanDays} dias de track record activo</span>`;
   }
 
   // ── KPIs ──
@@ -832,14 +838,19 @@ body{
       const sym    = t.mkt === 'EUR' ? '€' : '$';
       const sign   = t.lucro >= 0 ? '+' : '';
       const pctStr = t.lucro_pct != null ? (t.lucro_pct>=0?'+':'')+t.lucro_pct.toFixed(1)+'%' : '';
-      const post   = `🏆 ${t.ticker} — ${isWin ? 'TRADE FECHADO ✅' : 'STOP ATINGIDO'}\n\n`+
-        `📈 Setup: ${t.setup||'—'}\n`+
-        `📅 Entrada: ${t.data_entrada||'—'} @ ${t.preco_entrada||'—'}\n`+
-        `📅 Saída: ${t.data_saida||'—'} @ ${t.preco_saida||'—'}\n`+
-        `⏱ Holding: ${t.dias_holding||'—'} dias\n`+
-        `💰 P&L: ${sign}${t.lucro.toFixed(2)}${sym} (${pctStr})\n\n`+
-        (t.nota_saida ? `📝 ${t.nota_saida}\n\n` : '') +
-        `#TripleSevenCapital #CTM #Trading #${t.ticker} #${t.setup||'Trading'}`;
+      const starEmoji = '⭐️'.repeat(t.rating || 0);
+      const setupTag  = (t.setup||'Trading').replace(/\s+/g,'');
+      const post =
+        `📊 ${isWin ? 'Trade fechado' : 'Stop atingido'} — #${t.ticker}\n`+
+        `⏱ ${t.dias_holding||'—'} dias em carteira\n`+
+        `📈 Setup: #${setupTag}\n`+
+        `💰 Resultado: ${sign}${t.lucro.toFixed(2)}${sym}${pctStr?' ('+pctStr+')':''}\n`+
+        `${starEmoji} Rating: ${t.rating||0}/5\n`+
+        `\n`+
+        `${isWin?'✅':'📍'} Entrada: ${t.nota_entrada||'—'}\n`+
+        `${isWin?'🎯':'🛑'} Saída: ${t.nota_saida||'—'}\n`+
+        `\n`+
+        `#CleanTrendMethod #CTM #Triple7Capital #Trading`;
       return `<div class="social-card ${isWin?'winner':'loser'}">
         <div class="sc-header">
           <span class="sc-ticker">${t.ticker}</span>
