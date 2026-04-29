@@ -2277,11 +2277,23 @@
     },
     "posicoes_fechadas": [
       {
+        "ticker": "STM",
         "nome": "STMicroelectronics",
         "mkt": "USD",
         "lucro": 3.02,
+        "lucro_pct": 17.4,
         "tipo": "lucro",
-        "data_saida": "2026-04-23"
+        "data_entrada": "2026-04-17",
+        "data_saida": "2026-04-23",
+        "preco_entrada": 43.44,
+        "preco_saida": 51.01,
+        "volume": 0.4,
+        "dias_holding": 6,
+        "setup": "Momentum",
+        "nota_entrada": "Breakout limpo",
+        "nota_saida": "Ativo esticado — saída CTM",
+        "rating": 4,
+        "imagem_setup": null
       }
     ]
   },
@@ -2469,32 +2481,99 @@
     },
     "posicoes_fechadas": [
       {
-        "nome": "IG",
+        "ticker": "IGG",
+        "nome": "IG Group",
         "mkt": "EUR",
         "lucro": -0.17,
+        "lucro_pct": -1.1,
         "tipo": "prejuizo",
-        "data_saida": "2026-04-24"
+        "data_entrada": "2026-04-20",
+        "data_saida": "2026-04-24",
+        "preco_entrada": 15.290,
+        "preco_saida": 15.120,
+        "volume": 0.57,
+        "dias_holding": 4,
+        "setup": "Breakout",
+        "nota_entrada": "Tentativa breakout",
+        "nota_saida": "Falha breakout — saída stop",
+        "rating": 2,
+        "imagem_setup": null
       },
       {
+        "ticker": "HLMA",
         "nome": "Halma",
         "mkt": "EUR",
         "lucro": -0.10,
+        "lucro_pct": -0.5,
         "tipo": "prejuizo",
-        "data_saida": "2026-04-24"
+        "data_entrada": "2026-04-20",
+        "data_saida": "2026-04-24",
+        "preco_entrada": 44.60,
+        "preco_saida": 44.38,
+        "volume": 0.184,
+        "dias_holding": 4,
+        "setup": "Breakout",
+        "nota_entrada": "Tentativa breakout",
+        "nota_saida": "Falha breakout — saída stop",
+        "rating": 2,
+        "imagem_setup": null
       },
       {
-        "nome": "TBC Bank Group PLC",
+        "ticker": "TBCG",
+        "nome": "TBC Bank Group",
         "mkt": "EUR",
         "lucro": -0.48,
+        "lucro_pct": -4.2,
         "tipo": "prejuizo",
-        "data_saida": "2026-04-24"
+        "data_entrada": "2026-04-20",
+        "data_saida": "2026-04-24",
+        "preco_entrada": 51.00,
+        "preco_saida": 48.84,
+        "volume": 0.172,
+        "dias_holding": 4,
+        "setup": "Breakout",
+        "nota_entrada": "Tentativa breakout",
+        "nota_saida": "Falha breakout — saída stop",
+        "rating": 2,
+        "imagem_setup": null
       },
       {
-        "nome": "Saga",
+        "ticker": "SAGA",
+        "nome": "Saga (lote 1)",
         "mkt": "EUR",
-        "lucro": -0.95,
+        "lucro": -0.43,
+        "lucro_pct": -5.1,
         "tipo": "prejuizo",
-        "data_saida": "2026-04-24"
+        "data_entrada": "2026-04-15",
+        "data_saida": "2026-04-24",
+        "preco_entrada": 6.250,
+        "preco_saida": 5.930,
+        "volume": 1,
+        "dias_holding": 9,
+        "setup": "Pullback",
+        "nota_entrada": "Pullback sobre suporte",
+        "nota_saida": "Falha breakout — saída stop",
+        "rating": 2,
+        "imagem_setup": null
+      },
+      {
+        "ticker": "SAGA",
+        "nome": "Saga (lote 2)",
+        "mkt": "EUR",
+        "lucro": -0.52,
+        "lucro_pct": -6.3,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-04-16",
+        "data_saida": "2026-04-24",
+        "preco_entrada": 6.330,
+        "preco_saida": 5.930,
+        "volume": 1,
+        "dias_holding": 8,
+        "setup": "Pullback",
+        "nota_entrada": "Adição ao lote 1",
+        "nota_saida": "Falha breakout — saída stop",
+        "rating": 2,
+        "imagem_setup": null
       }
     ]
   },
@@ -2870,11 +2949,23 @@
     },
     "posicoes_fechadas": [
       {
+        "ticker": "SNDK",
         "nome": "SanDisk",
         "mkt": "USD",
         "lucro": 6.86,
+        "lucro_pct": 41.8,
         "tipo": "lucro",
-        "data_saida": "2026-04-28"
+        "data_entrada": "2026-03-23",
+        "data_saida": "2026-04-28",
+        "preco_entrada": 715.74,
+        "preco_saida": 1015.00,
+        "volume": 0.0229,
+        "dias_holding": 36,
+        "setup": "VCP",
+        "nota_entrada": "VCP clássico — compressão de volatilidade",
+        "nota_saida": "Ativo esticado — saída excelente",
+        "rating": 5,
+        "imagem_setup": null
       }
     ],
     "diario": {
