@@ -232,7 +232,9 @@ body{
 .setup-breakout{background:rgba(77,166,255,0.12);color:var(--blue);}
 .setup-pullback{background:rgba(255,179,64,0.12);color:var(--amber);}
 .setup-vcp{background:rgba(0,200,255,0.12);color:var(--accent2);}
-.td-rating{color:var(--amber);letter-spacing:-.5px;}
+.td-rating{letter-spacing:-.5px;}
+.star-on{color:#ffb340;}
+.star-off{color:#1c2a3d;}
 .td-pnl-pos{color:var(--green);font-weight:600;}
 .td-pnl-neg{color:var(--red);font-weight:600;}
 .td-expand{color:var(--txt-3);font-size:14px;}
@@ -537,10 +539,11 @@ body{
     return t.mkt === 'EUR' ? t.lucro / EUR_RATE : t.lucro;
   }
 
-  // Stars helper
+  // Stars helper — cheias a âmbar, vazias quase invisíveis
   function stars(n) {
     const full = Math.round(n||0);
-    return '★'.repeat(full) + '☆'.repeat(Math.max(0,5-full));
+    return '<span class="star-on">' + '★'.repeat(full) + '</span>' +
+           '<span class="star-off">' + '★'.repeat(Math.max(0,5-full)) + '</span>';
   }
 
   // Format currency
@@ -872,7 +875,7 @@ body{
             <div class="sc-metric-label">Dias</div>
           </div>
           <div class="sc-metric">
-            <div class="sc-metric-value c-amber">${stars(t.rating)}</div>
+            <div class="sc-metric-value">${stars(t.rating)}</div>
             <div class="sc-metric-label">Rating</div>
           </div>
         </div>
