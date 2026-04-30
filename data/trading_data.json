@@ -2329,7 +2329,7 @@
         "nota_entrada": "Breakout limpo",
         "nota_saida": "Ativo esticado — saída CTM",
         "imagem_setup": null,
-        "rating": 4
+        "rating": 3
       }
     ]
   },
@@ -2563,7 +2563,7 @@
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
-        "rating": 3
+        "rating": 0
       },
       {
         "ticker": "HLMA",
@@ -2582,7 +2582,7 @@
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
-        "rating": 3
+        "rating": 0
       },
       {
         "ticker": "TBCG",
@@ -2601,7 +2601,7 @@
         "nota_entrada": "Tentativa breakout",
         "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
-        "rating": 2
+        "rating": 0
       },
       {
         "ticker": "SAGA",
@@ -2620,7 +2620,7 @@
         "nota_entrada": "Pullback sobre suporte",
         "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
-        "rating": 1
+        "rating": 0
       },
       {
         "ticker": "SAGA",
@@ -2639,7 +2639,7 @@
         "nota_entrada": "Adição ao lote 1",
         "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
-        "rating": 1
+        "rating": 0
       }
     ]
   },
@@ -3116,11 +3116,14 @@
           "pct": 2.26,
           "lucro": 0.49,
           "vol": 0.4,
-          "valor": 22.20,
+          "valor": 22.2,
           "atual": 55.49,
           "abertura": 54.275,
           "trust": "v",
-          "delta": { "pct": 5.13, "val": 1.08 }
+          "delta": {
+            "pct": 5.13,
+            "val": 1.08
+          }
         },
         {
           "name": "Prysmian",
@@ -3128,11 +3131,14 @@
           "pct": 9.78,
           "lucro": 0.98,
           "vol": 0.0881,
-          "valor": 11.00,
+          "valor": 11,
           "atual": 124.85,
           "abertura": 113.75,
           "trust": "v",
-          "delta": { "pct": 1.75, "val": 0.19 }
+          "delta": {
+            "pct": 1.75,
+            "val": 0.19
+          }
         },
         {
           "name": "Samsung",
@@ -3141,40 +3147,49 @@
           "lucro": 3.96,
           "vol": 0.0075,
           "valor": 24.12,
-          "atual": 3780.00,
+          "atual": 3780,
           "abertura": 3105.07,
           "trust": "v",
-          "delta": { "pct": 3.39, "val": 0.83 }
+          "delta": {
+            "pct": 3.39,
+            "val": 0.83
+          }
         }
       ]
     },
     "usd": {
       "lucro": 7.17,
-      "caixa": 21.20,
+      "caixa": 21.2,
       "positions": [
         {
           "name": "Alphabet",
           "mkt": "USD",
-          "pct": 2.70,
+          "pct": 2.7,
           "lucro": 0.46,
           "vol": 0.05,
-          "valor": 17.50,
+          "valor": 17.5,
           "atual": 349.94,
           "abertura": 340.73,
           "trust": "v",
-          "delta": { "pct": 0.06, "val": 0.01 }
+          "delta": {
+            "pct": 0.06,
+            "val": 0.01
+          }
         },
         {
           "name": "Amazon",
           "mkt": "USD",
-          "pct": 0.60,
+          "pct": 0.6,
           "lucro": 0.12,
           "vol": 0.0765,
           "valor": 20.11,
           "atual": 262.88,
-          "abertura": 261.30,
+          "abertura": 261.3,
           "trust": "v",
-          "delta": { "pct": 1.20, "val": 0.24 }
+          "delta": {
+            "pct": 1.2,
+            "val": 0.24
+          }
         },
         {
           "name": "Casey's",
@@ -3186,7 +3201,10 @@
           "atual": 781.06,
           "abertura": 754.77,
           "trust": "v",
-          "delta": { "pct": -0.41, "val": -0.10 }
+          "delta": {
+            "pct": -0.41,
+            "val": -0.1
+          }
         },
         {
           "name": "Celestica Inc",
@@ -3194,11 +3212,14 @@
           "pct": -2.74,
           "lucro": -0.18,
           "vol": 0.017,
-          "valor": 6.40,
+          "valor": 6.4,
           "atual": 376.61,
           "abertura": 387.34,
           "trust": "r",
-          "delta": { "pct": 4.28, "val": 0.26 }
+          "delta": {
+            "pct": 4.28,
+            "val": 0.26
+          }
         },
         {
           "name": "Dell",
@@ -3210,7 +3231,10 @@
           "atual": 205.49,
           "abertura": 183.78,
           "trust": "v",
-          "delta": { "pct": -0.16, "val": -0.03 }
+          "delta": {
+            "pct": -0.16,
+            "val": -0.03
+          }
         },
         {
           "name": "Equinix",
@@ -3220,9 +3244,12 @@
           "vol": 0.0272,
           "valor": 29.65,
           "atual": 1089.56,
-          "abertura": 1013.20,
+          "abertura": 1013.2,
           "trust": "v",
-          "delta": { "pct": 1.55, "val": 0.46 }
+          "delta": {
+            "pct": 1.55,
+            "val": 0.46
+          }
         },
         {
           "name": "Kodiak Gas Services",
@@ -3232,9 +3259,12 @@
           "vol": 0.3,
           "valor": 20.02,
           "atual": 66.73,
-          "abertura": 58.80,
+          "abertura": 58.8,
           "trust": "v",
-          "delta": { "pct": 0.18, "val": 0.04 }
+          "delta": {
+            "pct": 0.18,
+            "val": 0.04
+          }
         },
         {
           "name": "Nvidia",
@@ -3243,10 +3273,13 @@
           "lucro": 0.16,
           "vol": 0.15,
           "valor": 31.37,
-          "atual": 209.10,
+          "atual": 209.1,
           "abertura": 208.04,
           "trust": "v",
-          "delta": { "pct": -2.01, "val": -0.64 }
+          "delta": {
+            "pct": -2.01,
+            "val": -0.64
+          }
         },
         {
           "name": "Voya Financial",
@@ -3258,7 +3291,10 @@
           "atual": 81.43,
           "abertura": 81.86,
           "trust": "r",
-          "delta": { "pct": 0.00, "val": 0.00 }
+          "delta": {
+            "pct": 0,
+            "val": 0
+          }
         }
       ]
     }

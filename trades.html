@@ -539,11 +539,12 @@ body{
     return t.mkt === 'EUR' ? t.lucro / EUR_RATE : t.lucro;
   }
 
-  // Stars helper — cheias a âmbar, vazias quase invisíveis
+  // Stars helper — 0★ mostra ✕ vermelho; 1-5★ cheias âmbar + vazias escuras
   function stars(n) {
-    const full = Math.round(n||0);
+    const full = Math.round(n != null ? n : 0);
+    if (full === 0) return '<span style="color:var(--red);font-size:13px;font-weight:700;">✕</span>';
     return '<span class="star-on">' + '★'.repeat(full) + '</span>' +
-           '<span class="star-off">' + '★'.repeat(Math.max(0,5-full)) + '</span>';
+           '<span class="star-off">' + '★'.repeat(5 - full) + '</span>';
   }
 
   // Format currency
@@ -841,7 +842,7 @@ body{
       const sym    = t.mkt === 'EUR' ? '€' : '$';
       const sign   = t.lucro >= 0 ? '+' : '';
       const pctStr = t.lucro_pct != null ? (t.lucro_pct>=0?'+':'')+t.lucro_pct.toFixed(1)+'%' : '';
-      const starEmoji = '⭐️'.repeat(t.rating || 0);
+      const starEmoji = t.rating > 0 ? '⭐️'.repeat(t.rating) : '✕';
       const setupTag  = (t.setup||'Trading').replace(/\s+/g,'');
       const post =
         `📊 ${isWin ? 'Trade fechado' : 'Stop atingido'} — #${t.ticker}\n`+

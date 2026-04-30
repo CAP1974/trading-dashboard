@@ -6,25 +6,19 @@ const ROOT = path.join(__dirname, '..');
 const data  = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/trading_data.json'), 'utf8'));
 const meses = data.meses || {};
 
-// ── RATING AUTOMÁTICO ──
-// Perdas: máx 3★.  Ganhos: 2-5★ por lucro_pct.
+// ── RATING AUTOMÁTICO CTM ──
+// Fórmula oficial: 0★ para qualquer perda, 1-5★ por lucro_pct.
 // Escrito de volta para trading_data.json + injectado em TRADES_DATA.
 function calcRating(t) {
   const pct = (t.lucro_pct != null) ? t.lucro_pct : null;
-  if (pct === null) return 1;        // sem dados → 1★ por defeito
+  if (pct === null) return 0;        // sem dados → 0★
 
-  if (t.lucro < 0) {
-    // ── PERDAS (máx 3★) ──
-    if (pct > -2)  return 3;         // controlada  0% a -2%
-    if (pct > -5)  return 2;         // moderada   -2% a -5%
-    return 1;                        // elevada    < -5%
-  }
-
-  // ── GANHOS ──
   if (pct >= 30)  return 5;          // excepcional  ≥ 30%
-  if (pct >= 15)  return 4;          // muito bom   15-29.9%
-  if (pct >= 5)   return 3;          // bom          5-14.9%
-  return 2;                          // aceitável    0-4.9%
+  if (pct >= 20)  return 4;          // muito bom   20-29.9%
+  if (pct >= 10)  return 3;          // bom         10-19.9%
+  if (pct >= 5)   return 2;          // aceitável    5-9.99%
+  if (pct >= 0)   return 1;          // marginal     0-4.99%
+  return 0;                          // perda        < 0%
 }
 
 // Escreve ratings calculados de volta para trading_data.json
