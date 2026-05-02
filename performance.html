@@ -628,9 +628,9 @@ if (trajMeses.length) {
 
     let saldoE, saldoU;
     if (d === lastDay && ym === curYM) {
-      // último dia do mês actual: usa constantes oficiais
-      saldoE = baseEur + LUCRO_ABT_EUR + REAL_EUR;
-      saldoU = baseUsd + LUCRO_ABT_USD + REAL_USD;
+      // último dia do mês actual: usa constantes oficiais directamente
+      saldoE = SALDO_EUR;
+      saldoU = SALDO_USD;
     } else {
       // dias anteriores: base + não-realizado snapshot + realizado acumulado
       (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
@@ -642,7 +642,7 @@ if (trajMeses.length) {
       saldoU = baseUsd + (dayData?.usd?.lucro || 0) + cumRealUsd;
     }
 
-    const lbl = d === lastDay ? 'Actual (' + fmtDate(d) + ')' : fmtDate(d);
+    const lbl = fmtDate(d);
     labels.push(lbl);
     // meta ideal = fim do mês corrente (target flat dentro do mês, sobe a cada mês)
     metaEurPts.push(+(firstMes.base_eur * Math.pow(1.10, monthIdx)).toFixed(2));
@@ -688,18 +688,21 @@ if (trajMeses.length) {
   document.getElementById('traj-tbody').innerHTML = trajMeses.map(ym => {
     const mes   = MESES[ym];
     const isCur = ym === curYM;
-    // saldo actual = base + aberto + realizado (oficial); fechado = saldo_fim
-    const realE = isCur ? (mes.base_eur + LUCRO_ABT_EUR + REAL_EUR) : mes.saldo_fim_eur;
-    const realU = isCur ? (mes.base_usd + LUCRO_ABT_USD + REAL_USD) : mes.saldo_fim_usd;
-    const pctE  = realE !== null ? (realE - mes.base_eur) / mes.meta_eur * 100 : null;
-    const pctU  = realU !== null ? (realU - mes.base_usd) / mes.meta_usd * 100 : null;
+    // saldo actual = constantes oficiais; fechado = saldo_fim
+    const realE = isCur ? SALDO_EUR : mes.saldo_fim_eur;
+    const realU = isCur ? SALDO_USD : mes.saldo_fim_usd;
+    const transferSaidaEur = mes.transferencias_saida_eur || 0;
+    const lucroE = realE !== null ? (realE - mes.base_eur + transferSaidaEur) : null;
+    const lucroU = realU !== null ? (realU - mes.base_usd) : null;
+    const pctE   = lucroE !== null ? (lucroE / mes.meta_eur * 100) : null;
+    const pctU   = lucroU !== null ? (lucroU / mes.meta_usd * 100) : null;
     const [_y,_m] = ym.split('-').map(Number);
     const lbl   = MO_PT_P[_m-1] + ' ' + _y;
     const badge = isCur
       ? '<span class="badge badge-a">EM CURSO</span>'
       : (pctE >= 100 && pctU >= 100 ? '<span class="badge badge-g">META ATINGIDA</span>' : '<span class="badge badge-r">ABAIXO</span>');
-    const fR = (v, base, sym, cur) => v !== null
-      ? `<span class="${v>=base?'up':'dn'}">${v.toFixed(2)}${sym}</span>${cur?' <span style="color:var(--txt-3);font-size:9px;">(em curso)</span>':''}`
+    const fR = (lucro, sym, cur) => lucro !== null
+      ? `<span class="${lucro>=0?'up':'dn'}">${lucro>=0?'+':''}${lucro.toFixed(2)}${sym}</span>${cur?' <span style="color:var(--txt-3);font-size:9px;">(em curso)</span>':''}`
       : '<span class="neu">—</span>';
     const fP = v => v !== null
       ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${(v>=0?'+':'')}${v.toFixed(1)}%</span>`
@@ -708,11 +711,11 @@ if (trajMeses.length) {
       <td style="font-weight:600;color:var(--accent2);">${lbl}</td>
       <td class="r" style="color:var(--txt-2);">${mes.base_eur.toFixed(2)}€</td>
       <td class="r" style="color:var(--accent1);">+${mes.meta_eur.toFixed(2)}€</td>
-      <td class="r">${fR(realE,mes.base_eur,'€',isCur)}</td>
+      <td class="r">${fR(lucroE,'€',isCur)}</td>
       <td class="r">${fP(pctE)}</td>
       <td class="r" style="color:var(--txt-2);">${mes.base_usd.toFixed(2)}$</td>
       <td class="r" style="color:var(--accent2);">+${mes.meta_usd.toFixed(2)}$</td>
-      <td class="r">${fR(realU,mes.base_usd,'$',isCur)}</td>
+      <td class="r">${fR(lucroU,'$',isCur)}</td>
       <td class="r">${fP(pctU)}</td>
       <td>${badge}</td>
     </tr>`;

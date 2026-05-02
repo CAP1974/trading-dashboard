@@ -1513,7 +1513,8 @@
       "meta_usd": 20.864,
       "inicio": "2026-04-20",
       "saldo_fim_eur": 58.89,
-      "saldo_fim_usd": 209.87
+      "saldo_fim_usd": 209.87,
+      "transferencias_saida_eur": 20.00
     },
     "2026-05": {
       "base_eur": 58.89,

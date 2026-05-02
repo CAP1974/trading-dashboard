@@ -600,9 +600,11 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     const baseUsd = mesInfo.base_usd || BASE_USD;
 
     // Lucro: saldo_fim - base (mês fechado) ou lucro_aberto + realizado (mês actual em curso)
+    // transferencias_saida_eur: capital retirado da conta EUR (ex: aporte USD) — não é perda
     const isClosed = mesInfo.saldo_fim_eur != null;
     const isCur    = ym === curYM_m;
-    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (isCur ? (LUCRO_ABT_EUR + REAL_EUR) : 0);
+    const transferSaidaEur = mesInfo.transferencias_saida_eur || 0;
+    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur + transferSaidaEur) : (isCur ? (LUCRO_ABT_EUR + REAL_EUR) : 0);
     const usdLucro = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (isCur ? (LUCRO_ABT_USD + REAL_USD) : 0);
 
     // Melhor/pior sessão — usa P&L snapshot diário combinado (mantém)
