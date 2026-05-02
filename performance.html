@@ -322,13 +322,13 @@ function monthStats(ym) {
 const allMonths = Object.keys(byMonth).sort().reverse();
 const curStats  = monthStats(curYM);
 
-// ── constantes oficiais (reset 30 Abr 2026) ──
-const REAL_EUR      = -3.16;   // lucro realizado EUR (plataforma)
-const REAL_USD      = 13.60;   // lucro realizado USD (posicoes_fechadas)
+// ── constantes oficiais (reset 01 Mai 2026 — início Maio) ──
+const REAL_EUR      =  0.00;   // lucro realizado EUR Mai 2026 (reset mensal)
+const REAL_USD      =  0.00;   // lucro realizado USD Mai 2026 (reset mensal)
 const LUCRO_ABT_EUR =  6.11;   // lucro aberto EUR
-const LUCRO_ABT_USD =  7.51;   // lucro aberto USD
-const SALDO_EUR     = 58.89;   // saldo actual EUR
-const SALDO_USD     = 209.87;  // saldo actual USD
+const LUCRO_ABT_USD =  8.26;   // lucro aberto USD
+const SALDO_EUR     = 58.89;   // saldo actual EUR (feriado — igual a 30 Abr)
+const SALDO_USD     = 210.66;  // saldo actual USD
 // Retorno real
 const lucroRealEur  = REAL_EUR;                                       // -0.98€
 const lucroRealUsd  = REAL_USD;                                       // +0.44$

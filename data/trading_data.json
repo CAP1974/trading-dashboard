@@ -1514,6 +1514,17 @@
       "inicio": "2026-04-20",
       "saldo_fim_eur": 58.89,
       "saldo_fim_usd": 209.87
+    },
+    "2026-05": {
+      "base_eur": 58.89,
+      "base_usd": 209.87,
+      "meta_eur": 5.889,
+      "meta_usd": 20.987,
+      "inicio": "2026-05-01",
+      "saldo_fim_eur": null,
+      "saldo_fim_usd": null,
+      "realizado_eur_acumulado": 0,
+      "realizado_usd_acumulado": 0
     }
   },
   "2026-04-20": {
@@ -3520,6 +3531,163 @@
             "pct": 0,
             "val": 0
           }
+        }
+      ]
+    }
+  },
+  "2026-05-01": {
+    "date": "2026-05-01",
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ativo": "Apple",
+        "ticker": "AAPL",
+        "mkt": "USD",
+        "nota": "Entrada AAPL 0.05 @ 283.49 — 01/05/2026"
+      }
+    ],
+    "eur": {
+      "lucro": 6.11,
+      "caixa": 0.88,
+      "feriado": true,
+      "positions": [
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "pct": 5.48,
+          "lucro": 1.19,
+          "vol": 0.4,
+          "valor": 22.90,
+          "atual": 57.24,
+          "abertura": 54.275,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 12.57,
+          "lucro": 1.26,
+          "vol": 0.0881,
+          "valor": 11.28,
+          "atual": 128.00,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Samsung",
+          "mkt": "EUR",
+          "pct": 17.91,
+          "lucro": 3.61,
+          "vol": 0.0075,
+          "valor": 23.77,
+          "atual": 3740.00,
+          "abertura": 3105.07,
+          "trust": "v",
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "lucro": 8.26,
+      "caixa": 43.00,
+      "positions": [
+        {
+          "name": "Alphabet",
+          "mkt": "USD",
+          "pct": 13.20,
+          "lucro": 2.25,
+          "vol": 0.05,
+          "valor": 19.29,
+          "atual": 385.77,
+          "abertura": 340.73,
+          "trust": "v",
+          "delta": { "pct": 0.22, "val": 0.04 }
+        },
+        {
+          "name": "Amazon",
+          "mkt": "USD",
+          "pct": 2.70,
+          "lucro": 0.54,
+          "vol": 0.0765,
+          "valor": 20.53,
+          "atual": 268.32,
+          "abertura": 261.30,
+          "trust": "v",
+          "delta": { "pct": 1.22, "val": 0.25 }
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "pct": -1.13,
+          "lucro": -0.16,
+          "vol": 0.05,
+          "valor": 14.01,
+          "atual": 280.20,
+          "abertura": 283.49,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Casey's",
+          "mkt": "USD",
+          "pct": 10.64,
+          "lucro": 2.33,
+          "vol": 0.029,
+          "valor": 24.22,
+          "atual": 835.06,
+          "abertura": 754.77,
+          "trust": "v",
+          "delta": { "pct": 1.60, "val": 0.38 }
+        },
+        {
+          "name": "Dell",
+          "mkt": "USD",
+          "pct": 14.00,
+          "lucro": 1.80,
+          "vol": 0.07,
+          "valor": 14.66,
+          "atual": 209.42,
+          "abertura": 183.78,
+          "trust": "v",
+          "delta": { "pct": 0.23, "val": 0.03 }
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": 15.99,
+          "lucro": 2.82,
+          "vol": 0.3,
+          "valor": 20.46,
+          "atual": 68.18,
+          "abertura": 58.80,
+          "trust": "v",
+          "delta": { "pct": 1.11, "val": 0.23 }
+        },
+        {
+          "name": "Nvidia",
+          "mkt": "USD",
+          "pct": -4.68,
+          "lucro": -1.46,
+          "vol": 0.15,
+          "valor": 29.75,
+          "atual": 198.34,
+          "abertura": 208.04,
+          "trust": "r",
+          "delta": { "pct": -0.80, "val": -0.24 }
+        },
+        {
+          "name": "Voya Financial",
+          "mkt": "USD",
+          "pct": 0.57,
+          "lucro": 0.14,
+          "vol": 0.3,
+          "valor": 24.70,
+          "atual": 82.34,
+          "abertura": 81.86,
+          "trust": "v",
+          "delta": { "pct": 0.93, "val": 0.22 }
         }
       ]
     }
