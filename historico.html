@@ -313,8 +313,8 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const FALLBACK_EUR  = 79.39;
   const FALLBACK_USD  = 176.67;
   // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 6.11;   // lucro aberto EUR
-  const LUCRO_ABT_USD = 8.26;   // lucro aberto USD
+  const LUCRO_ABT_EUR = 6.98;   // lucro aberto EUR
+  const LUCRO_ABT_USD = 8.41;   // lucro aberto USD
   const REAL_EUR      = 0.00;   // realizado EUR Mai 2026 (reset mensal)
   const REAL_USD      = 0.00;   // realizado USD Mai 2026 (reset mensal)
 
@@ -384,8 +384,8 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
 (function(){
   const BASE_EUR_S  = 79.39;
   const BASE_USD_S  = 176.67;
-  const SALDO_EUR_S = 58.89;
-  const SALDO_USD_S = 210.66;
+  const SALDO_EUR_S = 59.76;
+  const SALDO_USD_S = 210.84;
 
   // Labels: Início → datas (sem ponto "Actual" extra)
   const saldoLabels = [
@@ -573,8 +573,8 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   const CAP_EUR       = 79.39;
   const BASE_USD      = 176.67;
   // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 6.11;
-  const LUCRO_ABT_USD = 8.26;
+  const LUCRO_ABT_EUR = 6.98;
+  const LUCRO_ABT_USD = 8.41;
   const REAL_EUR      = 0.00;   // reset Maio 2026
   const REAL_USD      = 0.00;   // reset Maio 2026
   const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
