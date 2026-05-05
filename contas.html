@@ -361,6 +361,8 @@ ALL_D.forEach(d => {
 });
 setText('eur-best',  (eurBest >= 0 ? '+' : '') + eurBest.toFixed(2) + ' €  (' + fmtDate(eurBestDate) + ')');
 setText('eur-worst', (eurWorst >= 0 ? '+' : '') + eurWorst.toFixed(2) + ' €  (' + fmtDate(eurWorstDate) + ')');
+const ewEl = document.getElementById('eur-worst'); if(ewEl) ewEl.className = 'stat-val ' + (eurWorst >= 0 ? 'up' : 'dn');
+const ebEl = document.getElementById('eur-best');  if(ebEl) ebEl.className = 'stat-val ' + (eurBest  >= 0 ? 'up' : 'dn');
 setText('eur-pos-count', (LATEST.eur.positions || []).length);
 
 // USD aportes total
@@ -396,6 +398,8 @@ ALL_D.forEach(d => {
 });
 setText('usd-best',  (usdBest >= 0 ? '+' : '') + usdBest.toFixed(2) + ' $  (' + fmtDate(usdBestDate) + ')');
 setText('usd-worst', (usdWorst >= 0 ? '+' : '') + usdWorst.toFixed(2) + ' $  (' + fmtDate(usdWorstDate) + ')');
+const uwEl = document.getElementById('usd-worst'); if(uwEl) uwEl.className = 'stat-val ' + (usdWorst >= 0 ? 'up' : 'dn');
+const ubEl = document.getElementById('usd-best');  if(ubEl) ubEl.className = 'stat-val ' + (usdBest  >= 0 ? 'up' : 'dn');
 setText('usd-pos-count', (LATEST.usd.positions || []).length);
 
 // ── SPARKLINES ──

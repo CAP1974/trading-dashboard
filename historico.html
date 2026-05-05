@@ -815,7 +815,7 @@ document.getElementById('perf-tbody').innerHTML=sorted.map(a=>{
     <td style="color:var(--accent2);font-weight:500;">${a.name}</td>
     <td><span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${a.mkt}</span></td>
     <td class="r up">${fmt(best)}%</td>
-    <td class="r dn">${fmt(worst)}%</td>
+    <td class="r ${worst>=0?'up':'dn'}">${fmt(worst)}%</td>
     <td class="r" style="color:var(--txt-2);">${a.dias}</td>
   </tr>`;
 }).join('');

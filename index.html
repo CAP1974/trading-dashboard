@@ -688,6 +688,10 @@ function renderKPIs(){
   set('kpi-pos-pct',Math.round(pos/allPos.length*100)+'% em ganho');
   set('kpi-best',best.name); set('kpi-best-val',fmt(best.pct)+'% '+best.mkt);
   set('kpi-worst',worst.name); set('kpi-worst-val',fmt(worst.pct)+'% '+worst.mkt);
+  cls('kpi-best', best.pct>=0?'up':'dn');
+  cls('kpi-worst', worst.pct>=0?'up':'dn');
+  const kwv=document.getElementById('kpi-worst-val'); if(kwv) kwv.className=worst.pct>=0?'kpi-sub up':'kpi-sub dn';
+  const kbv=document.getElementById('kpi-best-val');  if(kbv) kbv.className=best.pct>=0?'kpi-sub up':'kpi-sub dn';
 
   // Deltas
   const idx=ALL_DATES.indexOf(currentDay);
@@ -719,6 +723,8 @@ function renderKPIs(){
   setHtml('m-eur-gp',`<span class="up">${eg}</span> / <span class="dn">${d.eur.positions.length-eg}</span>`);
   set('m-eur-best',eBest.name+' '+fmt(eBest.pct)+'%');
   set('m-eur-worst',eWorst.name+' '+fmt(eWorst.pct)+'%');
+  const meb=document.getElementById('m-eur-best');  if(meb)  meb.className='metric-val '+(eBest.pct>=0?'up':'dn');
+  const mew=document.getElementById('m-eur-worst'); if(mew) mew.className='metric-val '+(eWorst.pct>=0?'up':'dn');
   const ecr=document.getElementById('m-eur-caixa-row');
   if(d.eur.caixa){ecr.style.display='flex';set('m-eur-caixa',d.eur.caixa.toFixed(2)+' €');}
   else ecr.style.display='none';
@@ -731,6 +737,8 @@ function renderKPIs(){
   setHtml('m-usd-gp',`<span class="up">${ug}</span> / <span class="dn">${d.usd.positions.length-ug}</span>`);
   set('m-usd-best',uBest.name+' '+fmt(uBest.pct)+'%');
   set('m-usd-worst',uWorst.name+' '+fmt(uWorst.pct)+'%');
+  const mub=document.getElementById('m-usd-best');  if(mub)  mub.className='metric-val '+(uBest.pct>=0?'up':'dn');
+  const muw=document.getElementById('m-usd-worst'); if(muw) muw.className='metric-val '+(uWorst.pct>=0?'up':'dn');
   const uar=document.getElementById('m-usd-aporte-row');
   const ucr=document.getElementById('m-usd-caixa-row');
   if(d.usd.aporte){uar.style.display='flex';set('m-usd-aporte','+'+d.usd.aporte.toFixed(2)+' $');}
