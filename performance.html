@@ -201,22 +201,38 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- SECÇÃO 6 — Trajectória do Fundo -->
-  <div class="zone-label">Trajectória do Fundo</div>
+  <!-- SECÇÃO 6 — Gráficos de Performance -->
+  <div class="zone-label">Progresso vs Meta · por Mês</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Equity Curve EUR · 8MSN</span>
-        <span class="card-tag">vs meta 10%/mês</span>
+        <span class="card-title">Progresso EUR · 8MSN</span>
+        <span class="card-tag">Realizado + Flutuante vs Meta 10%/mês</span>
       </div>
-      <div style="padding:16px;height:256px;"><canvas id="chartEurCurve"></canvas></div>
+      <div style="padding:16px;height:220px;"><canvas id="chartProgEur"></canvas></div>
     </div>
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Equity Curve USD · OMV</span>
-        <span class="card-tag">vs meta 10%/mês</span>
+        <span class="card-title">Progresso USD · OMV</span>
+        <span class="card-tag">Realizado + Flutuante vs Meta 10%/mês</span>
       </div>
-      <div style="padding:16px;height:256px;"><canvas id="chartUsdCurve"></canvas></div>
+      <div style="padding:16px;height:220px;"><canvas id="chartProgUsd"></canvas></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Realizado Acumulado</span>
+        <span class="card-tag">só trades fechados · exclui posições abertas</span>
+      </div>
+      <div style="padding:16px;height:200px;"><canvas id="chartAcum"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Défice / Excesso por Mês</span>
+        <span class="card-tag">equity vs meta mensal</span>
+      </div>
+      <div style="padding:16px;height:200px;"><canvas id="chartDefice"></canvas></div>
     </div>
   </div>
   <div class="card">
@@ -235,12 +251,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
             <th class="r">Flutu EUR</th>
             <th class="r">Equity EUR</th>
             <th class="r">% Meta</th>
+            <th class="r">Falta EUR</th>
             <th class="r">Base Aj. USD</th>
             <th class="r">Meta USD</th>
             <th class="r">Realiz USD</th>
             <th class="r">Flutu USD</th>
             <th class="r">Equity USD</th>
             <th class="r">% Meta</th>
+            <th class="r">Falta USD</th>
             <th>Estado</th>
           </tr>
         </thead>
@@ -598,143 +616,233 @@ $('hist-tbody').innerHTML = months2026.map(ym => {
   </tr>`;
 }).join('');
 
-// ── SECÇÃO 6: Trajectória do Fundo (só 2026+) ──
-const trajMeses = Object.keys(MESES).sort().filter(ym => ym >= '2026');
+// ── SECÇÃO 6: Gráficos + Trajectória (só >= 2026-04) ──
+const trajMeses = Object.keys(MESES).sort().filter(ym => ym >= '2026-04');
 setText('traj-tag', trajMeses.length + (trajMeses.length === 1 ? ' mês' : ' meses'));
 
 if (trajMeses.length) {
   const firstMes = MESES[trajMeses[0]];
-  const [fy, fm] = trajMeses[0].split('-').map(Number);
 
-  // ── Série diária: index 0 = "Início", depois um ponto por dia de trading ──
-  const days2026   = ALL_D.filter(d => d >= '2026').sort();
-  const lastDay    = days2026[days2026.length - 1];
+  // ── Dados por mês para gráficos ──
+  // Para cada mês: realE, flutuE, metaE, faltaE, realU, flutuU, metaU, faltaU
+  const chartMesLabels = [];
+  const mRealE = [], mFlutuE = [], mFaltaE = [];
+  const mRealU = [], mFlutuU = [], mFaltaU = [];
+  const mAcumRealE = [], mAcumRealU = [];
+  const mMetaAcumE = [], mMetaAcumU = [];
+  let cumRealE = 0, cumRealU = 0;
 
-  const labels      = ['Início (' + fmtDate(firstMes.inicio) + ')'];
-  const metaEurPts  = [firstMes.base_eur];
-  const metaUsdPts  = [firstMes.base_usd];
-  const saldoEurPts = [firstMes.base_eur];
-  const saldoUsdPts = [firstMes.base_usd];
+  trajMeses.forEach(ym => {
+    const mes = MESES[ym];
+    const isCur = ym === curYM;
+    const [_y, _m] = ym.split('-').map(Number);
+    chartMesLabels.push(MO_PT_P[_m - 1] + ' ' + _y);
 
-  // Pre-compute EUR cumulative adjustments (outgoing transfers added back)
-  const fmEurTransf = (typeof FUND_METRICS_DATA !== 'undefined' && FUND_METRICS_DATA?.eur?.transferencias) || [];
-  let runAdjE = 0;
-  const adjByDay = {};
-  days2026.forEach(d => {
-    fmEurTransf.filter(t => t.valor < 0 && t.data === d).forEach(t => { runAdjE += Math.abs(t.valor); });
-    adjByDay[d] = runAdjE;
+    const rE = isCur ? REAL_EUR : (mes.realizado_eur != null ? mes.realizado_eur : 0);
+    const rU = isCur ? REAL_USD : (mes.realizado_usd != null ? mes.realizado_usd : 0);
+    const fE = isCur ? LUCRO_ABT_EUR : (mes.flutuante_fim_eur != null ? mes.flutuante_fim_eur : 0);
+    const fU = isCur ? LUCRO_ABT_USD : (mes.flutuante_fim_usd != null ? mes.flutuante_fim_usd : 0);
+    const mE = mes.meta_eur;
+    const mU = mes.meta_usd;
+    const faE = Math.max(0, mE - Math.max(rE, 0) - Math.max(fE, 0));
+    const faU = Math.max(0, mU - Math.max(rU, 0) - Math.max(fU, 0));
+
+    // Para barra realizado: se negativo mostra zero (barra invertida tratada no tooltip)
+    mRealE.push(rE);
+    mFlutuE.push(Math.max(fE, 0));
+    mFaltaE.push(faE);
+    mRealU.push(rU);
+    mFlutuU.push(Math.max(fU, 0));
+    mFaltaU.push(faU);
+
+    cumRealE += rE;
+    cumRealU += rU;
+    mAcumRealE.push(+cumRealE.toFixed(2));
+    mAcumRealU.push(+cumRealU.toFixed(2));
+
+    // meta acumulada teórica composta desde início
+    const idx = trajMeses.indexOf(ym) + 1;
+    mMetaAcumE.push(+(firstMes.base_eur * Math.pow(1.10, idx) - firstMes.base_eur).toFixed(2));
+    mMetaAcumU.push(+(firstMes.base_usd * Math.pow(1.10, idx) - firstMes.base_usd).toFixed(2));
   });
 
-  const saldoEurAjPts = [firstMes.base_eur]; // adjusted (adds back transfers)
+  // ── Utilitários chart ──
+  const tickStyle = { color: '#334455', font: { size: 9, family: 'JetBrains Mono' } };
+  const gridStyle = { color: 'rgba(255,255,255,.04)' };
+  const legendStyle = { labels: { color: '#6b8aaa', font: { size: 10, family: 'JetBrains Mono' }, boxWidth: 14, padding: 10 } };
 
-  let cumRealEur = 0, cumRealUsd = 0;
+  // ── GRÁFICO 1a — Progresso EUR (horizontal stacked bar) ──
+  function buildProgChart(canvasId, labels, realArr, flutuArr, faltaArr, metaArr, sym, mainColor, metaColor) {
+    const positiveReal = realArr.map(v => Math.max(v, 0));
+    new Chart(document.getElementById(canvasId), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Realizado', data: positiveReal, backgroundColor: '#1eff8e', stack: 'prog' },
+          { label: 'Flutuante', data: flutuArr, backgroundColor: 'rgba(30,255,142,0.35)', stack: 'prog' },
+          { label: 'Falta', data: faltaArr, backgroundColor: 'rgba(255,77,106,0.25)', stack: 'prog' }
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: legendStyle,
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                const i = ctx.dataIndex;
+                if (ctx.datasetIndex === 0) {
+                  const rv = realArr[i];
+                  return `Realizado: ${rv >= 0 ? '+' : ''}${rv.toFixed(2)}${sym}`;
+                }
+                if (ctx.datasetIndex === 1) return `Flutuante: +${flutuArr[i].toFixed(2)}${sym}`;
+                if (ctx.datasetIndex === 2) return `Falta: ${faltaArr[i].toFixed(2)}${sym} · Meta: +${metaArr[i].toFixed(2)}${sym}`;
+                return '';
+              }
+            }
+          },
+          annotation: {}
+        },
+        scales: {
+          x: { stacked: true, ticks: tickStyle, grid: gridStyle,
+            title: { display: true, text: sym === '€' ? 'EUR (€)' : 'USD ($)', color: '#334455', font: { size: 9 } } },
+          y: { stacked: true, ticks: tickStyle, grid: { display: false } }
+        }
+      },
+      plugins: [{
+        id: 'metaLine',
+        afterDraw(chart) {
+          const ctx2 = chart.ctx;
+          const xScale = chart.scales.x;
+          const yScale = chart.scales.y;
+          metaArr.forEach((meta, i) => {
+            const x = xScale.getPixelForValue(meta);
+            const yTop = yScale.getPixelForValue(i) - yScale.getPixelForValue(i - 0.4) + yScale.getPixelForValue(i);
+            const barH = Math.abs(yScale.getPixelForValue(i - 0.4) - yScale.getPixelForValue(i + 0.4));
+            const y0 = yScale.getPixelForValue(i) - barH / 2;
+            const y1 = y0 + barH;
+            ctx2.save();
+            ctx2.beginPath();
+            ctx2.setLineDash([4, 3]);
+            ctx2.moveTo(x, y0);
+            ctx2.lineTo(x, y1);
+            ctx2.strokeStyle = metaColor;
+            ctx2.lineWidth = 1.5;
+            ctx2.stroke();
+            ctx2.restore();
+          });
+        }
+      }]
+    });
+  }
 
-  days2026.forEach(d => {
-    const ym      = d.slice(0, 7);
-    const mesInfo = MESES[ym] || {};
-    const baseEur = mesInfo.base_eur || CAP_EUR;
-    const baseUsd = mesInfo.base_usd || BASE_USD;
-    const [y, m]  = ym.split('-').map(Number);
-    const monthIdx = (y - fy) * 12 + (m - fm) + 1;
+  buildProgChart('chartProgEur', chartMesLabels, mRealE, mFlutuE, mFaltaE,
+    trajMeses.map(ym => MESES[ym].meta_eur), '€', '#1eff8e', '#3dffb0');
+  buildProgChart('chartProgUsd', chartMesLabels, mRealU, mFlutuU, mFaltaU,
+    trajMeses.map(ym => MESES[ym].meta_usd), '$', '#00c8ff', '#00c8ff');
 
-    let saldoE, saldoU;
-    if (d === lastDay && ym === curYM) {
-      saldoE = SALDO_EUR;
-      saldoU = SALDO_USD;
-    } else {
-      (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
-        if (p.mkt === 'EUR') cumRealEur += p.lucro || 0;
-        else                  cumRealUsd += p.lucro || 0;
-      });
-      const dayData = TRADING_DATA[d];
-      saldoE = baseEur + (dayData?.eur?.lucro || 0) + cumRealEur;
-      saldoU = baseUsd + (dayData?.usd?.lucro || 0) + cumRealUsd;
-    }
-
-    labels.push(fmtDate(d));
-    metaEurPts.push(+(firstMes.base_eur * Math.pow(1.10, monthIdx)).toFixed(2));
-    metaUsdPts.push(+(firstMes.base_usd * Math.pow(1.10, monthIdx)).toFixed(2));
-    saldoEurPts.push(+saldoE.toFixed(2));
-    saldoUsdPts.push(+saldoU.toFixed(2));
-    saldoEurAjPts.push(+(saldoE + (adjByDay[d] || 0)).toFixed(2));
-  });
-
-  const chartDefaults = {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { labels: { color: '#6b8aaa', font: { size: 10, family: 'JetBrains Mono' }, boxWidth: 20 } },
-      tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.raw !== null ? c.raw.toFixed(2) : '—') } }
-    },
-    scales: {
-      x: { ticks: { color: '#334455', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.04)' } },
-      y: { ticks: { color: '#334455', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.04)' } }
-    }
-  };
-
-  // EUR curve: saldo ajustado (principal) + saldo real (tracejado)
-  new Chart(document.getElementById('chartEurCurve'), {
+  // ── GRÁFICO 2 — Realizado Acumulado ──
+  new Chart(document.getElementById('chartAcum'), {
     type: 'line',
     data: {
-      labels,
+      labels: chartMesLabels,
       datasets: [
-        { label: 'Meta Ideal', data: metaEurPts, borderColor: '#3dffb0', borderDash: [5,5],
+        { label: 'Meta acumulada EUR (€)', data: mMetaAcumE, borderColor: '#3dffb0', borderDash: [5,4],
           borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#3dffb0', tension: 0.3, fill: false },
-        { label: 'Saldo ajustado', data: saldoEurAjPts, borderColor: '#1eff8e', borderWidth: 2,
-          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
-          segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
-          fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } },
-        { label: 'Saldo real', data: saldoEurPts, borderColor: 'rgba(107,138,170,0.5)', borderWidth: 1.5,
-          borderDash: [3,3], pointRadius: 2, pointBackgroundColor: 'rgba(107,138,170,0.5)', tension: 0.3,
-          fill: false, spanGaps: false }
-      ]
-    },
-    options: chartDefaults
-  });
-
-  // USD curve: unchanged
-  new Chart(document.getElementById('chartUsdCurve'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Meta Ideal', data: metaUsdPts, borderColor: '#00c8ff', borderDash: [5,5],
+        { label: 'Realizado EUR (€)', data: mAcumRealE, borderColor: '#1eff8e', borderWidth: 2,
+          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3,
+          fill: { target: 0, above: 'rgba(30,255,142,.12)', below: 'rgba(255,77,106,.12)' } },
+        { label: 'Meta acumulada USD ($)', data: mMetaAcumU, borderColor: '#00c8ff', borderDash: [5,4],
           borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#00c8ff', tension: 0.3, fill: false },
-        { label: 'Saldo', data: saldoUsdPts, borderColor: '#1eff8e', borderWidth: 2,
-          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
-          segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
-          fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } }
+        { label: 'Realizado USD ($)', data: mAcumRealU, borderColor: '#4da6ff', borderWidth: 2,
+          pointRadius: 4, pointBackgroundColor: '#4da6ff', tension: 0.3, fill: false }
       ]
     },
-    options: chartDefaults
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: legendStyle,
+        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.raw >= 0 ? '+' : '') + c.raw.toFixed(2) } }
+      },
+      scales: {
+        x: { ticks: tickStyle, grid: gridStyle },
+        y: { ticks: tickStyle, grid: gridStyle }
+      }
+    }
   });
 
-  // ── Tabela Histórico de Meses (3 camadas) ──
+  // ── GRÁFICO 3 — Défice / Excesso por Mês ──
+  // equity do mês = realizado + flutuante fim; desvio = equity - meta
+  const mDesvE = trajMeses.map((ym, i) => +(mRealE[i] + mFlutuE[i] - MESES[ym].meta_eur).toFixed(2));
+  const mDesvU = trajMeses.map((ym, i) => +(mRealU[i] + mFlutuU[i] - MESES[ym].meta_usd).toFixed(2));
+  new Chart(document.getElementById('chartDefice'), {
+    type: 'bar',
+    data: {
+      labels: chartMesLabels,
+      datasets: [
+        { label: 'EUR (€)', data: mDesvE,
+          backgroundColor: mDesvE.map(v => v >= 0 ? 'rgba(30,255,142,0.55)' : 'rgba(255,77,106,0.45)'),
+          borderColor:      mDesvE.map(v => v >= 0 ? '#1eff8e' : '#ff4d6a'),
+          borderWidth: 1 },
+        { label: 'USD ($)', data: mDesvU,
+          backgroundColor: mDesvU.map(v => v >= 0 ? 'rgba(0,200,255,0.45)' : 'rgba(255,77,106,0.25)'),
+          borderColor:      mDesvU.map(v => v >= 0 ? '#00c8ff' : '#ff4d6a'),
+          borderWidth: 1 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: legendStyle,
+        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.raw >= 0 ? '+' : '') + c.raw.toFixed(2) + (c.datasetIndex === 0 ? '€' : '$') } }
+      },
+      scales: {
+        x: { ticks: tickStyle, grid: { display: false } },
+        y: { ticks: tickStyle, grid: gridStyle,
+          title: { display: true, text: 'Equity − Meta', color: '#334455', font: { size: 9 } } }
+      }
+    }
+  });
+
+  // ── Tabela Histórico de Meses (3 camadas + Falta) ──
   document.getElementById('traj-tbody').innerHTML = trajMeses.map(ym => {
     const mes    = MESES[ym];
     const isCur  = ym === curYM;
-    // base ajustada
     const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
     const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
-    // realizado
     const realE  = isCur ? REAL_EUR : (mes.realizado_eur != null ? mes.realizado_eur : null);
     const realU  = isCur ? REAL_USD : (mes.realizado_usd != null ? mes.realizado_usd : null);
-    // flutuante
     const flutuE = isCur ? LUCRO_ABT_EUR : (mes.flutuante_fim_eur != null ? mes.flutuante_fim_eur : null);
     const flutuU = isCur ? LUCRO_ABT_USD : (mes.flutuante_fim_usd != null ? mes.flutuante_fim_usd : null);
-    // equity
     const eqE = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
               : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : null);
     const eqU = isCur ? (REAL_USD + LUCRO_ABT_USD)
               : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : null);
     const pctE = eqE != null ? eqE / mes.meta_eur * 100 : null;
     const pctU = eqU != null ? eqU / mes.meta_usd * 100 : null;
-    const [_y,_m] = ym.split('-').map(Number);
+    // falta = max(0, meta - equity); negativo = excesso
+    const faltaE = eqE != null ? mes.meta_eur - eqE : null;
+    const faltaU = eqU != null ? mes.meta_usd - eqU : null;
+    const [_y, _m] = ym.split('-').map(Number);
     const lbl = MO_PT_P[_m-1] + ' ' + _y;
 
     // badge
     let badge;
     if (isCur) {
-      badge = '<span class="badge badge-a">EM CURSO</span>';
+      // META EM EQUITY = flutuante >= meta mas realizado < meta
+      const metaCobertaEur = eqE >= mes.meta_eur;
+      const metaCobertaUsd = eqU >= mes.meta_usd;
+      const realAbaixoEur  = (realE || 0) < mes.meta_eur;
+      const realAbaixoUsd  = (realU || 0) < mes.meta_usd;
+      if (metaCobertaEur && metaCobertaUsd && (realAbaixoEur || realAbaixoUsd)) {
+        badge = '<span class="badge badge-b">META EM EQUITY</span>';
+      } else if (metaCobertaEur && metaCobertaUsd) {
+        badge = '<span class="badge badge-g">META ATINGIDA</span>';
+      } else {
+        badge = '<span class="badge badge-a">EM CURSO</span>';
+      }
     } else if (eqE >= mes.meta_eur && eqU >= mes.meta_usd) {
       badge = '<span class="badge badge-g">META ATINGIDA</span>';
     } else if ((eqE >= mes.meta_eur || eqU >= mes.meta_usd) && (realE < mes.meta_eur || realU < mes.meta_usd)) {
@@ -752,6 +860,12 @@ if (trajMeses.length) {
     const fP = v => v != null
       ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`
       : '<span class="neu">—</span>';
+    // falta: verde se <=0 (coberta/excesso), vermelho se >0 (ainda falta)
+    const fFalta = (v, sym) => v != null
+      ? (v <= 0
+          ? `<span class="up">${v.toFixed(2)}${sym}</span>`
+          : `<span class="dn">+${v.toFixed(2)}${sym}</span>`)
+      : '<span class="neu">—</span>';
 
     return `<tr>
       <td style="font-weight:600;color:var(--accent2);">${lbl}${isCur?' <span style="font-size:9px;color:var(--txt-3);">(em curso)</span>':''}</td>
@@ -761,32 +875,32 @@ if (trajMeses.length) {
       <td class="r">${fN(flutuE,'€')}</td>
       <td class="r">${fR(eqE,'€')}</td>
       <td class="r">${fP(pctE)}</td>
+      <td class="r">${fFalta(faltaE,'€')}</td>
       <td class="r" style="color:var(--txt-2);">${baseAjU.toFixed(2)}$</td>
       <td class="r" style="color:var(--accent2);">+${mes.meta_usd.toFixed(2)}$</td>
       <td class="r">${fR(realU,'$')}</td>
       <td class="r">${fN(flutuU,'$')}</td>
       <td class="r">${fR(eqU,'$')}</td>
       <td class="r">${fP(pctU)}</td>
+      <td class="r">${fFalta(faltaU,'$')}</td>
       <td>${badge}</td>
     </tr>`;
   }).join('');
 
-  // ── Footer desvio (só 2026) ──
-  const nM     = trajMeses.length;
+  // ── Footer desvio ──
+  const nM = trajMeses.length;
   const mAcEur = (Math.pow(1.10, nM) - 1) * 100;
   const mAcUsd = mAcEur;
-  const lastSaldoE = saldoEurPts[saldoEurPts.length - 1];
-  const lastSaldoU = saldoUsdPts[saldoUsdPts.length - 1];
-  const rAcEur = (lastSaldoE - firstMes.base_eur) / firstMes.base_eur * 100;
-  const rAcUsd = (lastSaldoU - firstMes.base_usd) / firstMes.base_usd * 100;
-  const dEur   = rAcEur - mAcEur;
-  const dUsd   = rAcUsd - mAcUsd;
-  const fA = (v,c) => `<span class="${c||v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
+  const rAcEur = (mAcumRealE[mAcumRealE.length - 1] / firstMes.base_eur) * 100;
+  const rAcUsd = (mAcumRealU[mAcumRealU.length - 1] / firstMes.base_usd) * 100;
+  const dEur = rAcEur - mAcEur;
+  const dUsd = rAcUsd - mAcUsd;
+  const fA = v => `<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
   document.getElementById('traj-tfoot').innerHTML = `<tr>
-    <td colspan="14" style="font-size:10px;color:var(--txt-3);padding:10px 10px;line-height:2;">
-      Meta acumulada teórica: ${fA(mAcEur,true)} EUR · ${fA(mAcUsd,true)} USD
-      &nbsp;·&nbsp; Real acumulado: ${fA(rAcEur)} EUR · ${fA(rAcUsd)} USD
-      &nbsp;·&nbsp; Desvio: ${fA(dEur)} EUR · ${fA(dUsd)} USD
+    <td colspan="16" style="font-size:10px;color:var(--txt-3);padding:10px 10px;line-height:2;">
+      Meta acumulada teórica: ${fA(mAcEur)} EUR · ${fA(mAcUsd)} USD
+      &nbsp;·&nbsp; Realizado acumulado vs base: ${fA(rAcEur)} EUR · ${fA(rAcUsd)} USD
+      &nbsp;·&nbsp; Desvio (real − meta): ${fA(dEur)} EUR · ${fA(dUsd)} USD
     </td>
   </tr>`;
 }
