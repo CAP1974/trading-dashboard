@@ -1496,6 +1496,23 @@
       "caixa": 8.54
     }
   },
+  "fund_metrics": {
+    "eur": {
+      "capital_inicial": 78.41,
+      "transferencias": [
+        {"data": "2026-04-27", "valor": -20.00, "nota": "Transferência para USD"}
+      ],
+      "capital_ajustado": 58.41
+    },
+    "usd": {
+      "capital_inicial": 177.11,
+      "aportes": [
+        {"data": "2026-04-27", "valor": 23.36, "nota": "Transferência da conta EUR"},
+        {"data": "2026-04-28", "valor": 8.17, "nota": "Aporte Voya"}
+      ],
+      "capital_ajustado": 208.64
+    }
+  },
   "meses": {
     "2025-04": {
       "base_eur": 79.39,
@@ -1511,21 +1528,34 @@
       "base_usd": 208.64,
       "meta_eur": 7.841,
       "meta_usd": 20.864,
-      "inicio": "2026-04-20",
+      "ajustes_eur": -20.00,
+      "ajustes_usd": 31.53,
+      "base_ajustada_eur": 58.41,
+      "base_ajustada_usd": 208.64,
+      "realizado_eur": -3.16,
+      "realizado_usd": 13.60,
       "saldo_fim_eur": 58.89,
       "saldo_fim_usd": 209.87,
-      "transferencias_saida_eur": 20.00
+      "flutuante_fim_eur": 6.11,
+      "flutuante_fim_usd": 7.51,
+      "inicio": "2026-04-20"
     },
     "2026-05": {
       "base_eur": 58.89,
       "base_usd": 209.87,
       "meta_eur": 5.889,
       "meta_usd": 20.987,
-      "inicio": "2026-05-01",
+      "ajustes_eur": 0,
+      "ajustes_usd": 0,
+      "base_ajustada_eur": 58.89,
+      "base_ajustada_usd": 209.87,
+      "realizado_eur": 0,
+      "realizado_usd": 0,
       "saldo_fim_eur": null,
       "saldo_fim_usd": null,
-      "realizado_eur_acumulado": 0,
-      "realizado_usd_acumulado": 0
+      "flutuante_fim_eur": null,
+      "flutuante_fim_usd": null,
+      "inicio": "2026-05-01"
     }
   },
   "2026-04-20": {

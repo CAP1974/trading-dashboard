@@ -62,6 +62,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .badge-g{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
 .badge-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
 .badge-a{background:var(--amber-d);color:var(--amber);border:1px solid var(--amber-b);}
+.badge-b{background:var(--blue-d);color:var(--blue);border:1px solid var(--blue-b);}
 .badge-meta{background:linear-gradient(135deg,rgba(61,255,176,.15),rgba(0,200,255,.15));color:var(--accent1);border:1px solid rgba(61,255,176,.3);font-size:9px;padding:2px 8px;border-radius:3px;letter-spacing:.06em;font-weight:700;}
 
 /* meta metrics */
@@ -228,14 +229,18 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
         <thead>
           <tr>
             <th>Mês</th>
-            <th class="r">Base EUR</th>
+            <th class="r">Base Aj. EUR</th>
             <th class="r">Meta EUR</th>
-            <th class="r">Real EUR</th>
-            <th class="r">% Meta EUR</th>
-            <th class="r">Base USD</th>
+            <th class="r">Realiz EUR</th>
+            <th class="r">Flutu EUR</th>
+            <th class="r">Equity EUR</th>
+            <th class="r">% Meta</th>
+            <th class="r">Base Aj. USD</th>
             <th class="r">Meta USD</th>
-            <th class="r">Real USD</th>
-            <th class="r">% Meta USD</th>
+            <th class="r">Realiz USD</th>
+            <th class="r">Flutu USD</th>
+            <th class="r">Equity USD</th>
+            <th class="r">% Meta</th>
             <th>Estado</th>
           </tr>
         </thead>
@@ -329,174 +334,169 @@ const LUCRO_ABT_EUR =  6.98;   // lucro aberto EUR
 const LUCRO_ABT_USD =  8.41;   // lucro aberto USD
 const SALDO_EUR     = 59.76;   // saldo actual EUR
 const SALDO_USD     = 210.84;  // saldo actual USD
-// Retorno real
-const lucroRealEur  = REAL_EUR;                                       // -0.98€
-const lucroRealUsd  = REAL_USD;                                       // +0.44$
-const retRealEur    = REAL_EUR  / CAP_EUR  * 100;                     // -1.23%
-const retRealUsd    = REAL_USD  / BASE_USD * 100;                     // +0.25%
-const consLucroEur  = REAL_EUR + REAL_USD * EUR_RATE;                 // -0.98 + 0.40 = -0.58€
-const consBaseEur   = CAP_EUR  + BASE_USD * EUR_RATE;                 // 79.39 + 162.54 = 241.93€
-const retConsEur    = consLucroEur / consBaseEur * 100;               // ~-0.24%
-function colorRR(v){ return v>0?'var(--green)':v===0?'var(--txt-3)':'var(--red)'; }
 
-// ── SECÇÃO 1: Meta mensal — 3 métricas ──
-function miniBar(pctFill, pctNr, color) {
-  const f = Math.min(Math.max(pctFill,0),100).toFixed(1);
-  const n = Math.min(Math.max(pctNr,0), 100-parseFloat(f)).toFixed(1);
+// ── Métricas 3 camadas ──
+const eqEur   = REAL_EUR + LUCRO_ABT_EUR;   // equity EUR mês
+const eqUsd   = REAL_USD + LUCRO_ABT_USD;   // equity USD mês
+const faltaEur = META_EUR - eqEur;           // negativo = já ultrapassou
+const faltaUsd = META_USD - eqUsd;
+
+const pR_Eur  = META_EUR > 0 ? REAL_EUR      / META_EUR * 100 : 0;
+const pF_Eur  = META_EUR > 0 ? LUCRO_ABT_EUR / META_EUR * 100 : 0;
+const pEq_Eur = META_EUR > 0 ? eqEur         / META_EUR * 100 : 0;
+const pR_Usd  = META_USD > 0 ? REAL_USD      / META_USD * 100 : 0;
+const pF_Usd  = META_USD > 0 ? LUCRO_ABT_USD / META_USD * 100 : 0;
+const pEq_Usd = META_USD > 0 ? eqUsd         / META_USD * 100 : 0;
+
+// Consolidado ~EUR
+const eqCons   = eqEur + eqUsd * EUR_RATE;
+const metaCons = META_EUR + META_USD * EUR_RATE;
+const pEqCons  = metaCons > 0 ? eqCons / metaCons * 100 : 0;
+const faltaCons = metaCons - eqCons;
+
+function colorRR(v){ return v>0?'var(--green)':v===0?'var(--txt-3)':'var(--red)'; }
+function colorPct(v){ return v>=100?'var(--green)':v>=50?'var(--amber)':'var(--red)'; }
+
+// miniBar: sólido=realizado | transparente=flutuante | linha=100% meta
+function miniBar(pctReal, pctFlutu, color) {
+  const r = Math.min(Math.max(pctReal,0),100).toFixed(1);
+  const f = Math.min(Math.max(pctFlutu,0), 100-parseFloat(r)).toFixed(1);
   return `<div class="meta-track">
-    <div class="meta-fill" style="width:${f}%;background:${color};"></div>
-    <div style="position:absolute;top:0;left:${f}%;width:${n}%;height:100%;background:${color};opacity:0.32;"></div>
+    <div class="meta-fill" style="width:${r}%;background:${color};"></div>
+    <div style="position:absolute;top:0;left:${r}%;width:${f}%;height:100%;background:${color};opacity:0.32;"></div>
     <div class="meta-target" style="left:100%;transform:translateX(-1px);"></div>
   </div>`;
 }
 
-function colorPct(v) {
-  return v > 10 ? 'var(--green)' : v > 0 ? 'var(--amber)' : 'var(--red)';
-}
-
-// Métrica A — Realizado
-const pA_Eur = REAL_EUR / META_EUR * 100;   // -12.3%
-const pA_Usd = REAL_USD / META_USD * 100;   // +2.5%
-const metricA = `<div class="metric-card">
+// Card EUR
+const cardEur = `<div class="metric-card">
   <div class="metric-header">
-    <span class="metric-title">Realizado</span>
-    <span class="badge-metric">Meta Realizada</span>
+    <span class="metric-title">EUR · 8MSN</span>
+    <span class="badge-metric">Meta ${META_EUR.toFixed(2)}€</span>
   </div>
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">EUR · 8MSN</span>
-      <span class="rr-val ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(REAL_EUR)};">${pA_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(Math.max(pA_Eur,0), 0, 'var(--accent1)')}
-    <div class="rr-note">vs meta ${META_EUR.toFixed(2)}€</div>
+    <div class="rr-line-top"><span class="rr-label">Realizado</span><span class="rr-val ${REAL_EUR>=0?'up':'dn'}">${REAL_EUR>=0?'+':''}${REAL_EUR.toFixed(2)}€</span></div>
+    <div class="rr-pct" style="color:${colorPct(pR_Eur)};">${pR_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pR_Eur,0), 0, 'var(--accent1)')}
+    <div class="rr-note">da meta · cash confirmado</div>
   </div>
+  <hr class="rr-divider">
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">USD · OMV</span>
-      <span class="rr-val ${cls(REAL_USD)}">${s(REAL_USD,'$')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(REAL_USD)};">${pA_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(Math.max(pA_Usd,0), 0, 'var(--accent2)')}
-    <div class="rr-note">vs meta ${META_USD.toFixed(2)}$</div>
+    <div class="rr-line-top"><span class="rr-label">Flutuante</span><span class="rr-val" style="color:var(--txt-2);">${LUCRO_ABT_EUR>=0?'+':''}${LUCRO_ABT_EUR.toFixed(2)}€</span></div>
+    <div class="rr-pct" style="color:${colorRR(LUCRO_ABT_EUR)};">${pF_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pR_Eur,0), Math.max(pF_Eur,0), 'var(--accent1)')}
+    <div class="rr-note">da meta · posições abertas</div>
+  </div>
+  <hr class="rr-divider">
+  <div class="rr-line">
+    <div class="rr-line-top"><span class="rr-label">Falta Realizar</span><span class="rr-val ${faltaEur<=0?'up':'dn'}">${faltaEur<=0?'':'+''}${faltaEur.toFixed(2)}€</span></div>
+    <div class="rr-note" style="margin-top:2px;">${faltaEur<=0?'Meta já coberta em equity · proteger posições':'Ainda falta para atingir meta'}</div>
+  </div>
+  <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+    <span class="rr-label">Equity total</span>
+    <span class="rr-pct" style="color:${colorPct(pEq_Eur)};font-size:26px;margin-left:8px;">${pEq_Eur.toFixed(1)}<span style="font-size:12px;font-weight:400;">% meta</span></span>
   </div>
 </div>`;
 
-// Métrica B — Equity
-const eqEur  = REAL_EUR + LUCRO_ABT_EUR;   // -0.98 + 3.52 = +2.54
-const eqUsd  = REAL_USD + LUCRO_ABT_USD;   //  0.44 + 11.30 = +11.74
-const pB_Eur = eqEur / META_EUR * 100;     // +32.0%
-const pB_Usd = eqUsd / META_USD * 100;     // +66.5%
-const pBfillE = Math.max(REAL_EUR  / META_EUR * 100, 0);
-const pBnrE   = Math.max(LUCRO_ABT_EUR / META_EUR * 100, 0);
-const pBfillU = Math.max(REAL_USD  / META_USD * 100, 0);
-const pBnrU   = Math.max(LUCRO_ABT_USD / META_USD * 100, 0);
-const metricB = `<div class="metric-card">
+// Card USD
+const cardUsd = `<div class="metric-card">
   <div class="metric-header">
-    <span class="metric-title">Equity</span>
-    <span class="badge-metric">Meta em Equity</span>
+    <span class="metric-title">USD · OMV</span>
+    <span class="badge-metric">Meta ${META_USD.toFixed(2)}$</span>
   </div>
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">EUR · 8MSN</span>
-      <span class="rr-val ${cls(eqEur)}">${s(eqEur,'€')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(eqEur)};">${pB_Eur.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(pBfillE, pBnrE, 'var(--accent1)')}
-    <div class="rr-note">vs meta ${META_EUR.toFixed(2)}€ · sólido=real · transp.=aberto</div>
+    <div class="rr-line-top"><span class="rr-label">Realizado</span><span class="rr-val ${REAL_USD>=0?'up':'dn'}">${REAL_USD>=0?'+':''}${REAL_USD.toFixed(2)}$</span></div>
+    <div class="rr-pct" style="color:${colorPct(pR_Usd)};">${pR_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pR_Usd,0), 0, 'var(--accent2)')}
+    <div class="rr-note">da meta · cash confirmado</div>
   </div>
+  <hr class="rr-divider">
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">USD · OMV</span>
-      <span class="rr-val ${cls(eqUsd)}">${s(eqUsd,'$')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(eqUsd)};">${pB_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(pBfillU, pBnrU, 'var(--accent2)')}
-    <div class="rr-note">vs meta ${META_USD.toFixed(2)}$ · sólido=real · transp.=aberto</div>
+    <div class="rr-line-top"><span class="rr-label">Flutuante</span><span class="rr-val" style="color:var(--txt-2);">${LUCRO_ABT_USD>=0?'+':''}${LUCRO_ABT_USD.toFixed(2)}$</span></div>
+    <div class="rr-pct" style="color:${colorRR(LUCRO_ABT_USD)};">${pF_Usd.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    ${miniBar(Math.max(pR_Usd,0), Math.max(pF_Usd,0), 'var(--accent2)')}
+    <div class="rr-note">da meta · posições abertas</div>
+  </div>
+  <hr class="rr-divider">
+  <div class="rr-line">
+    <div class="rr-line-top"><span class="rr-label">Falta Realizar</span><span class="rr-val ${faltaUsd<=0?'up':'dn'}">${faltaUsd<=0?'':'+'}${faltaUsd.toFixed(2)}$</span></div>
+    <div class="rr-note" style="margin-top:2px;">${faltaUsd<=0?'Meta já coberta em equity · proteger posições':'Ainda falta para atingir meta'}</div>
+  </div>
+  <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
+    <span class="rr-label">Equity total</span>
+    <span class="rr-pct" style="color:${colorPct(pEq_Usd)};font-size:26px;margin-left:8px;">${pEq_Usd.toFixed(1)}<span style="font-size:12px;font-weight:400;">% meta</span></span>
   </div>
 </div>`;
 
-// Métrica C — Retorno Real
-const metricC = `<div class="metric-card principal">
+// Card CONSOLIDADO
+const cardCons = `<div class="metric-card principal">
   <div class="metric-header">
-    <span class="metric-title">Retorno Real</span>
+    <span class="metric-title">Consolidado ~EUR</span>
     <span class="badge-principal">Métrica Principal</span>
   </div>
-
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">EUR · 8MSN</span>
-      <span class="rr-val ${cls(lucroRealEur)}">${s(lucroRealEur,'€')}</span>
+    <div class="rr-line-top"><span class="rr-label">Equity Total ~EUR</span><span class="rr-val ${eqCons>=0?'up':'dn'}">${eqCons>=0?'+':''}${eqCons.toFixed(2)}€</span></div>
+    <div class="rr-pct" style="color:${colorPct(pEqCons)};">${pEqCons.toFixed(1)}<span style="font-size:13px;font-weight:400;">%</span></div>
+    <div class="meta-track">
+      <div class="meta-fill" style="width:${Math.min(pEqCons,100).toFixed(1)}%;background:var(--accent-g);"></div>
+      <div class="meta-target" style="left:100%;transform:translateX(-1px);"></div>
     </div>
-    <div class="rr-pct" style="color:${colorRR(retRealEur)};">${retRealEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(Math.min(retRealEur/META_PCT*100,100), 0, 'var(--accent1)')}
-    <div class="rr-note">(${SALDO_EUR} − ${CAP_EUR}) / ${CAP_EUR} × 100</div>
+    <div class="rr-note">da meta consolidada ${metaCons.toFixed(2)}€</div>
   </div>
-
-  <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">USD · OMV</span>
-      <span class="rr-val ${cls(lucroRealUsd)}">${s(lucroRealUsd,'$')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(retRealUsd)};">${retRealUsd.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    ${miniBar(Math.min(retRealUsd/META_PCT*100,100), 0, 'var(--accent2)')}
-    <div class="rr-note">(${SALDO_USD} − ${BASE_USD}) / ${BASE_USD} × 100 · base inclui todos os aportes</div>
-  </div>
-
   <hr class="rr-divider">
-
   <div class="rr-line">
-    <div class="rr-line-top">
-      <span class="rr-label">Consolidado ~EUR</span>
-      <span class="rr-val ${cls(consLucroEur)}">${s(consLucroEur,'€')}</span>
-    </div>
-    <div class="rr-pct" style="color:${colorRR(retConsEur)};">${retConsEur.toFixed(2)}<span style="font-size:13px;font-weight:400;">%</span></div>
-    <div class="rr-note">(${lucroRealEur.toFixed(2)} + ${lucroRealUsd.toFixed(2)} × ${EUR_RATE}) / (${CAP_EUR} + ${BASE_USD} × ${EUR_RATE}) × 100</div>
+    <div class="rr-line-top"><span class="rr-label">EUR</span><span class="rr-val" style="color:${colorPct(pEq_Eur)};">${pEq_Eur.toFixed(1)}% meta</span></div>
+    <div class="rr-note">${eqEur>=0?'+':''}${eqEur.toFixed(2)}€ equity · real ${REAL_EUR>=0?'+':''}${REAL_EUR.toFixed(2)}€ · flutu ${LUCRO_ABT_EUR>=0?'+':''}${LUCRO_ABT_EUR.toFixed(2)}€</div>
+  </div>
+  <div class="rr-line" style="margin-top:6px;">
+    <div class="rr-line-top"><span class="rr-label">USD</span><span class="rr-val" style="color:${colorPct(pEq_Usd)};">${pEq_Usd.toFixed(1)}% meta</span></div>
+    <div class="rr-note">${eqUsd>=0?'+':''}${eqUsd.toFixed(2)}$ equity · real ${REAL_USD>=0?'+':''}${REAL_USD.toFixed(2)}$ · flutu ${LUCRO_ABT_USD>=0?'+':''}${LUCRO_ABT_USD.toFixed(2)}$</div>
+  </div>
+  <hr class="rr-divider">
+  <div class="rr-line">
+    <div class="rr-line-top"><span class="rr-label">Falta Realizar ~EUR</span><span class="rr-val ${faltaCons<=0?'up':'dn'}">${faltaCons>=0?'+':''}${faltaCons.toFixed(2)}€</span></div>
+    <div class="rr-note">${faltaCons<=0?'Meta já coberta em equity consolidada':'Para atingir meta mensal completa'}</div>
   </div>
 </div>`;
 
-$('meta-section').innerHTML = `<div class="meta-3grid">${metricA}${metricB}${metricC}</div>`;
+$('meta-section').innerHTML = `<div class="meta-3grid">${cardEur}${cardUsd}${cardCons}</div>`;
 
-// ── SECÇÃO 2: KPIs (official constants) ──
-const totalCurEur = (REAL_EUR + REAL_USD*EUR_RATE) + (LUCRO_ABT_EUR + LUCRO_ABT_USD*EUR_RATE);
-const metaPctEur  = (REAL_EUR + LUCRO_ABT_EUR) / META_EUR * 100;
-const metaColor   = metaPctEur >= 100 ? 'var(--green)' : metaPctEur >= 50 ? 'var(--amber)' : 'var(--red)';
-
+// ── SECÇÃO 2: KPIs ──
 $('kpi-grid').innerHTML = `
   <div class="kpi-mini">
     <div class="kpi-mini-label">Realizado EUR</div>
-    <div class="kpi-mini-value ${cls(REAL_EUR)}">${s(REAL_EUR,'€')}</div>
-    <div class="kpi-mini-sub">${pctStr(REAL_EUR/CAP_EUR*100)} sobre capital</div>
+    <div class="kpi-mini-value ${REAL_EUR>=0?'up':'dn'}">${REAL_EUR>=0?'+':''}${REAL_EUR.toFixed(2)}€</div>
+    <div class="kpi-mini-sub">${pR_Eur.toFixed(1)}% da meta</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Realizado USD</div>
-    <div class="kpi-mini-value ${cls(REAL_USD)}">${s(REAL_USD,'$')}</div>
-    <div class="kpi-mini-sub">${pctStr(REAL_USD/BASE_USD*100)} sobre capital</div>
+    <div class="kpi-mini-value ${REAL_USD>=0?'up':'dn'}">${REAL_USD>=0?'+':''}${REAL_USD.toFixed(2)}$</div>
+    <div class="kpi-mini-sub">${pR_Usd.toFixed(1)}% da meta</div>
   </div>
   <div class="kpi-mini">
-    <div class="kpi-mini-label">Não realizado EUR</div>
-    <div class="kpi-mini-value ${cls(LUCRO_ABT_EUR)}" style="color:var(--txt-2);">${s(LUCRO_ABT_EUR,'€')}</div>
+    <div class="kpi-mini-label">Flutuante EUR</div>
+    <div class="kpi-mini-value" style="color:var(--txt-2);">${LUCRO_ABT_EUR>=0?'+':''}${LUCRO_ABT_EUR.toFixed(2)}€</div>
     <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
   </div>
   <div class="kpi-mini">
-    <div class="kpi-mini-label">Não realizado USD</div>
-    <div class="kpi-mini-value ${cls(LUCRO_ABT_USD)}" style="color:var(--txt-2);">${s(LUCRO_ABT_USD,'$')}</div>
+    <div class="kpi-mini-label">Flutuante USD</div>
+    <div class="kpi-mini-value" style="color:var(--txt-2);">${LUCRO_ABT_USD>=0?'+':''}${LUCRO_ABT_USD.toFixed(2)}$</div>
     <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
   </div>
   <div class="kpi-mini">
-    <div class="kpi-mini-label">Total ~EUR</div>
-    <div class="kpi-mini-value grad">${s(totalCurEur,'€')}</div>
-    <div class="kpi-mini-sub">real + não real · ×${EUR_RATE}</div>
+    <div class="kpi-mini-label">Equity ~EUR</div>
+    <div class="kpi-mini-value grad">${eqCons>=0?'+':''}${eqCons.toFixed(2)}€</div>
+    <div class="kpi-mini-sub">real + flutuante · ×${EUR_RATE}</div>
   </div>
   <div class="kpi-mini">
-    <div class="kpi-mini-label">% Meta Equity</div>
-    <div class="kpi-mini-value" style="color:${metaColor};">${pctStr(metaPctEur)}</div>
-    <div class="kpi-mini-sub">meta: ${META_PCT}% = ${META_EUR.toFixed(2)}€</div>
+    <div class="kpi-mini-label">% Meta Equity EUR</div>
+    <div class="kpi-mini-value" style="color:${colorPct(pEq_Eur)};">${pEq_Eur.toFixed(1)}%</div>
+    <div class="kpi-mini-sub">meta: ${META_EUR.toFixed(2)}€</div>
   </div>
   <div class="kpi-mini" style="border-color:rgba(61,255,176,.25);">
-    <div class="kpi-mini-label" style="color:var(--accent1);">Retorno Real</div>
-    <div class="kpi-mini-value" style="color:${colorRR(retConsEur)};font-size:16px;">${retConsEur.toFixed(1)}%</div>
-    <div class="kpi-mini-sub" style="line-height:1.7;">EUR <span style="color:${colorRR(retRealEur)};">${retRealEur.toFixed(1)}%</span> · USD <span style="color:${colorRR(retRealUsd)};">${retRealUsd.toFixed(1)}%</span></div>
+    <div class="kpi-mini-label" style="color:var(--accent1);">% Meta Consolidado</div>
+    <div class="kpi-mini-value" style="color:${colorPct(pEqCons)};font-size:16px;">${pEqCons.toFixed(1)}%</div>
+    <div class="kpi-mini-sub">EUR ${pEq_Eur.toFixed(1)}% · USD ${pEq_Usd.toFixed(1)}%</div>
   </div>`;
 
 setText('page-sub', 'Triple Seven Capital · ' + fmtMo(curYM) + ' · Meta ' + META_PCT + '%/mês');
@@ -616,6 +616,17 @@ if (trajMeses.length) {
   const saldoEurPts = [firstMes.base_eur];
   const saldoUsdPts = [firstMes.base_usd];
 
+  // Pre-compute EUR cumulative adjustments (outgoing transfers added back)
+  const fmEurTransf = (typeof FUND_METRICS_DATA !== 'undefined' && FUND_METRICS_DATA?.eur?.transferencias) || [];
+  let runAdjE = 0;
+  const adjByDay = {};
+  days2026.forEach(d => {
+    fmEurTransf.filter(t => t.valor < 0 && t.data === d).forEach(t => { runAdjE += Math.abs(t.valor); });
+    adjByDay[d] = runAdjE;
+  });
+
+  const saldoEurAjPts = [firstMes.base_eur]; // adjusted (adds back transfers)
+
   let cumRealEur = 0, cumRealUsd = 0;
 
   days2026.forEach(d => {
@@ -628,11 +639,9 @@ if (trajMeses.length) {
 
     let saldoE, saldoU;
     if (d === lastDay && ym === curYM) {
-      // último dia do mês actual: usa constantes oficiais directamente
       saldoE = SALDO_EUR;
       saldoU = SALDO_USD;
     } else {
-      // dias anteriores: base + não-realizado snapshot + realizado acumulado
       (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
         if (p.mkt === 'EUR') cumRealEur += p.lucro || 0;
         else                  cumRealUsd += p.lucro || 0;
@@ -642,13 +651,12 @@ if (trajMeses.length) {
       saldoU = baseUsd + (dayData?.usd?.lucro || 0) + cumRealUsd;
     }
 
-    const lbl = fmtDate(d);
-    labels.push(lbl);
-    // meta ideal = fim do mês corrente (target flat dentro do mês, sobe a cada mês)
+    labels.push(fmtDate(d));
     metaEurPts.push(+(firstMes.base_eur * Math.pow(1.10, monthIdx)).toFixed(2));
     metaUsdPts.push(+(firstMes.base_usd * Math.pow(1.10, monthIdx)).toFixed(2));
     saldoEurPts.push(+saldoE.toFixed(2));
     saldoUsdPts.push(+saldoU.toFixed(2));
+    saldoEurAjPts.push(+(saldoE + (adjByDay[d] || 0)).toFixed(2));
   });
 
   const chartDefaults = {
@@ -663,59 +671,101 @@ if (trajMeses.length) {
     }
   };
 
-  function mkCurve(id, metaPts, saldoPts, color) {
-    new Chart(document.getElementById(id), {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          { label: 'Meta Ideal', data: metaPts, borderColor: color, borderDash: [5,5],
-            borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: color, tension: 0.3, fill: false },
-          { label: 'Saldo', data: saldoPts, borderColor: '#1eff8e', borderWidth: 2,
-            pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
-            segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
-            fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } }
-        ]
-      },
-      options: chartDefaults
-    });
-  }
+  // EUR curve: saldo ajustado (principal) + saldo real (tracejado)
+  new Chart(document.getElementById('chartEurCurve'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Meta Ideal', data: metaEurPts, borderColor: '#3dffb0', borderDash: [5,5],
+          borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#3dffb0', tension: 0.3, fill: false },
+        { label: 'Saldo ajustado', data: saldoEurAjPts, borderColor: '#1eff8e', borderWidth: 2,
+          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
+          segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
+          fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } },
+        { label: 'Saldo real', data: saldoEurPts, borderColor: 'rgba(107,138,170,0.5)', borderWidth: 1.5,
+          borderDash: [3,3], pointRadius: 2, pointBackgroundColor: 'rgba(107,138,170,0.5)', tension: 0.3,
+          fill: false, spanGaps: false }
+      ]
+    },
+    options: chartDefaults
+  });
 
-  mkCurve('chartEurCurve', metaEurPts, saldoEurPts, '#3dffb0');
-  mkCurve('chartUsdCurve', metaUsdPts, saldoUsdPts, '#00c8ff');
+  // USD curve: unchanged
+  new Chart(document.getElementById('chartUsdCurve'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Meta Ideal', data: metaUsdPts, borderColor: '#00c8ff', borderDash: [5,5],
+          borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#00c8ff', tension: 0.3, fill: false },
+        { label: 'Saldo', data: saldoUsdPts, borderColor: '#1eff8e', borderWidth: 2,
+          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3, spanGaps: false,
+          segment: { borderColor: ctx => ctx.p1.parsed.y < ctx.p0.parsed.y ? '#ff4d6a' : '#1eff8e' },
+          fill: { target: 0, above: 'rgba(30,255,142,.10)', below: 'rgba(255,77,106,.10)' } }
+      ]
+    },
+    options: chartDefaults
+  });
 
-  // ── Tabela Histórico de Meses ──
+  // ── Tabela Histórico de Meses (3 camadas) ──
   document.getElementById('traj-tbody').innerHTML = trajMeses.map(ym => {
-    const mes   = MESES[ym];
-    const isCur = ym === curYM;
-    // saldo actual = constantes oficiais; fechado = saldo_fim
-    const realE = isCur ? SALDO_EUR : mes.saldo_fim_eur;
-    const realU = isCur ? SALDO_USD : mes.saldo_fim_usd;
-    const transferSaidaEur = mes.transferencias_saida_eur || 0;
-    const lucroE = realE !== null ? (realE - mes.base_eur + transferSaidaEur) : null;
-    const lucroU = realU !== null ? (realU - mes.base_usd) : null;
-    const pctE   = lucroE !== null ? (lucroE / mes.meta_eur * 100) : null;
-    const pctU   = lucroU !== null ? (lucroU / mes.meta_usd * 100) : null;
+    const mes    = MESES[ym];
+    const isCur  = ym === curYM;
+    // base ajustada
+    const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
+    const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
+    // realizado
+    const realE  = isCur ? REAL_EUR : (mes.realizado_eur != null ? mes.realizado_eur : null);
+    const realU  = isCur ? REAL_USD : (mes.realizado_usd != null ? mes.realizado_usd : null);
+    // flutuante
+    const flutuE = isCur ? LUCRO_ABT_EUR : (mes.flutuante_fim_eur != null ? mes.flutuante_fim_eur : null);
+    const flutuU = isCur ? LUCRO_ABT_USD : (mes.flutuante_fim_usd != null ? mes.flutuante_fim_usd : null);
+    // equity
+    const eqE = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
+              : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : null);
+    const eqU = isCur ? (REAL_USD + LUCRO_ABT_USD)
+              : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : null);
+    const pctE = eqE != null ? eqE / mes.meta_eur * 100 : null;
+    const pctU = eqU != null ? eqU / mes.meta_usd * 100 : null;
     const [_y,_m] = ym.split('-').map(Number);
-    const lbl   = MO_PT_P[_m-1] + ' ' + _y;
-    const badge = isCur
-      ? '<span class="badge badge-a">EM CURSO</span>'
-      : (pctE >= 100 && pctU >= 100 ? '<span class="badge badge-g">META ATINGIDA</span>' : '<span class="badge badge-r">ABAIXO</span>');
-    const fR = (lucro, sym, cur) => lucro !== null
-      ? `<span class="${lucro>=0?'up':'dn'}">${lucro>=0?'+':''}${lucro.toFixed(2)}${sym}</span>${cur?' <span style="color:var(--txt-3);font-size:9px;">(em curso)</span>':''}`
+    const lbl = MO_PT_P[_m-1] + ' ' + _y;
+
+    // badge
+    let badge;
+    if (isCur) {
+      badge = '<span class="badge badge-a">EM CURSO</span>';
+    } else if (eqE >= mes.meta_eur && eqU >= mes.meta_usd) {
+      badge = '<span class="badge badge-g">META ATINGIDA</span>';
+    } else if ((eqE >= mes.meta_eur || eqU >= mes.meta_usd) && (realE < mes.meta_eur || realU < mes.meta_usd)) {
+      badge = '<span class="badge badge-b">META EM EQUITY</span>';
+    } else {
+      badge = '<span class="badge badge-r">ABAIXO</span>';
+    }
+
+    const fR = (v, sym) => v != null
+      ? `<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(2)}${sym}</span>`
       : '<span class="neu">—</span>';
-    const fP = v => v !== null
-      ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${(v>=0?'+':'')}${v.toFixed(1)}%</span>`
+    const fN = (v, sym) => v != null
+      ? `<span style="color:var(--txt-2);">${v>=0?'+':''}${v.toFixed(2)}${sym}</span>`
       : '<span class="neu">—</span>';
+    const fP = v => v != null
+      ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`
+      : '<span class="neu">—</span>';
+
     return `<tr>
-      <td style="font-weight:600;color:var(--accent2);">${lbl}</td>
-      <td class="r" style="color:var(--txt-2);">${mes.base_eur.toFixed(2)}€</td>
+      <td style="font-weight:600;color:var(--accent2);">${lbl}${isCur?' <span style="font-size:9px;color:var(--txt-3);">(em curso)</span>':''}</td>
+      <td class="r" style="color:var(--txt-2);">${baseAjE.toFixed(2)}€</td>
       <td class="r" style="color:var(--accent1);">+${mes.meta_eur.toFixed(2)}€</td>
-      <td class="r">${fR(lucroE,'€',isCur)}</td>
+      <td class="r">${fR(realE,'€')}</td>
+      <td class="r">${fN(flutuE,'€')}</td>
+      <td class="r">${fR(eqE,'€')}</td>
       <td class="r">${fP(pctE)}</td>
-      <td class="r" style="color:var(--txt-2);">${mes.base_usd.toFixed(2)}$</td>
+      <td class="r" style="color:var(--txt-2);">${baseAjU.toFixed(2)}$</td>
       <td class="r" style="color:var(--accent2);">+${mes.meta_usd.toFixed(2)}$</td>
-      <td class="r">${fR(lucroU,'$',isCur)}</td>
+      <td class="r">${fR(realU,'$')}</td>
+      <td class="r">${fN(flutuU,'$')}</td>
+      <td class="r">${fR(eqU,'$')}</td>
       <td class="r">${fP(pctU)}</td>
       <td>${badge}</td>
     </tr>`;
@@ -733,7 +783,7 @@ if (trajMeses.length) {
   const dUsd   = rAcUsd - mAcUsd;
   const fA = (v,c) => `<span class="${c||v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
   document.getElementById('traj-tfoot').innerHTML = `<tr>
-    <td colspan="10" style="font-size:10px;color:var(--txt-3);padding:10px 10px;line-height:2;">
+    <td colspan="14" style="font-size:10px;color:var(--txt-3);padding:10px 10px;line-height:2;">
       Meta acumulada teórica: ${fA(mAcEur,true)} EUR · ${fA(mAcUsd,true)} USD
       &nbsp;·&nbsp; Real acumulado: ${fA(rAcEur)} EUR · ${fA(rAcUsd)} USD
       &nbsp;·&nbsp; Desvio: ${fA(dEur)} EUR · ${fA(dUsd)} USD

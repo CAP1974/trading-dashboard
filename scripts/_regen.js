@@ -23,7 +23,7 @@ function calcRating(t) {
 
 // Escreve ratings calculados de volta para trading_data.json
 let jsonModified = false;
-Object.keys(data).filter(k => k !== 'meses').forEach(k => {
+Object.keys(data).filter(k => k !== 'meses' && k !== 'fund_metrics').forEach(k => {
   const pf = data[k].posicoes_fechadas;
   if (Array.isArray(pf)) {
     pf.forEach(t => {
@@ -41,7 +41,7 @@ if (jsonModified) {
 
 // Build dateData (já com ratings actualizados)
 const dateData = {};
-Object.keys(data).filter(k => k !== 'meses').sort().forEach(k => { dateData[k] = data[k]; });
+Object.keys(data).filter(k => k !== 'meses' && k !== 'fund_metrics').sort().forEach(k => { dateData[k] = data[k]; });
 const sorted = Object.keys(dateData);
 const latest = sorted[sorted.length - 1];
 const last7  = sorted.slice(-7);
@@ -60,6 +60,7 @@ const lines = [
   'const DATA_DATES   = ' + JSON.stringify(last7) + ';',
   'const LATEST_DATE  = ' + JSON.stringify(latest) + ';',
   'const MESES_DATA   = ' + JSON.stringify(meses, null, 2) + ';',
+  'const FUND_METRICS_DATA = ' + JSON.stringify(data.fund_metrics || {}) + ';',
   'const TRADES_DATA  = ' + JSON.stringify(tradesData, null, 2) + ';',
   ''
 ];

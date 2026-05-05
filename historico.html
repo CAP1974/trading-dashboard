@@ -65,6 +65,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .badge-g{background:var(--green-d);color:var(--green);border:1px solid var(--green-b);}
 .badge-r{background:var(--red-d);color:var(--red);border:1px solid var(--red-b);}
 .badge-a{background:var(--amber-d);color:var(--amber);border:1px solid rgba(255,179,64,.3);}
+.badge-b{background:var(--blue-d);color:var(--blue);border:1px solid rgba(77,166,255,0.22);}
 .evento-pill{display:inline-flex;align-items:center;gap:6px;background:var(--bg-03);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:11px;}
 </style>
 <style>
@@ -260,14 +261,20 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
           <thead>
             <tr>
               <th>Mês</th>
-              <th class="r">Sessões</th>
-              <th class="r">Lucro EUR</th>
-              <th class="r">Lucro USD</th>
-              <th class="r">Total ~€</th>
-              <th class="r">Ret EUR%</th>
-              <th class="r">Ret USD%</th>
-              <th class="r">Melhor dia</th>
-              <th class="r">Pior dia</th>
+              <th class="r">Sess.</th>
+              <th class="r">Base Aj. EUR</th>
+              <th class="r">Meta EUR</th>
+              <th class="r">Real EUR</th>
+              <th class="r">Flutu EUR</th>
+              <th class="r">Equity EUR</th>
+              <th class="r">% Meta</th>
+              <th class="r">Base Aj. USD</th>
+              <th class="r">Meta USD</th>
+              <th class="r">Real USD</th>
+              <th class="r">Flutu USD</th>
+              <th class="r">Equity USD</th>
+              <th class="r">% Meta</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody id="monthly-tbody"></tbody>
@@ -327,9 +334,10 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const baseEur = mesInfo.base_eur || FALLBACK_EUR;
   const baseUsd = mesInfo.base_usd || FALLBACK_USD;
 
-  // Lucro = saldo_fim - base (mês fechado) ou lucro_aberto + realizado (mês em curso)
+  // Lucro = saldo_fim - base_ajustada (mês fechado) ou lucro_aberto + realizado (mês em curso)
   const isClosed = mesInfo.saldo_fim_eur != null;
-  const lucroEur = isClosed ? (mesInfo.saldo_fim_eur - baseEur) : (LUCRO_ABT_EUR + REAL_EUR);
+  const baseAjEur = mesInfo.base_ajustada_eur != null ? mesInfo.base_ajustada_eur : baseEur;
+  const lucroEur = isClosed ? (mesInfo.saldo_fim_eur - baseAjEur) : (LUCRO_ABT_EUR + REAL_EUR);
   const lucroUsd = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (LUCRO_ABT_USD + REAL_USD);
   const retEurPct = (lucroEur / baseEur * 100).toFixed(1);
   const retUsdPct = (lucroUsd / baseUsd * 100).toFixed(1);
@@ -347,7 +355,7 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const set = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
 
   set('kpi-ret-eur-val', (lucroEur >= 0 ? '+' : '') + lucroEur.toFixed(2) + '€');
-  set('kpi-ret-eur-sub', (retEurPct >= 0 ? '+' : '') + retEurPct + '% sobre ' + baseEur.toFixed(2) + '€ base');
+  set('kpi-ret-eur-sub', (retEurPct >= 0 ? '+' : '') + retEurPct + '% sobre ' + baseAjEur.toFixed(2) + '€ base aj.');
   set('kpi-ret-usd-val', (lucroUsd >= 0 ? '+' : '') + lucroUsd.toFixed(2) + '$');
   set('kpi-ret-usd-sub', (retUsdPct >= 0 ? '+' : '') + retUsdPct + '% sobre ' + baseUsd.toFixed(2) + '$ base');
   set('kpi-best-eur-val', '+' + bestEurVal.toFixed(2) + ' €');
@@ -401,6 +409,16 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
   const usdSaldo = [
     BASE_USD_S,
     ...DATES.map(d => parseFloat((BASE_USD_S + (TRADING_DATA[d].usd?.lucro || 0)).toFixed(2)))
+  ];
+
+  // EUR adjusted: add back cumulative outgoing transfers per day
+  const fmEurT = (typeof FUND_METRICS_DATA !== 'undefined' && FUND_METRICS_DATA?.eur?.transferencias) || [];
+  const eurSaldoAj = [
+    BASE_EUR_S,
+    ...DATES.map(d => {
+      const cumAdj = fmEurT.filter(t => t.valor < 0 && t.data <= d).reduce((s,t) => s+Math.abs(t.valor), 0);
+      return parseFloat((BASE_EUR_S + (TRADING_DATA[d].eur?.lucro || 0) + cumAdj).toFixed(2));
+    })
   ];
 
   // Tags do header (valor actual + retorno %)
@@ -499,7 +517,58 @@ new Chart(document.getElementById('equityChart').getContext('2d'),{
     });
   }
 
-  makeSaldoChart('saldoEurChart', eurSaldo, BASE_EUR_S, '#1eff8e', 'rgba(30,255,142,0.10)', '€');
+  // EUR chart with adjusted + real lines
+  (function() {
+    const n        = saldoLabels.length;
+    const baseline = new Array(n).fill(BASE_EUR_S);
+    const yMin     = Math.min(...eurSaldoAj, ...eurSaldo) * 0.994;
+    const yMax     = Math.max(...eurSaldoAj) * 1.006;
+    new Chart(document.getElementById('saldoEurChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: saldoLabels,
+        datasets: [
+          { label: '_base', data: baseline, borderColor: 'rgba(255,255,255,0.18)', borderWidth: 1,
+            borderDash: [5,4], pointRadius: 0, fill: false, tension: 0, order: 3 },
+          { label: 'Saldo ajustado (exclui transferências)', data: eurSaldoAj,
+            borderColor: '#1eff8e', borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6, tension: 0.25,
+            pointBackgroundColor: eurSaldoAj.map(v => v >= BASE_EUR_S ? '#1eff8e' : '#ff4d6a'),
+            pointBorderColor: 'transparent',
+            fill: { target: 0, above: 'rgba(30,255,142,0.10)', below: 'rgba(255,77,106,0.12)' },
+            segment: { borderColor: ctx => ctx.p1.parsed.y < BASE_EUR_S ? '#ff4d6a' : '#1eff8e' },
+            order: 1 },
+          { label: 'Saldo real', data: eurSaldo,
+            borderColor: 'rgba(107,138,170,0.55)', borderWidth: 1.5, borderDash: [3,3],
+            pointRadius: 2, pointBackgroundColor: 'rgba(107,138,170,0.55)', pointBorderColor: 'transparent',
+            fill: false, tension: 0.25, order: 2 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: true, labels: { color: '#6b8aaa', font: { size: 9 }, filter: item => item.text !== '_base', boxWidth: 14 } },
+          tooltip: {
+            backgroundColor: '#0f1923', borderColor: 'rgba(255,255,255,.08)', borderWidth: 1,
+            titleColor: '#ddeaf7', bodyColor: '#6b8aaa', padding: 10,
+            callbacks: {
+              label: ctx => {
+                if (ctx.dataset.label === '_base') return null;
+                const delta = ctx.parsed.y - BASE_EUR_S;
+                const sign  = delta >= 0 ? '+' : '';
+                return ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}€  (${sign}${delta.toFixed(2)}€)`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b8aaa', font: { size: 10 } } },
+          y: { min: yMin, max: yMax, grid: { color: 'rgba(255,255,255,0.04)' },
+               ticks: { color: '#6b8aaa', font: { size: 10 }, callback: v => v.toFixed(0) + '€' } }
+        }
+      }
+    });
+  })();
   makeSaldoChart('saldoUsdChart', usdSaldo, BASE_USD_S, '#00c8ff', 'rgba(0,200,255,0.10)', '$');
 
   // Tabela saldo diário
@@ -596,18 +665,29 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   const stats = monthKeys.map(ym => {
     const days    = byMonth[ym];
     const mesInfo = MESES[ym] || {};
-    const baseEur = mesInfo.base_eur || CAP_EUR;
-    const baseUsd = mesInfo.base_usd || BASE_USD;
-
-    // Lucro: saldo_fim - base (mês fechado) ou lucro_aberto + realizado (mês actual em curso)
-    // transferencias_saida_eur: capital retirado da conta EUR (ex: aporte USD) — não é perda
+    const baseEur = mesInfo.base_ajustada_eur != null ? mesInfo.base_ajustada_eur : (mesInfo.base_eur || CAP_EUR);
+    const baseUsd = mesInfo.base_ajustada_usd != null ? mesInfo.base_ajustada_usd : (mesInfo.base_usd || BASE_USD);
     const isClosed = mesInfo.saldo_fim_eur != null;
     const isCur    = ym === curYM_m;
-    const transferSaidaEur = mesInfo.transferencias_saida_eur || 0;
-    const eurLucro = isClosed ? (mesInfo.saldo_fim_eur - baseEur + transferSaidaEur) : (isCur ? (LUCRO_ABT_EUR + REAL_EUR) : 0);
-    const usdLucro = isClosed ? (mesInfo.saldo_fim_usd - baseUsd) : (isCur ? (LUCRO_ABT_USD + REAL_USD) : 0);
 
-    // Melhor/pior sessão — usa P&L snapshot diário combinado (mantém)
+    // 3 camadas
+    const realEur  = isCur ? REAL_EUR  : (mesInfo.realizado_eur  != null ? mesInfo.realizado_eur  : null);
+    const realUsd  = isCur ? REAL_USD  : (mesInfo.realizado_usd  != null ? mesInfo.realizado_usd  : null);
+    const flutuEur = isCur ? LUCRO_ABT_EUR : (mesInfo.flutuante_fim_eur != null ? mesInfo.flutuante_fim_eur : null);
+    const flutuUsd = isCur ? LUCRO_ABT_USD : (mesInfo.flutuante_fim_usd != null ? mesInfo.flutuante_fim_usd : null);
+    const eqEur    = isCur ? (LUCRO_ABT_EUR + REAL_EUR)
+                   : (isClosed ? mesInfo.saldo_fim_eur - baseEur : null);
+    const eqUsd    = isCur ? (LUCRO_ABT_USD + REAL_USD)
+                   : (isClosed ? mesInfo.saldo_fim_usd - baseUsd : null);
+    const metaEur  = mesInfo.meta_eur || (baseEur * 0.10);
+    const metaUsd  = mesInfo.meta_usd || (baseUsd * 0.10);
+    const pctEur   = eqEur != null ? eqEur / metaEur * 100 : null;
+    const pctUsd   = eqUsd != null ? eqUsd / metaUsd * 100 : null;
+
+    // sessions
+    const sessions = days.length;
+
+    // best/worst session
     let bestDay={v:-Infinity,d:''}, worstDay={v:Infinity,d:''};
     days.forEach(d => {
       const el = TRADING_DATA[d].eur?.lucro || 0;
@@ -617,31 +697,49 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
       if (combined < worstDay.v) worstDay = {v:combined, vEur:el, vUsd:ul, d};
     });
 
-    const retEur   = (eurLucro / baseEur * 100);
-    const retUsd   = (usdLucro / baseUsd * 100);
-    const totalEur = (eurLucro + usdLucro * EUR_RATE);
-    const [y,m]    = ym.split('-').map(Number);
-    return {ym, label: MONTHS_PT[m-1]+' '+y, sessions:days.length,
-            eurLucro, usdLucro, totalEur, retEur, retUsd, baseEur, baseUsd,
-            bestDay, worstDay, isClosed};
+    const [y,m] = ym.split('-').map(Number);
+    return {ym, label: MONTHS_PT[m-1]+' '+y, sessions,
+            realEur, realUsd, flutuEur, flutuUsd, eqEur, eqUsd,
+            metaEur, metaUsd, pctEur, pctUsd, baseEur, baseUsd,
+            bestDay, worstDay, isClosed, isCur};
   });
 
   function fmtL(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+' '+sym; }
   function fmtP(v){ return (v>=0?'+':'')+v.toFixed(1)+'%'; }
   function cls(v){ return v>=0?'up':'dn'; }
+  function fN(v,sym){ return v!=null ? `<span style="color:var(--txt-2);">${v>=0?'+':''}${v.toFixed(2)} ${sym}</span>` : '—'; }
+  function fR(v,sym){ return v!=null ? `<span class="${cls(v)}">${fmtL(v,sym)}</span>` : '—'; }
+  function fPct(v){ return v!=null ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${fmtP(v)}</span>` : '—'; }
+
+  function getBadge(s) {
+    if (s.isCur) return '<span class="badge badge-a">EM CURSO</span>';
+    const eurMeta = s.eqEur != null && s.eqEur >= s.metaEur;
+    const usdMeta = s.eqUsd != null && s.eqUsd >= s.metaUsd;
+    const eurReal = s.realEur != null && s.realEur >= s.metaEur;
+    const usdReal = s.realUsd != null && s.realUsd >= s.metaUsd;
+    if (eurReal && usdReal) return '<span class="badge badge-g">META REALIZADA</span>';
+    if ((eurMeta || usdMeta) && (!eurReal || !usdReal)) return '<span class="badge badge-b">META EM EQUITY</span>';
+    return '<span class="badge badge-r">ABAIXO</span>';
+  }
 
   // table
   document.getElementById('monthly-tbl-tag').textContent = stats.length+' '+(stats.length===1?'mês':'meses');
   document.getElementById('monthly-tbody').innerHTML = stats.map(s => `<tr>
     <td style="font-weight:600;color:var(--accent2);">${s.label}</td>
     <td class="r neu">${s.sessions}</td>
-    <td class="r ${cls(s.eurLucro)}">${fmtL(s.eurLucro,'€')}</td>
-    <td class="r ${cls(s.usdLucro)}">${fmtL(s.usdLucro,'$')}</td>
-    <td class="r ${cls(s.totalEur)}">${fmtL(s.totalEur,'€')}</td>
-    <td class="r ${cls(s.retEur)}">${fmtP(s.retEur)}</td>
-    <td class="r ${cls(s.retUsd)}">${fmtP(s.retUsd)}</td>
-    <td class="r up">${fmtL(s.bestDay.vEur,'€')} / ${fmtL(s.bestDay.vUsd,'$')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.bestDay.d)}</span></td>
-    <td class="r dn">${fmtL(s.worstDay.vEur,'€')} / ${fmtL(s.worstDay.vUsd,'$')}<br><span style="font-size:9px;color:var(--txt-3);">${fmtDate(s.worstDay.d)}</span></td>
+    <td class="r" style="color:var(--txt-2);">${s.baseEur.toFixed(2)} €</td>
+    <td class="r" style="color:var(--accent1);">+${s.metaEur.toFixed(2)} €</td>
+    <td class="r">${fR(s.realEur,'€')}</td>
+    <td class="r">${fN(s.flutuEur,'€')}</td>
+    <td class="r">${fR(s.eqEur,'€')}</td>
+    <td class="r">${fPct(s.pctEur)}</td>
+    <td class="r" style="color:var(--txt-2);">${s.baseUsd.toFixed(2)} $</td>
+    <td class="r" style="color:var(--accent2);">+${s.metaUsd.toFixed(2)} $</td>
+    <td class="r">${fR(s.realUsd,'$')}</td>
+    <td class="r">${fN(s.flutuUsd,'$')}</td>
+    <td class="r">${fR(s.eqUsd,'$')}</td>
+    <td class="r">${fPct(s.pctUsd)}</td>
+    <td>${getBadge(s)}</td>
   </tr>`).join('');
 
   // KPIs mês actual
@@ -649,19 +747,19 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   if (cur) {
     document.getElementById('monthly-kpis').innerHTML = `
       <div class="kpi-mini">
-        <div class="kpi-mini-label">Lucro EUR · ${cur.label}</div>
-        <div class="kpi-mini-value ${cls(cur.eurLucro)}">${fmtL(cur.eurLucro,'€')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retEur)} sobre ${cur.baseEur.toFixed(2)}€ base</div>
+        <div class="kpi-mini-label">Equity EUR · ${cur.label}</div>
+        <div class="kpi-mini-value ${cur.eqEur>=0?'up':'dn'}">${cur.eqEur>=0?'+':''}${cur.eqEur!=null?cur.eqEur.toFixed(2):'—'}€</div>
+        <div class="kpi-mini-sub">${cur.pctEur!=null?fmtP(cur.pctEur)+' de meta · ':''} base ${cur.baseEur.toFixed(2)}€</div>
       </div>
       <div class="kpi-mini">
-        <div class="kpi-mini-label">Lucro USD · ${cur.label}</div>
-        <div class="kpi-mini-value ${cls(cur.usdLucro)}">${fmtL(cur.usdLucro,'$')}</div>
-        <div class="kpi-mini-sub">${fmtP(cur.retUsd)} sobre ${cur.baseUsd.toFixed(2)}$ base</div>
+        <div class="kpi-mini-label">Equity USD · ${cur.label}</div>
+        <div class="kpi-mini-value ${cur.eqUsd>=0?'up':'dn'}">${cur.eqUsd>=0?'+':''}${cur.eqUsd!=null?cur.eqUsd.toFixed(2):'—'}$</div>
+        <div class="kpi-mini-sub">${cur.pctUsd!=null?fmtP(cur.pctUsd)+' de meta · ':''} base ${cur.baseUsd.toFixed(2)}$</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Sessões · ${cur.label}</div>
         <div class="kpi-mini-value" style="color:var(--amber);">${cur.sessions}</div>
-        <div class="kpi-mini-sub">total ~EUR ${fmtL(cur.totalEur,'€')}</div>
+        <div class="kpi-mini-sub">real: ${cur.realEur!=null?(cur.realEur>=0?'+':'')+cur.realEur.toFixed(2)+'€':'—'} · ${cur.realUsd!=null?(cur.realUsd>=0?'+':'')+cur.realUsd.toFixed(2)+'$':'—'}</div>
       </div>
       <div class="kpi-mini">
         <div class="kpi-mini-label">Melhor sessão</div>
@@ -677,9 +775,9 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     data: {
       labels: chartStats.map(s=>s.label),
       datasets: [
-        { label:'EUR (€)', data: chartStats.map(s=>s.eurLucro),
+        { label:'EUR (€)', data: chartStats.map(s=>s.eqEur||0),
           backgroundColor:'rgba(61,255,176,0.25)', borderColor:'#3dffb0', borderWidth:1.5, borderRadius:3 },
-        { label:'USD ($)', data: chartStats.map(s=>s.usdLucro),
+        { label:'USD ($)', data: chartStats.map(s=>s.eqUsd||0),
           backgroundColor:'rgba(0,200,255,0.20)', borderColor:'#00c8ff', borderWidth:1.5, borderRadius:3 }
       ]
     },
