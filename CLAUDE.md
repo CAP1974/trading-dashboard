@@ -1,3 +1,18 @@
+## FLUXO DIÁRIO — WATCHED FOLDER
+
+Pasta watched: C:\Users\Utilizador\trading-dashboard\watched\
+
+Quando o utilizador disser "processa watched" ou "processa hoje":
+1. Procura ficheiros em ./watched/ (relativo à raiz do projecto)
+2. Identifica par eur_DD_MM.png + usd_DD_MM.png mais recente
+3. Corre: node scripts/extract.js --date YYYY-MM-DD --eur ./watched/eur_DD_MM.png --usd ./watched/usd_DD_MM.png
+4. Se existir eventos_DD_MM.txt: adiciona --eventos ./watched/eventos_DD_MM.txt
+5. Corre: node scripts/deploy.js
+6. Move ficheiros para ./watched/processados/YYYY-MM-DD/
+
+NUNCA procurar em trading-watcher ou outras pastas.
+NUNCA ler o trading_data.json completo.
+
 ## MODO EFICIÊNCIA — SEMPRE ACTIVO
 
 Tokens:
