@@ -1,80 +1,85 @@
-## FLUXO DIÁRIO — WATCHED FOLDER
+# TRADING DASHBOARD — Triple Seven Capital
+# Instruções para Claude Code
 
-Pasta watched: C:\Users\Utilizador\trading-dashboard\watched\
+## PROJECTO
+- Dashboard: https://cap1974.github.io/trading-dashboard/
+- Pasta local: C:\Users\Utilizador\trading-dashboard\
+- Stack: HTML estático + data.js + Chart.js
 
+## COMANDO DIÁRIO — "processa watched"
 Quando o utilizador disser "processa watched" ou "processa hoje":
-1. Procura ficheiros em ./watched/ (relativo à raiz do projecto)
-2. Identifica par eur_DD_MM.png + usd_DD_MM.png mais recente
-3. Corre: node scripts/extract.js --date YYYY-MM-DD --eur ./watched/eur_DD_MM.png --usd ./watched/usd_DD_MM.png
-4. Se existir eventos_DD_MM.txt: adiciona --eventos ./watched/eventos_DD_MM.txt
-5. Corre: node scripts/deploy.js
-6. Move ficheiros para ./watched/processados/YYYY-MM-DD/
 
-NUNCA procurar em trading-watcher ou outras pastas.
-NUNCA ler o trading_data.json completo.
+PASTA WATCHED (sempre aqui):
+C:\Users\Utilizador\trading-dashboard\watched\
 
-## MODO EFICIÊNCIA — SEMPRE ACTIVO
+PASSOS:
+1. Lista ficheiros em ./watched/ — procura eur_DD_MM.png + usd_DD_MM.png
+2. Determina a data: DD_MM → YYYY-MM-DD (ano actual 2026)
+3. Verifica se existe eventos_DD_MM.txt
+4. Corre extract.js:
+   node scripts/extract.js --date YYYY-MM-DD --eur ./watched/eur_DD_MM.png --usd ./watched/usd_DD_MM.png
+   (adiciona --eventos ./watched/eventos_DD_MM.txt se existir)
+5. Corre deploy.js:
+   node scripts/deploy.js
+6. Move ficheiros processados:
+   ./watched/processados/YYYY-MM-DD/
 
-Tokens:
-- Zero narração de processo
-- Zero confirmações intermédias
-- Zero resumos do que foi feito
-- Resultado directo ou erro
+## REGRAS CRÍTICAS
+- NUNCA ler o trading_data.json completo
+- NUNCA substituir dados existentes — sempre acumular
+- NUNCA fazer push sem validação passar
+- Backup automático antes de qualquer escrita
+- Realizados SEMPRE acumulados (nunca substituir)
 
-Pensamento:
-- Thinking budget: mínimo necessário
-- Não explicar raciocínio salvo erro crítico
-- Uma solução, não alternativas
+## BASES DO FUNDO (não alterar sem ordem explícita)
+EUR · 8MSN: capital_base = 58.41€
+USD · OMV: capital_base = 213.83$
+Meta mensal: 10% da base do início do mês
 
-Código:
-- Escrever ficheiro completo de uma vez
-- Sem comentários óbvios
-- Sem TODO nem placeholders
+## MESES ACTIVOS
+2026-04: FECHADO · saldo_fim_eur 58.89 · saldo_fim_usd 209.87
+2026-05: EM CURSO · base_eur 58.89 · base_usd 213.83
 
-Git:
-- Sempre um único commit com tudo
-- Mensagem curta: "feat: X" ou "fix: X"
+## REALIZADOS ACUMULADOS MAIO 2026
+REAL_EUR_MAIO = 0€
+REAL_USD_MAIO = 0$
+(actualizar a cada fecho com realizados)
 
-Erros:
-- Reportar só o essencial: ficheiro + linha + causa
-- Propor fix imediato sem pedir confirmação
+## FORMATO EVENTOS_DD_MM.TXT
+DATA: DD/MM/YYYY
 
-Ficheiros grandes:
-- Ler só o necessário (grep/sed em vez de cat completo)
-- Editar só as linhas afectadas
+EUR:
+SAIDA | Nome | +/-X.XX€ | lucro/prejuizo | Setup | Nota
+ENTRADA | Nome | EUR | Nota
+CAIXA | X.XX€
 
-## FECHO DIÁRIO — FORMATO OBRIGATÓRIO
+USD:
+SAIDA | Nome | +/-X.XX$ | lucro/prejuizo | Setup | Nota
+ENTRADA | Nome | USD | Nota
+APORTE | X.XX$ | Nota
+CAIXA | X.XX$
 
-Quando o utilizador apresenta fechos do dia, SEMPRE verificar se forneceu caixa EUR e USD.
-Se não forneceu, perguntar IMEDIATAMENTE antes de correr o pipeline:
-  "Qual o valor de caixa EUR e USD hoje? (senão mantém carry-forward do dia anterior)"
+DIARIO:
+Texto livre com nota do dia
 
-Template completo de fecho diário:
-```
-Fechos de hoje DD/MM/YYYY:
---eur screenshot/eur_DD_MM.png
---usd screenshot/usd_DD_MM.png
-Caixa EUR: X.XX€
-Caixa USD: X.XX$
-Realizados EUR: [lista: TICKER ±X.XX€ Venda/Compra]
-Realizados USD: [lista: TICKER ±X.XX$ Venda/Compra]
-Entradas: [lista de novos activos abertos]
-```
+## RATING CTM (automático)
+≥30% → 5★
+20-29.9% → 4★
+10-19.9% → 3★
+5-9.99% → 2★
+0-4.99% → 1★
+qualquer perda → 0★
 
-Comando pipeline com caixa:
-```
-node scripts/pipeline.js \
-  --eur screenshot/eur_DD_MM.png \
-  --usd screenshot/usd_DD_MM.png \
-  --caixa-eur X.XX \
-  --caixa-usd X.XX
-```
+## INÍCIO DE NOVO MÊS
+Quando utilizador disser "início de [Mês]":
+Base EUR = saldo XTB conta EUR
+Base USD = saldo XTB conta USD
+Cria novo entry em meses com base e meta (base × 0.10)
+Reset realizados acumulados do mês para 0
 
-Caixa carry-forward: se --caixa-eur/usd não fornecido, extract.js usa automaticamente
-o valor do dia anterior mais recente. Confirmar no output: "Caixa EUR: X (carry-forward de YYYY-MM-DD)".
-
-## PROTECÇÃO DE DADOS
-- NUNCA escrever trading_data.json sem backup prévio (extract.js faz isto automaticamente)
-- NUNCA fazer push sem validação passar (deploy.js valida antes do git push)
-- Em caso de dados corrompidos: node scripts/restore.js --list
-- Backups em data/backups/ — últimos 30 mantidos, ignorados pelo git
+## EFICIÊNCIA DE TOKENS
+- Thinking budget: mínimo
+- Zero explicações intermédias
+- Zero leitura de ficheiros grandes
+- Executar scripts em vez de processar JSON manualmente
+- Um commit com tudo — nunca commits parciais
