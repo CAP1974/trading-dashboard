@@ -1500,34 +1500,18 @@
     "eur": {
       "capital_inicial": 78.41,
       "transferencias": [
-        {
-          "data": "2026-04-27",
-          "valor": -20,
-          "nota": "Transferência para USD"
-        }
+        {"data": "2026-04-27", "valor": -20.00, "nota": "Transferência para USD"}
       ],
       "capital_ajustado": 58.41
     },
     "usd": {
       "capital_inicial": 177.11,
       "aportes": [
-        {
-          "data": "2026-04-27",
-          "valor": 23.36,
-          "nota": "Transferência da conta EUR"
-        },
-        {
-          "data": "2026-04-28",
-          "valor": 8.17,
-          "nota": "Aporte Voya"
-        },
-        {
-          "data": "2026-05-05",
-          "valor": 3.96,
-          "nota": "Aporte NVDA 0.02 @ 197.90"
-        }
+        {"data": "2026-04-27", "valor": 23.36, "nota": "Transferência da conta EUR"},
+        {"data": "2026-04-28", "valor": 8.17, "nota": "Aporte Voya"},
+        {"data": "2026-05-05", "valor": 3.96, "nota": "Aporte NVDA 0.02 @ 197.90"}
       ],
-      "capital_ajustado": 212.6
+      "capital_ajustado": 212.60
     }
   },
   "meses": {
@@ -1545,12 +1529,12 @@
       "base_usd": 208.64,
       "meta_eur": 7.841,
       "meta_usd": 20.864,
-      "ajustes_eur": -20,
+      "ajustes_eur": -20.00,
       "ajustes_usd": 31.53,
       "base_ajustada_eur": 58.41,
       "base_ajustada_usd": 208.64,
       "realizado_eur": -3.16,
-      "realizado_usd": 13.6,
+      "realizado_usd": 13.60,
       "saldo_fim_eur": 58.89,
       "saldo_fim_usd": 209.87,
       "flutuante_fim_eur": 6.11,
@@ -3609,32 +3593,26 @@
         {
           "name": "Infineon",
           "mkt": "EUR",
-          "pct": 5.3,
+          "pct": 5.30,
           "lucro": 1.15,
           "vol": 0.4,
           "valor": 22.86,
-          "atual": 57.17,
+          "atual": 57.170,
           "abertura": 54.275,
           "trust": "v",
-          "delta": {
-            "pct": -0.18,
-            "val": -0.04
-          }
+          "delta": { "pct": -0.18, "val": -0.04 }
         },
         {
           "name": "Prysmian",
           "mkt": "EUR",
           "pct": 10.98,
-          "lucro": 1.1,
+          "lucro": 1.10,
           "vol": 0.0881,
           "valor": 11.12,
           "atual": 126.25,
           "abertura": 113.75,
           "trust": "v",
-          "delta": {
-            "pct": -1.59,
-            "val": -0.16
-          }
+          "delta": { "pct": -1.59, "val": -0.16 }
         },
         {
           "name": "Samsung",
@@ -3643,13 +3621,10 @@
           "lucro": 4.75,
           "vol": 0.0075,
           "valor": 24.91,
-          "atual": 3902,
+          "atual": 3902.00,
           "abertura": 3105.07,
           "trust": "v",
-          "delta": {
-            "pct": 5.65,
-            "val": 1.14
-          }
+          "delta": { "pct": 5.65, "val": 1.14 }
         }
       ]
     },
@@ -3667,10 +3642,7 @@
           "atual": 383.04,
           "abertura": 340.73,
           "trust": "v",
-          "delta": {
-            "pct": -0.82,
-            "val": -0.14
-          }
+          "delta": { "pct": -0.82, "val": -0.14 }
         },
         {
           "name": "Amazon",
@@ -3678,29 +3650,23 @@
           "pct": 4.05,
           "lucro": 0.81,
           "vol": 0.0765,
-          "valor": 20.8,
-          "atual": 271.9,
-          "abertura": 261.3,
+          "valor": 20.80,
+          "atual": 271.90,
+          "abertura": 261.30,
           "trust": "v",
-          "delta": {
-            "pct": 1.35,
-            "val": 0.27
-          }
+          "delta": { "pct": 1.35, "val": 0.27 }
         },
         {
           "name": "Apple",
           "mkt": "USD",
-          "pct": -2.4,
+          "pct": -2.40,
           "lucro": -0.34,
           "vol": 0.05,
           "valor": 13.83,
           "atual": 276.69,
           "abertura": 283.49,
           "trust": "r",
-          "delta": {
-            "pct": -1.27,
-            "val": -0.18
-          }
+          "delta": { "pct": -1.27, "val": -0.18 }
         },
         {
           "name": "BigBear.ai",
@@ -3724,10 +3690,7 @@
           "atual": 851.77,
           "abertura": 754.77,
           "trust": "v",
-          "delta": {
-            "pct": 2.24,
-            "val": 0.49
-          }
+          "delta": { "pct": 2.24, "val": 0.49 }
         },
         {
           "name": "Dell",
@@ -3739,10 +3702,7 @@
           "atual": 211.86,
           "abertura": 183.78,
           "trust": "v",
-          "delta": {
-            "pct": 1.32,
-            "val": 0.17
-          }
+          "delta": { "pct": 1.32, "val": 0.17 }
         },
         {
           "name": "Kodiak Gas Services",
@@ -3750,14 +3710,11 @@
           "pct": 15.65,
           "lucro": 2.76,
           "vol": 0.3,
-          "valor": 20.4,
+          "valor": 20.40,
           "atual": 67.98,
-          "abertura": 58.8,
+          "abertura": 58.80,
           "trust": "v",
-          "delta": {
-            "pct": -0.34,
-            "val": -0.06
-          }
+          "delta": { "pct": -0.34, "val": -0.06 }
         },
         {
           "name": "Nvidia",
@@ -3769,16 +3726,13 @@
           "atual": 198.52,
           "abertura": 208.04,
           "trust": "r",
-          "delta": {
-            "pct": 0.1,
-            "val": 0.03
-          }
+          "delta": { "pct": 0.10, "val": 0.03 }
         },
         {
           "name": "TechnipFMC",
           "mkt": "USD",
-          "pct": 0,
-          "lucro": 0,
+          "pct": 0.00,
+          "lucro": 0.00,
           "vol": 0.15,
           "valor": 11.17,
           "atual": 74.49,
@@ -3796,10 +3750,7 @@
           "atual": 81.95,
           "abertura": 81.86,
           "trust": "v",
-          "delta": {
-            "pct": -0.45,
-            "val": -0.11
-          }
+          "delta": { "pct": -0.45, "val": -0.11 }
         }
       ]
     }
@@ -3826,7 +3777,7 @@
           "pct": 5.48,
           "lucro": 1.19,
           "vol": 0.4,
-          "valor": 22.9,
+          "valor": 22.90,
           "atual": 57.24,
           "abertura": 54.275,
           "trust": "v",
@@ -3839,7 +3790,7 @@
           "lucro": 1.26,
           "vol": 0.0881,
           "valor": 11.28,
-          "atual": 128,
+          "atual": 128.00,
           "abertura": 113.75,
           "trust": "v",
           "delta": null
@@ -3851,7 +3802,7 @@
           "lucro": 3.61,
           "vol": 0.0075,
           "valor": 23.77,
-          "atual": 3740,
+          "atual": 3740.00,
           "abertura": 3105.07,
           "trust": "v",
           "delta": null
@@ -3860,37 +3811,31 @@
     },
     "usd": {
       "lucro": 8.26,
-      "caixa": 43,
+      "caixa": 43.00,
       "positions": [
         {
           "name": "Alphabet",
           "mkt": "USD",
-          "pct": 13.2,
+          "pct": 13.20,
           "lucro": 2.25,
           "vol": 0.05,
           "valor": 19.29,
           "atual": 385.77,
           "abertura": 340.73,
           "trust": "v",
-          "delta": {
-            "pct": 0.22,
-            "val": 0.04
-          }
+          "delta": { "pct": 0.22, "val": 0.04 }
         },
         {
           "name": "Amazon",
           "mkt": "USD",
-          "pct": 2.7,
+          "pct": 2.70,
           "lucro": 0.54,
           "vol": 0.0765,
           "valor": 20.53,
           "atual": 268.32,
-          "abertura": 261.3,
+          "abertura": 261.30,
           "trust": "v",
-          "delta": {
-            "pct": 1.22,
-            "val": 0.25
-          }
+          "delta": { "pct": 1.22, "val": 0.25 }
         },
         {
           "name": "Apple",
@@ -3899,7 +3844,7 @@
           "lucro": -0.16,
           "vol": 0.05,
           "valor": 14.01,
-          "atual": 280.2,
+          "atual": 280.20,
           "abertura": 283.49,
           "trust": "r",
           "delta": null
@@ -3914,25 +3859,19 @@
           "atual": 835.06,
           "abertura": 754.77,
           "trust": "v",
-          "delta": {
-            "pct": 1.6,
-            "val": 0.38
-          }
+          "delta": { "pct": 1.60, "val": 0.38 }
         },
         {
           "name": "Dell",
           "mkt": "USD",
-          "pct": 14,
-          "lucro": 1.8,
+          "pct": 14.00,
+          "lucro": 1.80,
           "vol": 0.07,
           "valor": 14.66,
           "atual": 209.42,
           "abertura": 183.78,
           "trust": "v",
-          "delta": {
-            "pct": 0.23,
-            "val": 0.03
-          }
+          "delta": { "pct": 0.23, "val": 0.03 }
         },
         {
           "name": "Kodiak Gas Services",
@@ -3942,12 +3881,9 @@
           "vol": 0.3,
           "valor": 20.46,
           "atual": 68.18,
-          "abertura": 58.8,
+          "abertura": 58.80,
           "trust": "v",
-          "delta": {
-            "pct": 1.11,
-            "val": 0.23
-          }
+          "delta": { "pct": 1.11, "val": 0.23 }
         },
         {
           "name": "Nvidia",
@@ -3959,10 +3895,7 @@
           "atual": 198.34,
           "abertura": 208.04,
           "trust": "r",
-          "delta": {
-            "pct": -0.8,
-            "val": -0.24
-          }
+          "delta": { "pct": -0.80, "val": -0.24 }
         },
         {
           "name": "Voya Financial",
@@ -3970,14 +3903,11 @@
           "pct": 0.57,
           "lucro": 0.14,
           "vol": 0.3,
-          "valor": 24.7,
+          "valor": 24.70,
           "atual": 82.34,
           "abertura": 81.86,
           "trust": "v",
-          "delta": {
-            "pct": 0.93,
-            "val": 0.22
-          }
+          "delta": { "pct": 0.93, "val": 0.22 }
         }
       ]
     }
@@ -4036,7 +3966,7 @@
           "lucro": 6.66,
           "vol": 0.0075,
           "valor": 26.82,
-          "atual": 4202,
+          "atual": 4202.00,
           "abertura": 3105.07,
           "trust": "v",
           "delta": null
@@ -4067,7 +3997,7 @@
           "vol": 0.0765,
           "valor": 20.92,
           "atual": 273.52,
-          "abertura": 261.3,
+          "abertura": 261.30,
           "trust": "v",
           "delta": null
         },
@@ -4089,7 +4019,7 @@
           "pct": -2.58,
           "lucro": -0.44,
           "vol": 4,
-          "valor": 16.6,
+          "valor": 16.60,
           "atual": 4.15,
           "abertura": 4.26,
           "trust": "r",
@@ -4101,7 +4031,7 @@
           "pct": 14.21,
           "lucro": 3.11,
           "vol": 0.029,
-          "valor": 25,
+          "valor": 25.00,
           "atual": 862.02,
           "abertura": 754.77,
           "trust": "v",
@@ -4123,11 +4053,11 @@
           "name": "Kodiak Gas Services",
           "mkt": "USD",
           "pct": 19.84,
-          "lucro": 3.5,
+          "lucro": 3.50,
           "vol": 0.3,
           "valor": 21.14,
           "atual": 70.46,
-          "abertura": 58.8,
+          "abertura": 58.80,
           "trust": "v",
           "delta": null
         },
@@ -4137,7 +4067,7 @@
           "pct": -5.03,
           "lucro": -1.77,
           "vol": 0.17,
-          "valor": 33.4,
+          "valor": 33.40,
           "atual": 196.46,
           "abertura": 206.85,
           "trust": "r",
@@ -4158,7 +4088,7 @@
         {
           "name": "Vertiv",
           "mkt": "USD",
-          "pct": 0.1,
+          "pct": 0.10,
           "lucro": 0.01,
           "vol": 0.03,
           "valor": 10.22,
@@ -4201,7 +4131,7 @@
           "trust": "v",
           "delta": {
             "pct": -1.38,
-            "val": -0.3
+            "val": -0.30
           }
         },
         {
@@ -4226,7 +4156,7 @@
           "lucro": 8.08,
           "vol": 0.0075,
           "valor": 28.24,
-          "atual": 4448,
+          "atual": 4448.00,
           "abertura": 3105.07,
           "trust": "v",
           "delta": {
@@ -4246,7 +4176,7 @@
           "pct": 16.78,
           "lucro": 2.86,
           "vol": 0.05,
-          "valor": 19.9,
+          "valor": 19.90,
           "atual": 398.04,
           "abertura": 340.73,
           "trust": "v",
@@ -4263,10 +4193,10 @@
           "vol": 0.0765,
           "valor": 21.04,
           "atual": 274.98,
-          "abertura": 261.3,
+          "abertura": 261.30,
           "trust": "v",
           "delta": {
-            "pct": 0.6,
+            "pct": 0.60,
             "val": 0.12
           }
         },
@@ -4281,7 +4211,7 @@
           "abertura": 283.49,
           "trust": "v",
           "delta": {
-            "pct": 1.2,
+            "pct": 1.20,
             "val": 0.17
           }
         },
@@ -4307,11 +4237,11 @@
           "lucro": 2.98,
           "vol": 0.029,
           "valor": 24.87,
-          "atual": 857.7,
+          "atual": 857.70,
           "abertura": 754.77,
           "trust": "v",
           "delta": {
-            "pct": -0.6,
+            "pct": -0.60,
             "val": -0.13
           }
         },
@@ -4327,18 +4257,18 @@
           "trust": "v",
           "delta": {
             "pct": 12.44,
-            "val": 1.6
+            "val": 1.60
           }
         },
         {
           "name": "Kodiak Gas Services",
           "mkt": "USD",
-          "pct": 21.6,
+          "pct": 21.60,
           "lucro": 3.81,
           "vol": 0.3,
           "valor": 21.45,
-          "atual": 71.5,
-          "abertura": 58.8,
+          "atual": 71.50,
+          "abertura": 58.80,
           "trust": "v",
           "delta": {
             "pct": 1.76,
@@ -4393,7 +4323,7 @@
         {
           "name": "Voya Financial",
           "mkt": "USD",
-          "pct": -2,
+          "pct": -2.00,
           "lucro": -0.49,
           "vol": 0.3,
           "valor": 24.07,
@@ -4407,180 +4337,5 @@
         }
       ]
     }
-  },
-  "historico": {
-    "2026-05-07": {
-      "data": "2026-05-07",
-      "eur": {
-        "lucro_total": 14.01,
-        "moeda": "EUR",
-        "posicoes": [
-          {
-            "nome": "Infineon",
-            "pct": 10,
-            "lucro": 2.17,
-            "vol": 0.4,
-            "valor": 23.88,
-            "atual": 59.68,
-            "abertura": 54.275
-          },
-          {
-            "nome": "Prysmian",
-            "pct": 26.35,
-            "lucro": 2.64,
-            "vol": 0.0881,
-            "valor": 12.66,
-            "atual": 143.7,
-            "abertura": 113.75
-          },
-          {
-            "nome": "Samsung",
-            "pct": 45.63,
-            "lucro": 9.2,
-            "vol": 0.0075,
-            "valor": 29.36,
-            "atual": 4620,
-            "abertura": 3105.07
-          }
-        ]
-      },
-      "usd": {
-        "lucro_total": 13.8,
-        "moeda": "USD",
-        "posicoes": [
-          {
-            "nome": "Alphabet",
-            "pct": 16.78,
-            "lucro": 2.86,
-            "vol": 0.05,
-            "valor": 19.9,
-            "atual": 397.96,
-            "abertura": 340.73
-          },
-          {
-            "nome": "Amazon",
-            "pct": 3.75,
-            "lucro": 0.75,
-            "vol": 0.0765,
-            "valor": 20.74,
-            "atual": 271.08,
-            "abertura": 261.3
-          },
-          {
-            "nome": "Apple",
-            "pct": 1.41,
-            "lucro": 0.2,
-            "vol": 0.05,
-            "valor": 14.37,
-            "atual": 287.4,
-            "abertura": 283.49
-          },
-          {
-            "nome": "BigBear.ai",
-            "pct": -1.88,
-            "lucro": -0.32,
-            "vol": 4,
-            "valor": 16.72,
-            "atual": 4.18,
-            "abertura": 4.26
-          },
-          {
-            "nome": "Casey's",
-            "pct": 12.75,
-            "lucro": 2.79,
-            "vol": 0.029,
-            "valor": 24.68,
-            "atual": 850.81,
-            "abertura": 754.77
-          },
-          {
-            "nome": "Dell",
-            "pct": 25.19,
-            "lucro": 3.24,
-            "vol": 0.07,
-            "valor": 16.1,
-            "atual": 229.96,
-            "abertura": 183.78
-          },
-          {
-            "nome": "Kodiak Gas Services",
-            "pct": 19.56,
-            "lucro": 3.45,
-            "vol": 0.3,
-            "valor": 21.09,
-            "atual": 70.29,
-            "abertura": 58.8
-          },
-          {
-            "nome": "Micron",
-            "pct": 0.52,
-            "lucro": 0.05,
-            "vol": 0.015,
-            "valor": 9.7,
-            "atual": 646.87,
-            "abertura": 643
-          },
-          {
-            "nome": "Nvidia",
-            "pct": 2.25,
-            "lucro": 0.79,
-            "vol": 0.17,
-            "valor": 35.96,
-            "atual": 211.52,
-            "abertura": 206.85
-          },
-          {
-            "nome": "Vertiv",
-            "pct": -0.1,
-            "lucro": -0.01,
-            "vol": 0.03,
-            "valor": 10.2,
-            "atual": 340,
-            "abertura": 340.29
-          }
-        ]
-      },
-      "deltas": {},
-      "realizados_dia": 0,
-      "realizados_mes": 0,
-      "posicoes_fechadas": [
-        {
-          "nome": "FTI",
-          "pct": 0,
-          "lucro_eur": 0,
-          "data_entrada": "saída 71,01$",
-          "data_saida": "2026-05-07",
-          "dias_holding": 20215,
-          "vol": 0,
-          "motivo": "",
-          "rating_ctm": 2
-        },
-        {
-          "nome": "VOYA",
-          "pct": 0,
-          "lucro_eur": 0,
-          "data_entrada": "saída 79,32$",
-          "data_saida": "2026-05-07",
-          "dias_holding": null,
-          "vol": 0,
-          "motivo": "",
-          "rating_ctm": 2
-        }
-      ],
-      "entradas": [
-        {
-          "nome": "MU",
-          "preco": 0,
-          "vol": 0,
-          "motivo": ""
-        }
-      ],
-      "aportes": [],
-      "caixa": 25,
-      "diario": {
-        "nota": null
-      }
-    }
-  },
-  "ultima_actualizacao": "2026-05-09T12:37:23.937Z"
+  }
 }
