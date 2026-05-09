@@ -42,7 +42,7 @@ Meta mensal: 10% da base do início do mês
 
 ## REALIZADOS ACUMULADOS MAIO 2026
 REAL_EUR_MAIO = 0€
-REAL_USD_MAIO = 0$
+REAL_USD_MAIO = -1.29$  (FTI -0.52 + VOYA -0.77 · 07/05)
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT
