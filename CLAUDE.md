@@ -46,21 +46,30 @@ REAL_USD_MAIO = -1.29$  (FTI -0.52 + VOYA -0.77 · 07/05)
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT
+Ver modelo completo em: watched/MODELO_eventos.txt
+
 DATA: DD/MM/YYYY
 
 EUR:
-SAIDA | Nome | +/-X.XX€ | lucro/prejuizo | Setup | Nota
-ENTRADA | Nome | EUR | Nota
-CAIXA | X.XX€
+SAIDA  | TICKER | Nome | +/-X.XX€ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota
+ENTRADA| TICKER | Nome | entrada:PRECO | vol:N | Setup | Nota
+APORTE | TICKER | Nome | +/-X.XX€ | preco:PRECO | vol:N | Nota
+CAIXA  | X.XX€                          ← obrigatório, valor exacto screenshot
 
 USD:
-SAIDA | Nome | +/-X.XX$ | lucro/prejuizo | Setup | Nota
-ENTRADA | Nome | USD | Nota
-APORTE | X.XX$ | Nota
-CAIXA | X.XX$
+SAIDA  | TICKER | Nome | +/-X.XX$ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota
+ENTRADA| TICKER | Nome | entrada:PRECO | vol:N | Setup | Nota
+APORTE | TICKER | Nome | +/-X.XX$ | preco:PRECO | vol:N | Nota
+TRANSFERENCIA | EUR→USD | -X.XX€ | +X.XX$ | Nota
+CAIXA  | X.XX$                          ← obrigatório, valor exacto screenshot
 
 DIARIO:
 Texto livre com nota do dia
+
+CAMPOS CRÍTICOS:
+• SAIDA  → lucro + saida + entrada + vol  (para lucro_pct e REAL_MAIO)
+• ENTRADA→ entrada + vol                  (base para deltas futuros)
+• CAIXA  → SEMPRE presente, valor exacto  (actualiza display HTML)
 
 ## RATING CTM (automático)
 ≥30% → 5★
