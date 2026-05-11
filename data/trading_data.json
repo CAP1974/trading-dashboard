@@ -4854,5 +4854,240 @@
       ],
       "caixa": 0.05
     }
+  },
+  "2026-05-11": {
+    "date": "2026-05-11",
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ativo": "Navitas Semiconductor",
+        "ticker": "NVTS",
+        "mkt": "USD",
+        "nota": "Entrada NVTS 0.915 @ 23.00 - VCP"
+      },
+      {
+        "tipo": "entrada",
+        "ativo": "SanDisk",
+        "ticker": "SNDK",
+        "mkt": "USD",
+        "nota": "Entrada SNDK 0.0092 @ 1534.94 - Clean Trend"
+      }
+    ],
+    "eur": {
+      "lucro": 17.3,
+      "positions": [
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "pct": 13.68,
+          "lucro": 2.97,
+          "vol": 0.4,
+          "valor": 24.68,
+          "atual": 61.72,
+          "abertura": 54.275,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 37.82,
+          "lucro": 3.79,
+          "vol": 0.0881,
+          "valor": 13.81,
+          "atual": 156.8,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Samsung",
+          "mkt": "EUR",
+          "pct": 52.33,
+          "lucro": 10.55,
+          "vol": 0.0075,
+          "valor": 30.71,
+          "atual": 4848,
+          "abertura": 3105.07,
+          "trust": "v",
+          "delta": null
+        }
+      ],
+      "caixa": 0.88
+    },
+    "usd": {
+      "lucro": 22.01,
+      "positions": [
+        {
+          "name": "Alphabet",
+          "mkt": "USD",
+          "pct": 14.08,
+          "lucro": 2.4,
+          "vol": 0.05,
+          "valor": 19.44,
+          "atual": 388.74,
+          "abertura": 340.73,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Amazon",
+          "mkt": "USD",
+          "pct": 2.85,
+          "lucro": 0.57,
+          "vol": 0.0765,
+          "valor": 20.56,
+          "atual": 268.8,
+          "abertura": 261.3,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "pct": 3.25,
+          "lucro": 0.46,
+          "vol": 0.05,
+          "valor": 14.63,
+          "atual": 292.6,
+          "abertura": 283.49,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "BigBear.ai",
+          "mkt": "USD",
+          "pct": 1.64,
+          "lucro": 0.28,
+          "vol": 4,
+          "valor": 17.32,
+          "atual": 4.33,
+          "abertura": 4.26,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Casey's",
+          "mkt": "USD",
+          "pct": 16.17,
+          "lucro": 3.54,
+          "vol": 0.029,
+          "valor": 25.43,
+          "atual": 877.02,
+          "abertura": 754.77,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Dell",
+          "mkt": "USD",
+          "pct": 34.45,
+          "lucro": 4.43,
+          "vol": 0.07,
+          "valor": 17.29,
+          "atual": 247.04,
+          "abertura": 183.78,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": 27.95,
+          "lucro": 4.93,
+          "vol": 0.3,
+          "valor": 22.57,
+          "atual": 75.24,
+          "abertura": 58.8,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Micron",
+          "mkt": "USD",
+          "pct": 23.73,
+          "lucro": 2.29,
+          "vol": 0.015,
+          "valor": 11.94,
+          "atual": 796.02,
+          "abertura": 643,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Navitas Semiconductor",
+          "mkt": "USD",
+          "pct": -1.47,
+          "lucro": -0.31,
+          "vol": 0.915,
+          "valor": 20.74,
+          "atual": 22.67,
+          "abertura": 23,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Nvidia",
+          "mkt": "USD",
+          "pct": 6.03,
+          "lucro": 2.12,
+          "vol": 0.17,
+          "valor": 37.29,
+          "atual": 219.32,
+          "abertura": 206.85,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": 0.64,
+          "lucro": 0.09,
+          "vol": 0.0092,
+          "valor": 14.21,
+          "atual": 1544.5,
+          "abertura": 1534.94,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "STMicroelectronics",
+          "mkt": "USD",
+          "pct": 2.68,
+          "lucro": 0.27,
+          "vol": 0.172,
+          "valor": 10.35,
+          "atual": 60.15,
+          "abertura": 58.62,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Synopsys",
+          "mkt": "USD",
+          "pct": 0.85,
+          "lucro": 0.13,
+          "vol": 0.03,
+          "valor": 15.43,
+          "atual": 514.24,
+          "abertura": 509.99,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Vertiv",
+          "mkt": "USD",
+          "pct": 7.93,
+          "lucro": 0.81,
+          "vol": 0.03,
+          "valor": 11.02,
+          "atual": 367.48,
+          "abertura": 340.29,
+          "trust": "v",
+          "delta": null
+        }
+      ],
+      "caixa": 0.02
+    }
   }
 }
