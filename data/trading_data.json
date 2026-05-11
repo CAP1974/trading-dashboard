@@ -1561,11 +1561,11 @@
       "base_eur": 58.89,
       "base_usd": 209.87,
       "meta_eur": 5.889,
-      "meta_usd": 21.383,
+      "meta_usd": 24.897,
       "ajustes_eur": 0,
-      "ajustes_usd": 3.96,
+      "ajustes_usd": 39.10,
       "base_ajustada_eur": 58.89,
-      "base_ajustada_usd": 213.83,
+      "base_ajustada_usd": 248.97,
       "realizado_eur": 0,
       "realizado_usd": 0,
       "saldo_fim_eur": null,
@@ -4858,6 +4858,12 @@
   "2026-05-11": {
     "date": "2026-05-11",
     "eventos": [
+      {
+        "tipo": "aporte",
+        "mkt": "USD",
+        "valor": 35.14,
+        "nota": "Deposito USD 35.14$ — financiou entradas NVTS+SNDK"
+      },
       {
         "tipo": "entrada",
         "ativo": "Navitas Semiconductor",
