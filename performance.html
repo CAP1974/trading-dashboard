@@ -345,13 +345,13 @@ function monthStats(ym) {
 const allMonths = Object.keys(byMonth).sort().reverse();
 const curStats  = monthStats(curYM);
 
-// ── constantes oficiais (fecho 11 Mai 2026) ──
+// ── constantes oficiais (fecho 12 Mai 2026) ──
 const REAL_EUR      =  0.00;   // lucro realizado EUR Mai 2026 (reset mensal)
-const REAL_USD      = -1.29;   // lucro realizado USD Mai 2026 (FTI -0.52 + VOYA -0.77)
-const LUCRO_ABT_EUR = 17.30;   // lucro aberto EUR
-const LUCRO_ABT_USD = 22.01;   // lucro aberto USD
-const SALDO_EUR     = 70.08;   // saldo actual EUR
-const SALDO_USD     = 258.24;  // saldo actual USD  (aporte 35.14$ em 11/05 → base_aj 248.97$)
+const REAL_USD      = -1.06;   // lucro realizado USD Mai 2026 (FTI -0.52 + VOYA -0.77 + AMZN +0.23)
+const LUCRO_ABT_EUR = 13.76;   // lucro aberto EUR
+const LUCRO_ABT_USD = 15.98;   // lucro aberto USD
+const SALDO_EUR     = 66.52;   // saldo actual EUR
+const SALDO_USD     = 252.44;  // saldo actual USD
 
 // ── Métricas 3 camadas ──
 const eqEur   = REAL_EUR + LUCRO_ABT_EUR;   // equity EUR mês
