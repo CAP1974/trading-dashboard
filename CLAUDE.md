@@ -38,7 +38,7 @@ Meta mensal: 10% da base do início do mês
 
 ## MESES ACTIVOS
 2026-04: FECHADO · saldo_fim_eur 58.89 · saldo_fim_usd 209.87
-2026-05: EM CURSO · base_eur 58.89 · base_usd 213.83 · base_aj_usd 248.97 (aporte 35.14$ em 11/05)
+2026-05: EM CURSO · base_eur 58.89 · base_usd 213.83 · base_aj_usd 272.28 (aportes 35.14+23.31$)
 
 ## REALIZADOS ACUMULADOS MAIO 2026
 REAL_EUR_MAIO = 0€

@@ -340,27 +340,27 @@ body{
 <div class="fund-header">
   <div class="fh-item">
     <div class="fh-label">Capital EUR</div>
-    <div class="fh-value up" id="fh-cap-eur">66,52 €</div>
+    <div class="fh-value up" id="fh-cap-eur">70,45 €</div>
     <div class="fh-sub" id="fh-cap-eur-sub">base 58,89€ · lucro real Mai 0,00€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Capital USD</div>
-    <div class="fh-value up" id="fh-cap-usd">252,44 $</div>
-    <div class="fh-sub" id="fh-cap-usd-sub">base 248,97$ · lucro real Mai -1,06$</div>
+    <div class="fh-value up" id="fh-cap-usd">282,01 $</div>
+    <div class="fh-sub" id="fh-cap-usd-sub">base 272,28$ · lucro real Mai -1,06$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno EUR Maio</div>
-    <div class="fh-value up" id="fh-ret-eur">233,7% meta</div>
-    <div class="fh-sub">equity +13,76€ · realizado 0,00€</div>
+    <div class="fh-value up" id="fh-ret-eur">300,2% meta</div>
+    <div class="fh-sub">equity +17,68€ · realizado 0,00€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno USD Maio</div>
-    <div class="fh-value up" id="fh-ret-usd">59,9% meta</div>
-    <div class="fh-sub">equity +15,98$ · realizado -1,06$</div>
+    <div class="fh-value up" id="fh-ret-usd">77,8% meta</div>
+    <div class="fh-sub">equity +22,24$ · realizado -1,06$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">AUM Total ~EUR</div>
-    <div class="fh-value grad" id="fh-aum">≈ 299 €</div>
+    <div class="fh-value grad" id="fh-aum">≈ 330 €</div>
     <div class="fh-sub">EUR + USD convertido</div>
   </div>
   <div class="fh-item">
@@ -581,10 +581,10 @@ body{
   <div>
     <div class="zone-label">Fluxo de capital</div>
     <div class="flow-grid">
-      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">66,52 €</div></div>
+      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">70,45 €</div></div>
       <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac">0,88 €</div></div>
-      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">252,44 $</div></div>
-      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">0,54 $</div></div>
+      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">282,01 $</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">8,00 $</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje EUR</div><div class="flow-val up" id="fl-eur">—</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje USD</div><div class="flow-val up" id="fl-usd">—</div></div>
     </div>
@@ -837,13 +837,13 @@ function exportExcel(){
     ['Data de exportação',new Date().toLocaleDateString('pt-PT'),'',''],
     ['','','',''],
     ['CAPITAL ACTUAL','','',''],
-    ['Conta EUR (8MSN)','66.52 €','Caixa EUR','0.88 €'],
-    ['Conta USD (OMV)','252.44 USD','Caixa USD','0.54 USD'],
-    ['AUM Total ~EUR','≈ 299 €','',''],
+    ['Conta EUR (8MSN)','70.45 €','Caixa EUR','0.88 €'],
+    ['Conta USD (OMV)','282.01 USD','Caixa USD','8.00 USD'],
+    ['AUM Total ~EUR','≈ 330 €','',''],
     ['','','',''],
     ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
-    ['Retorno EUR','-16.2%','',''],
-    ['Retorno USD','+42.9%','',''],
+    ['Retorno EUR','-11.3%','',''],
+    ['Retorno USD','+59.6%','',''],
     ['Dias activos',ALL_DATES.length,'',''],
   ];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(resumo),'Resumo');
