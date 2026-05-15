@@ -319,15 +319,23 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
   const EUR_RATE      = 0.92;
   const FALLBACK_EUR  = 79.39;
   const FALLBACK_USD  = 176.67;
-  // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 16.71;  // lucro aberto EUR
-  const LUCRO_ABT_USD =  8.82;  // lucro aberto USD
-  const REAL_EUR      = 0.00;   // realizado EUR Mai 2026 (reset mensal)
-  const REAL_USD      = 5.55;   // realizado USD Mai 2026 (FTI -0.52 + VOYA -0.77 + AMZN +0.23 + DELL +3.86 + GOOGL +2.75)
 
   // Bases do mês actual via MESES_DATA
   const MESES   = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
   const curYM   = LATEST_DATE.slice(0, 7);
+
+  // Realizado e lucro aberto — calculados automaticamente
+  let _rEur = 0, _rUsd = 0;
+  DATES.filter(d => d.startsWith(curYM)).forEach(d => {
+    (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
+      if (p.mkt === 'EUR') _rEur += p.lucro || 0;
+      else                 _rUsd += p.lucro || 0;
+    });
+  });
+  const REAL_EUR      = parseFloat(_rEur.toFixed(2));
+  const REAL_USD      = parseFloat(_rUsd.toFixed(2));
+  const LUCRO_ABT_EUR = parseFloat((TRADING_DATA[LATEST_DATE]?.eur?.lucro || 0).toFixed(2));
+  const LUCRO_ABT_USD = parseFloat((TRADING_DATA[LATEST_DATE]?.usd?.lucro || 0).toFixed(2));
   const mesKeys = Object.keys(MESES).sort();
   const mesKey  = MESES[curYM] ? curYM : (mesKeys.length ? mesKeys[mesKeys.length - 1] : null);
   const mesInfo = mesKey ? MESES[mesKey] : {};
@@ -641,14 +649,22 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   const EUR_RATE      = 0.92;
   const CAP_EUR       = 79.39;
   const BASE_USD      = 176.67;
-  // Constantes oficiais do mês actual (actualizar a cada fechamento)
-  const LUCRO_ABT_EUR = 11.31;
-  const LUCRO_ABT_USD = 10.34;
-  const REAL_EUR      = 0.00;   // reset Maio 2026
-  const REAL_USD      = 0.00;   // reset Maio 2026
   const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
   const MONTHS_PT     = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const curYM_m       = LATEST_DATE.slice(0, 7);
+
+  // Realizado e lucro aberto — calculados automaticamente
+  let _rmEur = 0, _rmUsd = 0;
+  DATES.filter(d => d.startsWith(curYM_m)).forEach(d => {
+    (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
+      if (p.mkt === 'EUR') _rmEur += p.lucro || 0;
+      else                 _rmUsd += p.lucro || 0;
+    });
+  });
+  const REAL_EUR      = parseFloat(_rmEur.toFixed(2));
+  const REAL_USD      = parseFloat(_rmUsd.toFixed(2));
+  const LUCRO_ABT_EUR = parseFloat((TRADING_DATA[LATEST_DATE]?.eur?.lucro || 0).toFixed(2));
+  const LUCRO_ABT_USD = parseFloat((TRADING_DATA[LATEST_DATE]?.usd?.lucro || 0).toFixed(2));
 
   // group by YYYY-MM
   const byMonth = {};
