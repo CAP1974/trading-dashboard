@@ -222,7 +222,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div class="card">
       <div class="card-header">
-        <span class="card-title">Realizado Acumulado</span>
+        <span class="card-title">Equity vs Meta · % Mensal</span>
         <span class="card-tag">só trades fechados · exclui posições abertas</span>
       </div>
       <div style="padding:16px;height:200px;"><canvas id="chartAcum"></canvas></div>
@@ -745,40 +745,97 @@ if (trajMeses.length) {
   buildProgChart('chartProgUsd', chartMesLabels, mRealU, mFlutuU, mFaltaU,
     trajMeses.map(ym => MESES[ym].meta_usd), '$', '#00c8ff', '#00c8ff');
 
-  // ── GRÁFICO 2 — Realizado Acumulado ──
+  // ── GRÁFICO 2 — Equity % Meta por Mês (barras normalizadas) ──
+  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual)
+  const mEquityPctE = trajMeses.map((ym, i) => {
+    const mes = MESES[ym]; const isCur = ym === curYM;
+    const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
+    const eq = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
+                     : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]);
+    return mes.meta_eur > 0 ? +(eq / mes.meta_eur * 100).toFixed(1) : 0;
+  });
+  const mEquityPctU = trajMeses.map((ym, i) => {
+    const mes = MESES[ym]; const isCur = ym === curYM;
+    const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
+    const eq = isCur ? (REAL_USD + LUCRO_ABT_USD)
+                     : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]);
+    return mes.meta_usd > 0 ? +(eq / mes.meta_usd * 100).toFixed(1) : 0;
+  });
   new Chart(document.getElementById('chartAcum'), {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: chartMesLabels,
       datasets: [
-        { label: 'Meta acumulada EUR (€)', data: mMetaAcumE, borderColor: '#3dffb0', borderDash: [5,4],
-          borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#3dffb0', tension: 0.3, fill: false },
-        { label: 'Realizado EUR (€)', data: mAcumRealE, borderColor: '#1eff8e', borderWidth: 2,
-          pointRadius: 4, pointBackgroundColor: '#1eff8e', tension: 0.3,
-          fill: { target: 0, above: 'rgba(30,255,142,.12)', below: 'rgba(255,77,106,.12)' } },
-        { label: 'Meta acumulada USD ($)', data: mMetaAcumU, borderColor: '#00c8ff', borderDash: [5,4],
-          borderWidth: 1.5, pointRadius: 3, pointBackgroundColor: '#00c8ff', tension: 0.3, fill: false },
-        { label: 'Realizado USD ($)', data: mAcumRealU, borderColor: '#4da6ff', borderWidth: 2,
-          pointRadius: 4, pointBackgroundColor: '#4da6ff', tension: 0.3, fill: false }
+        { label: 'EUR % meta', data: mEquityPctE, barPercentage: 0.6,
+          backgroundColor: mEquityPctE.map(v => v >= 100 ? 'rgba(30,255,142,0.65)' : v >= 0 ? 'rgba(255,193,7,0.5)' : 'rgba(255,77,106,0.5)'),
+          borderColor:      mEquityPctE.map(v => v >= 100 ? '#1eff8e'              : v >= 0 ? '#ffc107'               : '#ff4d6a'),
+          borderWidth: 1.5 },
+        { label: 'USD % meta', data: mEquityPctU, barPercentage: 0.6,
+          backgroundColor: mEquityPctU.map(v => v >= 100 ? 'rgba(0,200,255,0.55)' : v >= 0 ? 'rgba(0,200,255,0.25)'  : 'rgba(255,77,106,0.35)'),
+          borderColor:      mEquityPctU.map(v => v >= 100 ? '#00c8ff'              : v >= 0 ? '#4da6ff'                : '#ff4d6a'),
+          borderWidth: 1.5 }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
         legend: legendStyle,
-        tooltip: { callbacks: { label: c => c.dataset.label + ': ' + (c.raw >= 0 ? '+' : '') + c.raw.toFixed(2) } }
+        tooltip: { callbacks: { label: c => {
+          const ym = trajMeses[c.dataIndex];
+          const mes = MESES[ym]; const isCur = ym === curYM;
+          const sym = c.datasetIndex === 0 ? '€' : '$';
+          const meta = c.datasetIndex === 0 ? mes.meta_eur : mes.meta_usd;
+          const baseAj = c.datasetIndex === 0
+            ? (mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur)
+            : (mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd);
+          const realArr = c.datasetIndex === 0 ? mRealE : mRealU;
+          const fluArr  = c.datasetIndex === 0 ? mFlutuE : mFlutuU;
+          const sfArr   = c.datasetIndex === 0 ? 'saldo_fim_eur' : 'saldo_fim_usd';
+          const eq = isCur
+            ? (c.datasetIndex === 0 ? REAL_EUR+LUCRO_ABT_EUR : REAL_USD+LUCRO_ABT_USD)
+            : (mes[sfArr] != null ? mes[sfArr] - baseAj : realArr[c.dataIndex] + fluArr[c.dataIndex]);
+          return `${c.dataset.label}: ${c.raw >= 0 ? '+' : ''}${c.raw.toFixed(1)}% · equity ${eq >= 0 ? '+' : ''}${eq.toFixed(2)}${sym} / meta +${meta.toFixed(2)}${sym}`;
+        }}}
       },
       scales: {
-        x: { ticks: tickStyle, grid: gridStyle },
-        y: { ticks: tickStyle, grid: gridStyle }
+        x: { ticks: tickStyle, grid: { display: false } },
+        y: { ticks: { ...tickStyle, callback: v => v + '%' }, grid: gridStyle,
+             title: { display: true, text: '% de Meta Mensal', color: '#334455', font: { size: 9 } } }
       }
-    }
+    },
+    plugins: [{
+      id: 'metaLine100',
+      afterDraw(chart) {
+        const { ctx, scales: { y, x } } = chart;
+        const yVal = y.getPixelForValue(100);
+        if (yVal < y.top || yVal > y.bottom) return;
+        ctx.save();
+        ctx.beginPath(); ctx.setLineDash([6, 4]);
+        ctx.moveTo(x.left, yVal); ctx.lineTo(x.right, yVal);
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.font = '9px JetBrains Mono';
+        ctx.fillText('100% meta', x.right - 62, yVal - 4);
+        ctx.restore();
+      }
+    }]
   });
 
   // ── GRÁFICO 3 — Défice / Excesso por Mês ──
-  // equity do mês = realizado + flutuante fim; desvio = equity - meta
-  const mDesvE = trajMeses.map((ym, i) => +(mRealE[i] + mFlutuE[i] - MESES[ym].meta_eur).toFixed(2));
-  const mDesvU = trajMeses.map((ym, i) => +(mRealU[i] + mFlutuU[i] - MESES[ym].meta_usd).toFixed(2));
+  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual) — consistente com tabela
+  const mDesvE = trajMeses.map((ym, i) => {
+    const mes = MESES[ym]; const isCur = ym === curYM;
+    const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
+    const eq = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
+                     : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]);
+    return +(eq - mes.meta_eur).toFixed(2);
+  });
+  const mDesvU = trajMeses.map((ym, i) => {
+    const mes = MESES[ym]; const isCur = ym === curYM;
+    const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
+    const eq = isCur ? (REAL_USD + LUCRO_ABT_USD)
+                     : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]);
+    return +(eq - mes.meta_usd).toFixed(2);
+  });
   new Chart(document.getElementById('chartDefice'), {
     type: 'bar',
     data: {
@@ -893,8 +950,10 @@ if (trajMeses.length) {
   const nM = trajMeses.length;
   const mAcEur = (Math.pow(1.10, nM) - 1) * 100;
   const mAcUsd = mAcEur;
-  const rAcEur = (mAcumRealE[mAcumRealE.length - 1] / firstMes.base_eur) * 100;
-  const rAcUsd = (mAcumRealU[mAcumRealU.length - 1] / firstMes.base_usd) * 100;
+  const baseAjFirstE = firstMes.base_ajustada_eur != null ? firstMes.base_ajustada_eur : firstMes.base_eur;
+  const baseAjFirstU = firstMes.base_ajustada_usd != null ? firstMes.base_ajustada_usd : firstMes.base_usd;
+  const rAcEur = (mAcumRealE[mAcumRealE.length - 1] / baseAjFirstE) * 100;
+  const rAcUsd = (mAcumRealU[mAcumRealU.length - 1] / baseAjFirstU) * 100;
   const dEur = rAcEur - mAcEur;
   const dUsd = rAcUsd - mAcUsd;
   const fA = v => `<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
