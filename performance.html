@@ -251,14 +251,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
             <th class="r">Flutu EUR</th>
             <th class="r">Equity EUR</th>
             <th class="r">% Meta</th>
-            <th class="r">Falta EUR</th>
+            <th class="r">vs Meta EUR</th>
             <th class="r">Base Aj. USD</th>
             <th class="r">Meta USD</th>
             <th class="r">Realiz USD</th>
             <th class="r">Flutu USD</th>
             <th class="r">Equity USD</th>
             <th class="r">% Meta</th>
-            <th class="r">Falta USD</th>
+            <th class="r">vs Meta USD</th>
             <th>Estado</th>
           </tr>
         </thead>
@@ -409,7 +409,7 @@ const cardEur = `<div class="metric-card">
   </div>
   <hr class="rr-divider">
   <div class="rr-line">
-    <div class="rr-line-top"><span class="rr-label">Falta Realizar</span><span class="rr-val ${faltaEur<=0?'up':'dn'}">${faltaEur<=0?'':'+'}${faltaEur.toFixed(2)}€</span></div>
+    <div class="rr-line-top"><span class="rr-label">${faltaEur<=0?'Excesso vs Meta':'Falta Realizar'}</span><span class="rr-val ${faltaEur<=0?'up':'dn'}">${faltaEur<=0?'+'+(-faltaEur).toFixed(2):'+'+faltaEur.toFixed(2)}€</span></div>
     <div class="rr-note" style="margin-top:2px;">${faltaEur<=0?'Meta já coberta em equity · proteger posições':'Ainda falta para atingir meta'}</div>
   </div>
   <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
@@ -439,7 +439,7 @@ const cardUsd = `<div class="metric-card">
   </div>
   <hr class="rr-divider">
   <div class="rr-line">
-    <div class="rr-line-top"><span class="rr-label">Falta Realizar</span><span class="rr-val ${faltaUsd<=0?'up':'dn'}">${faltaUsd<=0?'':'+'}${faltaUsd.toFixed(2)}$</span></div>
+    <div class="rr-line-top"><span class="rr-label">${faltaUsd<=0?'Excesso vs Meta':'Falta Realizar'}</span><span class="rr-val ${faltaUsd<=0?'up':'dn'}">${faltaUsd<=0?'+'+(-faltaUsd).toFixed(2):'+'+faltaUsd.toFixed(2)}$</span></div>
     <div class="rr-note" style="margin-top:2px;">${faltaUsd<=0?'Meta já coberta em equity · proteger posições':'Ainda falta para atingir meta'}</div>
   </div>
   <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">
@@ -474,7 +474,7 @@ const cardCons = `<div class="metric-card principal">
   </div>
   <hr class="rr-divider">
   <div class="rr-line">
-    <div class="rr-line-top"><span class="rr-label">Falta Realizar ~EUR</span><span class="rr-val ${faltaCons<=0?'up':'dn'}">${faltaCons>=0?'+':''}${faltaCons.toFixed(2)}€</span></div>
+    <div class="rr-line-top"><span class="rr-label">${faltaCons<=0?'Excesso vs Meta ~EUR':'Falta Realizar ~EUR'}</span><span class="rr-val ${faltaCons<=0?'up':'dn'}">${faltaCons<=0?'+'+(-faltaCons).toFixed(2):'+'+faltaCons.toFixed(2)}€</span></div>
     <div class="rr-note">${faltaCons<=0?'Meta já coberta em equity consolidada':'Para atingir meta mensal completa'}</div>
   </div>
 </div>`;
@@ -919,11 +919,11 @@ if (trajMeses.length) {
     const fP = v => v != null
       ? `<span class="${v>=100?'up':v>=50?'ac':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`
       : '<span class="neu">—</span>';
-    // falta: verde se <=0 (coberta/excesso), vermelho se >0 (ainda falta)
+    // vs Meta: + verde = acima da meta (excesso) | - vermelho = abaixo da meta (falta)
     const fFalta = (v, sym) => v != null
       ? (v <= 0
-          ? `<span class="up">${v.toFixed(2)}${sym}</span>`
-          : `<span class="dn">+${v.toFixed(2)}${sym}</span>`)
+          ? `<span class="up">+${(-v).toFixed(2)}${sym}</span>`   // excesso: +10.82€ verde
+          : `<span class="dn">-${v.toFixed(2)}${sym}</span>`)      // falta: -12.86$ vermelho
       : '<span class="neu">—</span>';
 
     return `<tr>
