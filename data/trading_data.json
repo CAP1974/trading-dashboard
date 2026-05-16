@@ -645,7 +645,7 @@
         "tipo": "saida",
         "ativo": "SDRL",
         "mkt": "USD",
-        "nota": "SaÃ­da do ativo SDRL â€” lateralizaÃ§Ã£o semanal, aguardar pullback ou breakout"
+        "nota": "Saída do ativo SDRL — lateralização semanal, aguardar pullback ou breakout"
       },
       {
         "tipo": "entrada",
@@ -879,19 +879,19 @@
         "tipo": "saida",
         "ativo": "OMV",
         "mkt": "EUR",
-        "nota": "SaÃ­da do ativo OMV â€” sem tendÃªncia de clean trend"
+        "nota": "Saída do ativo OMV — sem tendência de clean trend"
       },
       {
         "tipo": "saida",
         "ativo": "DOF",
         "mkt": "EUR",
-        "nota": "SaÃ­da do ativo DOF â€” sem tendÃªncia de clean trend"
+        "nota": "Saída do ativo DOF — sem tendência de clean trend"
       },
       {
         "tipo": "saida",
         "ativo": "NXD1",
         "mkt": "EUR",
-        "nota": "SaÃ­da do ativo Nordex â€” sem tendÃªncia de clean trend"
+        "nota": "Saída do ativo Nordex — sem tendência de clean trend"
       },
       {
         "tipo": "entrada",
@@ -902,13 +902,13 @@
       {
         "tipo": "caixa",
         "mkt": "EUR",
-        "nota": "Valor em caixa ao fim do dia: 6,23â‚¬"
+        "nota": "Valor em caixa ao fim do dia: 6,23€"
       },
       {
         "tipo": "saida",
         "ativo": "ERA",
         "mkt": "USD",
-        "nota": "SaÃ­da do ativo Erasca â€” sem tendÃªncia de clean trend"
+        "nota": "Saída do ativo Erasca — sem tendência de clean trend"
       },
       {
         "tipo": "entrada",
@@ -1311,7 +1311,7 @@
         "tipo": "caixa",
         "conta": "EUR",
         "valor": 9.95,
-        "nota": "Aporte caixa EUR (total 10,21â‚¬)"
+        "nota": "Aporte caixa EUR (total 10,21€)"
       },
       {
         "tipo": "caixa",
@@ -1503,7 +1503,7 @@
         {
           "data": "2026-04-27",
           "valor": -20,
-          "nota": "TransferÃªncia para USD"
+          "nota": "Transferência para USD"
         }
       ],
       "capital_ajustado": 58.41
@@ -1514,7 +1514,7 @@
         {
           "data": "2026-04-27",
           "valor": 23.36,
-          "nota": "TransferÃªncia da conta EUR"
+          "nota": "Transferência da conta EUR"
         },
         {
           "data": "2026-04-28",
@@ -1583,14 +1583,14 @@
         "ativo": "Ericsson",
         "mkt": "EUR",
         "lucro": 0.12,
-        "nota": "Venda Eric_A Â· lucro +0,12â‚¬"
+        "nota": "Venda Eric_A · lucro +0,12€"
       },
       {
         "tipo": "saida",
         "ativo": "SPM",
         "mkt": "EUR",
         "lucro": -0.6,
-        "nota": "Venda SPM Â· prejuÃ­zo -0,60â‚¬ Â· total realizado -0,48â‚¬"
+        "nota": "Venda SPM · prejuízo -0,60€ · total realizado -0,48€"
       },
       {
         "tipo": "entrada",
@@ -1615,7 +1615,7 @@
         "ativo": "MU",
         "mkt": "USD",
         "lucro": 1.49,
-        "nota": "Venda Micron (MU) Â· lucro +1,49$"
+        "nota": "Venda Micron (MU) · lucro +1,49$"
       }
     ],
     "eur": {
@@ -2139,19 +2139,19 @@
         "ativo": "STMicroelectronics",
         "mkt": "USD",
         "lucro": 3.02,
-        "nota": "Venda STM â€” ativo esticado"
+        "nota": "Venda STM — ativo esticado"
       },
       {
         "tipo": "entrada",
         "ativo": "Alphabet",
         "mkt": "USD",
-        "nota": "Entrada Alphabet (GOOGL) â€” prÃ©-breakout"
+        "nota": "Entrada Alphabet (GOOGL) — pré-breakout"
       },
       {
         "tipo": "entrada",
         "ativo": "Nvidia",
         "mkt": "USD",
-        "nota": "Entrada Nvidia (NVDA) â€” prÃ©-breakout"
+        "nota": "Entrada Nvidia (NVDA) — pré-breakout"
       }
     ],
     "eur": {
@@ -2386,7 +2386,7 @@
         "dias_holding": 6,
         "setup": "Momentum",
         "nota_entrada": "Breakout limpo",
-        "nota_saida": "Ativo esticado â€” saÃ­da CTM",
+        "nota_saida": "Ativo esticado — saída CTM",
         "imagem_setup": null,
         "rating": 3
       }
@@ -2421,7 +2421,7 @@
         "ativo": "Saga",
         "mkt": "EUR",
         "lucro": -0.95,
-        "nota": "Falha break-out (2 posiÃ§Ãµes)"
+        "nota": "Falha break-out (2 posições)"
       },
       {
         "tipo": "entrada",
@@ -2620,7 +2620,7 @@
         "dias_holding": 4,
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
-        "nota_saida": "Falha breakout â€” saÃ­da stop",
+        "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
         "rating": 0
       },
@@ -2639,7 +2639,7 @@
         "dias_holding": 4,
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
-        "nota_saida": "Falha breakout â€” saÃ­da stop",
+        "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
         "rating": 0
       },
@@ -2658,7 +2658,7 @@
         "dias_holding": 4,
         "setup": "Breakout",
         "nota_entrada": "Tentativa breakout",
-        "nota_saida": "Falha breakout â€” saÃ­da stop",
+        "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
         "rating": 0
       },
@@ -2677,7 +2677,7 @@
         "dias_holding": 9,
         "setup": "Pullback",
         "nota_entrada": "Pullback sobre suporte",
-        "nota_saida": "Falha breakout â€” saÃ­da stop",
+        "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
         "rating": 0
       },
@@ -2695,8 +2695,8 @@
         "volume": 1,
         "dias_holding": 8,
         "setup": "Pullback",
-        "nota_entrada": "AdiÃ§Ã£o ao lote 1",
-        "nota_saida": "Falha breakout â€” saÃ­da stop",
+        "nota_entrada": "Adição ao lote 1",
+        "nota_saida": "Falha breakout — saída stop",
         "imagem_setup": null,
         "rating": 0
       }
@@ -2709,7 +2709,7 @@
         "tipo": "saida_capital",
         "mkt": "EUR",
         "valor": -20,
-        "nota": "TransferÃªncia 20â‚¬ para conta USD"
+        "nota": "Transferência 20€ para conta USD"
       },
       {
         "tipo": "entrada",
@@ -2727,7 +2727,7 @@
         "tipo": "aporte",
         "mkt": "USD",
         "valor": 23.36,
-        "nota": "TransferÃªncia 20â‚¬ da conta EUR (~23.36$)"
+        "nota": "Transferência 20€ da conta EUR (~23.36$)"
       }
     ],
     "eur": {
@@ -2934,7 +2934,7 @@
         "ativo": "SanDisk",
         "mkt": "USD",
         "lucro": 6.86,
-        "nota": "Venda SNDK 4 lotes a 1015$ â€” lucro realizado"
+        "nota": "Venda SNDK 4 lotes a 1015$ — lucro realizado"
       },
       {
         "tipo": "aporte",
@@ -3147,14 +3147,14 @@
         "volume": 0.0229,
         "dias_holding": 36,
         "setup": "VCP",
-        "nota_entrada": "VCP clÃ¡ssico â€” compressÃ£o de volatilidade",
-        "nota_saida": "Ativo esticado â€” saÃ­da excelente",
+        "nota_entrada": "VCP clássico — compressão de volatilidade",
+        "nota_saida": "Ativo esticado — saída excelente",
         "imagem_setup": null,
         "rating": 5
       }
     ],
     "diario": {
-      "nota": "âœ”ï¸ ConclusÃ£o final\nTrade SNDK:\nentrada boa\ngestÃ£o correta\nsaÃ­da excelente\n\nðŸ‘‰ Este Ã© um trade modelo dentro do protocolo.",
+      "nota": "✔️ Conclusão final\nTrade SNDK:\nentrada boa\ngestão correta\nsaída excelente\n\n👉 Este é um trade modelo dentro do protocolo.",
       "checklist": {
         "revisao": true,
         "stoploss": true,
@@ -3171,14 +3171,14 @@
         "ativo": "Celestica",
         "mkt": "USD",
         "lucro": 0.05,
-        "nota": "CLS vendida â€” protocolo CTM"
+        "nota": "CLS vendida — protocolo CTM"
       },
       {
         "tipo": "saida",
         "ativo": "Equinix",
         "mkt": "USD",
         "lucro": 1.74,
-        "nota": "EQIX vendida 4 lotes â€” protocolo CTM"
+        "nota": "EQIX vendida 4 lotes — protocolo CTM"
       }
     ],
     "eur": {
@@ -3377,14 +3377,14 @@
         "volume": 0.0272,
         "dias_holding": 29,
         "setup": "Clean Trend",
-        "nota_entrada": "TendÃªncia limpa â€” entrada CTM",
+        "nota_entrada": "Tendência limpa — entrada CTM",
         "nota_saida": "Protocolo CTM",
         "imagem_setup": null,
         "rating": 2
       }
     ],
     "diario": {
-      "nota": "Fecho de Abril 2026. Primeiro mÃªs completo do fundo.\nRealizados USD: +13.60$ â€” SNDK trade do mÃªs.\nEUR ainda negativo em realizados: -3.16â‚¬.\nEquinix e Celestica fechadas â€” protocolo CTM.",
+      "nota": "Fecho de Abril 2026. Primeiro mês completo do fundo.\nRealizados USD: +13.60$ — SNDK trade do mês.\nEUR ainda negativo em realizados: -3.16€.\nEquinix e Celestica fechadas — protocolo CTM.",
       "checklist": {}
     }
   },
@@ -3585,21 +3585,21 @@
   },
   "2026-05-04": {
     "date": "2026-05-04",
-    "diario": "Entradas BBAI e FTI. USD portfÃ³lio alargado â€” 10 posiÃ§Ãµes activas. EUR mantÃ©m as 3 posiÃ§Ãµes com Samsung a liderar +23.56%.",
+    "diario": "Entradas BBAI e FTI. USD portfólio alargado — 10 posições activas. EUR mantém as 3 posições com Samsung a liderar +23.56%.",
     "eventos": [
       {
         "tipo": "entrada",
         "ativo": "BigBear.ai",
         "ticker": "BBAI",
         "mkt": "USD",
-        "nota": "Entrada BBAI 4 @ 4.26 â€” 04/05/2026"
+        "nota": "Entrada BBAI 4 @ 4.26 — 04/05/2026"
       },
       {
         "tipo": "entrada",
         "ativo": "TechnipFMC",
         "ticker": "FTI",
         "mkt": "USD",
-        "nota": "Entrada FTI 0.15 @ 74.47 â€” 04/05/2026"
+        "nota": "Entrada FTI 0.15 @ 74.47 — 04/05/2026"
       }
     ],
     "eur": {
@@ -3812,7 +3812,7 @@
         "ativo": "Apple",
         "ticker": "AAPL",
         "mkt": "USD",
-        "nota": "Entrada AAPL 0.05 @ 283.49 â€” 01/05/2026"
+        "nota": "Entrada AAPL 0.05 @ 283.49 — 01/05/2026"
       }
     ],
     "eur": {
@@ -3990,7 +3990,7 @@
         "ativo": "Vertiv",
         "ticker": "VRT",
         "mkt": "USD",
-        "nota": "Entrada VRT 0.03 @ 340.29 â€” 05/05/2026"
+        "nota": "Entrada VRT 0.03 @ 340.29 — 05/05/2026"
       },
       {
         "tipo": "aporte",
@@ -3998,7 +3998,7 @@
         "ticker": "NVDA",
         "mkt": "USD",
         "valor": 3.96,
-        "nota": "Aporte NVDA 0.02 @ 197.90 â€” posiÃ§Ã£o reforÃ§ada"
+        "nota": "Aporte NVDA 0.02 @ 197.90 — posição reforçada"
       }
     ],
     "eur": {
