@@ -1,0 +1,128 @@
+# ══════════════════════════════════════════════════════════════════
+#  TRIPLE SEVEN CAPITAL — MODELO DE EVENTOS DIÁRIOS
+#  Copiar este ficheiro e renomear: eventos_DD_MM.txt
+#  Apagar as linhas de exemplo (sem #). Manter as linhas com #.
+# ══════════════════════════════════════════════════════════════════
+
+DATA: DD/MM/2026
+
+
+# ──────────────────────────────────────────────────────────────────
+#  CONTA EUR
+# ──────────────────────────────────────────────────────────────────
+EUR:
+
+# SAÍDA — posição fechada
+# SAIDA | TICKER | Nome do Ativo | resultado€ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota saída
+#
+# Exemplos:
+#   SAIDA | SMSN | Samsung      | +10.55€ | saida:4794   | entrada:3105.07 | vol:0.0075 | Distribuição        | target atingido
+#   SAIDA | IFX  | Infineon     | -1.20€  | saida:58.40  | entrada:61.50   | vol:0.4    | Pullback            | quebra conceito
+#   SAIDA | PRYS | Prysmian     | +3.00€  | saida:147.80 | entrada:113.75  | vol:0.0881 | Clean Trend         | objetivo parcial
+#
+# !! resultado: usar ponto decimal  ex: +10.55€  -1.20€  (NÃO vírgula)
+# !! preços: usar ponto decimal     ex: 4794.00   113.75
+
+# [apagar esta linha e preencher]
+# SAIDA | TICKER | Nome | +/-X.XX€ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota
+
+
+# ENTRADA — nova posição aberta
+# ENTRADA | TICKER | Nome do Ativo | entrada:PRECO | vol:N | Setup | Nota entrada
+#
+# Exemplos:
+#   ENTRADA | PRYS | Prysmian | entrada:113.75 | vol:0.0881 | Clean Trend   | breakout semanal
+#   ENTRADA | IFX  | Infineon | entrada:54.275 | vol:0.4    | Pullback      | reteste suporte
+
+# [apagar esta linha e preencher]
+# ENTRADA | TICKER | Nome | entrada:PRECO | vol:N | Setup | Nota
+
+
+# APORTE — reforço de posição existente
+# APORTE | TICKER | Nome do Ativo | preco:PRECO | vol:N | Nota
+#
+# Exemplo:
+#   APORTE | PRYS | Prysmian | preco:120.00 | vol:0.05 | reforço pullback
+
+# [apagar esta linha e preencher]
+# APORTE | TICKER | Nome | preco:PRECO | vol:N | Nota
+
+
+# CAIXA EUR — obrigatório, valor exacto do screenshot (Fundos disponíveis)
+CAIXA | 0.00€
+
+
+# ──────────────────────────────────────────────────────────────────
+#  CONTA USD
+# ──────────────────────────────────────────────────────────────────
+USD:
+
+# SAÍDA
+# SAIDA | TICKER | Nome do Ativo | resultado$ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota saída
+#
+# Exemplos:
+#   SAIDA | NVDA | Nvidia  | +2.60$ | saida:222.22 | entrada:206.85 | vol:0.17 | Saída preventiva | meta 10% antes resultados
+#   SAIDA | DELL | Dell    | +3.86$ | saida:238.80 | entrada:183.78 | vol:0.07 | Lateralização    | target atingido
+#   SAIDA | FTI  | TechnipFMC | -0.52$ | saida:71.01 | entrada:74.47 | vol:0.15 | Breakout      | quebra conceito
+
+# [apagar esta linha e preencher]
+# SAIDA | TICKER | Nome | +/-X.XX$ | saida:PRECO | entrada:PRECO | vol:N | Setup | Nota
+
+
+# ENTRADA
+# ENTRADA | TICKER | Nome do Ativo | entrada:PRECO | vol:N | Setup | Nota entrada
+#
+# Exemplos:
+#   ENTRADA | DDOG | Datadog          | entrada:207.31 | vol:0.10  | Breakout     | possível breakout
+#   ENTRADA | NBIS | Nebius Group NV  | entrada:191.20 | vol:0.045 | Pullback     | reteste EMA
+#   ENTRADA | CBRS | Cerebras Systems | entrada:298.76 | vol:0.05  | IPO Momentum | aposta IPO
+
+# [apagar esta linha e preencher]
+# ENTRADA | TICKER | Nome | entrada:PRECO | vol:N | Setup | Nota
+
+
+# APORTE — reforço de posição existente
+# APORTE | TICKER | Nome do Ativo | preco:PRECO | vol:N | Nota
+#
+# Exemplo:
+#   APORTE | NVDA | Nvidia | preco:196.46 | vol:0.02 | melhorar preço médio
+
+# [apagar esta linha e preencher]
+# APORTE | TICKER | Nome | preco:PRECO | vol:N | Nota
+
+
+# TRANSFERÊNCIA entre contas (quando aplicável)
+# TRANSFERENCIA | EUR->USD | -X.XX€ | +X.XX$ | Nota
+# TRANSFERENCIA | USD->EUR | -X.XX$ | +X.XX€ | Nota
+#
+# Exemplo:
+#   TRANSFERENCIA | EUR->USD | -20.00€ | +21.74$ | reforço conta USD
+
+# [apagar esta linha e preencher]
+# TRANSFERENCIA | EUR->USD | -X.XX€ | +X.XX$ | Nota
+
+
+# CAIXA USD — obrigatório, valor exacto do screenshot (Fundos disponíveis)
+CAIXA | 0.00$
+
+
+# ──────────────────────────────────────────────────────────────────
+#  NOTA DO DIA — opcional, texto livre
+# ──────────────────────────────────────────────────────────────────
+# DIARIO: descrever o dia, contexto macro, decisões tomadas, observações
+
+DIARIO:
+
+
+# ══════════════════════════════════════════════════════════════════
+#  REGRAS PARA NÃO ERRAR
+#
+#  1. DECIMAL com PONTO, não vírgula      +10.55€  não  +10,55€
+#  2. CAIXA sempre preenchida (os 2)      valor exacto do screenshot
+#  3. TICKER sempre maiúsculas            NVDA  SMSN  IFX
+#  4. vol com ponto decimal               0.17  0.0075  0.045
+#  5. resultado com sinal                 +2.60$  -0.52$
+#  6. Linhas com # são ignoradas
+#  7. Linhas vazias são ignoradas
+#  8. Ordem dos campos é OBRIGATÓRIA
+# ══════════════════════════════════════════════════════════════════
