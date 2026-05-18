@@ -12,17 +12,44 @@ Quando o utilizador disser "processa watched" ou "processa hoje":
 PASTA WATCHED (sempre aqui):
 C:\Users\Utilizador\trading-dashboard\watched\
 
-PASSOS:
-1. Lista ficheiros em ./watched/ — procura eur_DD_MM.png + usd_DD_MM.png
+PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
+
+1. Lista ./watched/ — localiza os 3 ficheiros:
+   • eur_DD_MM.png      ← screenshot conta EUR
+   • usd_DD_MM.png      ← screenshot conta USD
+   • eventos_DD_MM.txt  ← eventos do dia (SEMPRE presente)
+
 2. Determina a data: DD_MM → YYYY-MM-DD (ano actual 2026)
-3. Verifica se existe eventos_DD_MM.txt
-4. Corre extract.js:
+
+3. LÊ os 3 ficheiros ANTES de qualquer escrita:
+   a) Read eur_DD_MM.png   → saldo EUR, caixa EUR, posições abertas EUR
+   b) Read usd_DD_MM.png   → saldo USD, caixa USD, posições abertas USD
+   c) Read eventos_DD_MM.txt → saídas, entradas, aportes, caixa, diário
+
+4. Corre extract.js (posições abertas):
    node scripts/extract.js --date YYYY-MM-DD --eur ./watched/eur_DD_MM.png --usd ./watched/usd_DD_MM.png
-   (adiciona --eventos ./watched/eventos_DD_MM.txt se existir)
-5. Corre deploy.js:
-   node scripts/deploy.js
-6. Move ficheiros processados:
-   ./watched/processados/YYYY-MM-DD/
+
+5. Aplica eventos do .txt ao JSON (extract.js NÃO processa o .txt):
+   Para cada linha activa (sem #):
+   • SAIDA  → adicionar a posicoes_fechadas + eventos[] + actualizar REAL_MAIO
+   • ENTRADA→ adicionar a eventos[] (posição já captada pelo extract.js)
+   • APORTE → adicionar a eventos[]
+   • CAIXA  → actualizar eur.caixa / usd.caixa no dia
+   • DIARIO → adicionar diario.nota
+
+6. Corre: node scripts/_regen.js
+
+7. Actualiza index.html:
+   • Capital EUR / USD (saldo do screenshot)
+   • Caixa EUR / USD
+   • Retorno EUR/USD % meta (= (REAL+LUCRO_ABT) / meta × 100)
+   • Equity sub (realizado + lucro aberto)
+   • AUM (SALDO_EUR + SALDO_USD × 0.92)
+
+8. Move para ./watched/processados/YYYY-MM-DD/:
+   eur_DD_MM.png, usd_DD_MM.png, eventos_DD_MM.txt
+
+9. Commit único + push
 
 ## REGRAS CRÍTICAS
 - NUNCA ler o trading_data.json completo
