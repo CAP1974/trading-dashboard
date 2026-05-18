@@ -41,8 +41,8 @@ Meta mensal: 10% da base do início do mês
 2026-05: EM CURSO · base_eur 58.89 · base_usd 213.83 · base_aj_usd 272.28 (aportes 35.14+23.31$)
 
 ## REALIZADOS ACUMULADOS MAIO 2026
-REAL_EUR_MAIO = 0€
-REAL_USD_MAIO = -1.06$  (FTI -0.52 + VOYA -0.77 + AMZN +0.23)
+REAL_EUR_MAIO = +10.55€  (SMSN +10.55)
+REAL_USD_MAIO = +8.15$   (FTI -0.52 + VOYA -0.77 + AMZN +0.23 + DELL +3.86 + GOOGL +2.75 + NVDA +2.60)
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT

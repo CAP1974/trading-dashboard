@@ -6104,7 +6104,29 @@
   },
   "2026-05-18": {
     "date": "2026-05-18",
-    "eventos": [],
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "SMSN",
+        "ativo": "Samsung",
+        "mkt": "EUR",
+        "nota": "Saída Samsung (SMSN) — distribuição · lucro +10,55€"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "NVDA",
+        "ativo": "Nvidia",
+        "mkt": "USD",
+        "nota": "Saída Nvidia (NVDA) — meta 10% antes dos resultados · lucro +2,60$"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "NBIS",
+        "ativo": "Nebius Group NV",
+        "mkt": "USD",
+        "nota": "Entrada Nebius (NBIS) — pullback · 0,045 @ 191,20$"
+      }
+    ],
     "eur": {
       "lucro": 7.65,
       "positions": [
@@ -6133,7 +6155,7 @@
           "delta": null
         }
       ],
-      "caixa": 0.88
+      "caixa": 31.59
     },
     "usd": {
       "lucro": 2.05,
@@ -6307,7 +6329,47 @@
           "delta": null
         }
       ],
-      "caixa": 8.86
-    }
+      "caixa": 38.03
+    },
+    "posicoes_fechadas": [
+      {
+        "ticker": "SMSN",
+        "nome": "Samsung",
+        "mkt": "EUR",
+        "lucro": 10.55,
+        "lucro_pct": 45.3,
+        "tipo": "lucro",
+        "data_entrada": "2025-04-09",
+        "data_saida": "2026-05-18",
+        "preco_entrada": 3105.07,
+        "preco_saida": 4794,
+        "volume": 0.0075,
+        "dias_holding": 404,
+        "setup": "Distribuição",
+        "nota_entrada": "Posição desde abertura do fundo",
+        "nota_saida": "Distribuição — meta atingida",
+        "imagem_setup": null,
+        "rating": 5
+      },
+      {
+        "ticker": "NVDA",
+        "nome": "Nvidia",
+        "mkt": "USD",
+        "lucro": 2.6,
+        "lucro_pct": 7.43,
+        "tipo": "lucro",
+        "data_entrada": "2026-04-23",
+        "data_saida": "2026-05-18",
+        "preco_entrada": 206.85,
+        "preco_saida": 222.22,
+        "volume": 0.17,
+        "dias_holding": 25,
+        "setup": "Saída preventiva",
+        "nota_entrada": "Entrada Nvidia (NVDA) — pré-breakout",
+        "nota_saida": "Meta 10% antes dos resultados — saída preventiva",
+        "imagem_setup": null,
+        "rating": 2
+      }
+    ]
   }
 }
