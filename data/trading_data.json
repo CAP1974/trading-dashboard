@@ -5799,52 +5799,52 @@
     "date": "2026-05-15",
     "eventos": [
       {
-        "tipo": "SAIDA",
+        "tipo": "saida",
         "ticker": "DELL",
-        "nome": "Dell",
         "mkt": "USD",
         "lucro": 3.86,
         "preco_saida": 238.8,
         "preco_entrada": 183.78,
         "volume": 0.07,
         "setup": "LATERALIZACAO",
-        "nota": ""
+        "nota": "",
+        "ativo": "Dell"
       },
       {
-        "tipo": "SAIDA",
+        "tipo": "saida",
         "ticker": "GOOGL",
-        "nome": "Alphabet",
         "mkt": "USD",
         "lucro": 2.75,
         "preco_saida": 395.71,
         "preco_entrada": 340.73,
         "volume": 0.05,
         "setup": "LATERALIZACAO",
-        "nota": ""
+        "nota": "",
+        "ativo": "Alphabet"
       },
       {
-        "tipo": "ENTRADA",
+        "tipo": "entrada",
         "ticker": "DDOG",
-        "nome": "Datadog",
         "mkt": "USD",
         "preco_entrada": 207.31,
         "volume": 0.1,
         "setup": "Possivel Breakout",
-        "nota": ""
+        "nota": "",
+        "ativo": "Datadog"
       },
       {
-        "tipo": "ENTRADA",
+        "tipo": "entrada",
         "ticker": "CBRS",
-        "nome": "Cerebras Systems",
         "mkt": "USD",
         "preco_entrada": 298.76,
         "volume": 0.05,
         "setup": "APOSTA IPO",
-        "nota": ""
+        "nota": "",
+        "ativo": "Cerebras Systems"
       },
       {
-        "tipo": "DIARIO",
-        "texto": "DIA NEGATIVO ESPERA NOTICIAS GEO-POLICAS FIM DE SEMANA"
+        "tipo": "diario",
+        "nota": "DIA NEGATIVO ESPERA NOTICIAS GEO-POLICAS FIM DE SEMANA"
       }
     ],
     "eur": {

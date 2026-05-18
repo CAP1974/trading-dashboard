@@ -631,16 +631,17 @@ document.getElementById('hist-tbody').innerHTML=DATES.map(d=>{
 }).join('');
 
 /* ── Timeline eventos ── */
-const icons={saida:'🔴',entrada:'🟢',aporte:'💰',caixa:'📦'};
+const icons={saida:'🔴',entrada:'🟢',aporte:'💰',caixa:'📦',diario:'📝',transferencia:'🔄'};
 const allEvs=[];
 DATES.forEach(d=>{(TRADING_DATA[d].eventos||[]).forEach(ev=>allEvs.push({date:d,...ev}));});
 document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>{
   const ic=icons[ev.tipo]||'📋';
-  const at=ev.ativo?`<span class="evento-ativo">${ev.ativo}</span> `:''
+  const at=ev.ativo?`<span class="evento-ativo">${ev.ativo}</span> `:'';
+  const mktBadge=ev.mkt?`<span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${ev.mkt}</span>`:'';
   return`<div class="evento-row">
     <div class="evento-date">${fmtDate(ev.date).slice(0,6)}</div>
     <div style="font-size:14px;flex-shrink:0;">${ic}</div>
-    <div class="evento-content"><div>${at}<span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${ev.mkt}</span></div><div class="evento-nota">${ev.nota}</div></div>
+    <div class="evento-content"><div>${at}${mktBadge}</div><div class="evento-nota">${ev.nota||''}</div></div>
   </div>`;
 }).join(''):'<div style="color:var(--txt-3);font-size:11px;">Sem eventos registados.</div>';
 
