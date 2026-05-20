@@ -6657,5 +6657,242 @@
         "rating": 4
       }
     ]
+  },
+  "2026-05-20": {
+    "date": "2026-05-20",
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Recuperação sector IA — earnings NVDA esperados positivos. Sem movimentos."
+      }
+    ],
+    "eur": {
+      "lucro": 7.78,
+      "positions": [
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "pct": 25.47,
+          "lucro": 5.53,
+          "vol": 0.4,
+          "valor": 27.24,
+          "atual": 68.11,
+          "abertura": 54.275,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 26.65,
+          "lucro": 2.67,
+          "vol": 0.0881,
+          "valor": 12.69,
+          "atual": 144,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Teleperformance",
+          "mkt": "EUR",
+          "pct": -2.02,
+          "lucro": -0.42,
+          "vol": 0.27,
+          "valor": 20.33,
+          "atual": 75.3,
+          "abertura": 76.84,
+          "trust": "r",
+          "delta": null
+        }
+      ],
+      "caixa": 10.84
+    },
+    "usd": {
+      "lucro": 1.36,
+      "positions": [
+        {
+          "name": "Micron",
+          "mkt": "USD",
+          "pct": 13.78,
+          "lucro": 1.33,
+          "vol": 0.015,
+          "valor": 10.98,
+          "atual": 731.68,
+          "abertura": 643,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Casey's",
+          "mkt": "USD",
+          "pct": 12.88,
+          "lucro": 2.82,
+          "vol": 0.029,
+          "valor": 24.71,
+          "atual": 851.92,
+          "abertura": 754.77,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "STMicroelectronics",
+          "mkt": "USD",
+          "pct": 10.52,
+          "lucro": 1.06,
+          "vol": 0.172,
+          "valor": 11.14,
+          "atual": 64.78,
+          "abertura": 58.62,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "pct": 6.63,
+          "lucro": 0.94,
+          "vol": 0.05,
+          "valor": 15.11,
+          "atual": 302.18,
+          "abertura": 283.49,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Datadog",
+          "mkt": "USD",
+          "pct": 2.41,
+          "lucro": 0.5,
+          "vol": 0.1,
+          "valor": 21.24,
+          "atual": 212.4,
+          "abertura": 207.37,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Nebius Group NV",
+          "mkt": "USD",
+          "pct": 0.47,
+          "lucro": 0.04,
+          "vol": 0.045,
+          "valor": 8.64,
+          "atual": 191.97,
+          "abertura": 191.2,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Navitas Semiconductor Corp",
+          "mkt": "USD",
+          "pct": -0.1,
+          "lucro": -0.02,
+          "vol": 0.915,
+          "valor": 21.03,
+          "atual": 22.98,
+          "abertura": 23,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Cadence",
+          "mkt": "USD",
+          "pct": -0.38,
+          "lucro": -0.06,
+          "vol": 0.045,
+          "valor": 15.79,
+          "atual": 350.9,
+          "abertura": 352.32,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Chevron",
+          "mkt": "USD",
+          "pct": -2.15,
+          "lucro": -0.42,
+          "vol": 0.1,
+          "valor": 19.15,
+          "atual": 191.5,
+          "abertura": 195.68,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Synopsys",
+          "mkt": "USD",
+          "pct": -2.16,
+          "lucro": -0.33,
+          "vol": 0.03,
+          "valor": 14.97,
+          "atual": 499.05,
+          "abertura": 509.99,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": -2.39,
+          "lucro": -0.97,
+          "vol": 0.54,
+          "valor": 39.6,
+          "atual": 73.33,
+          "abertura": 75.13,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "pct": -2.95,
+          "lucro": -0.44,
+          "vol": 0.05,
+          "valor": 14.5,
+          "atual": 290,
+          "abertura": 298.76,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": -4.58,
+          "lucro": -1.55,
+          "vol": 0.0232,
+          "valor": 32.27,
+          "atual": 1391.05,
+          "abertura": 1457.66,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "BigBear.ai",
+          "mkt": "USD",
+          "pct": -4.69,
+          "lucro": -0.8,
+          "vol": 4,
+          "valor": 16.24,
+          "atual": 4.06,
+          "abertura": 4.26,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Vertiv",
+          "mkt": "USD",
+          "pct": -7.25,
+          "lucro": -0.74,
+          "vol": 0.03,
+          "valor": 9.47,
+          "atual": 315.55,
+          "abertura": 340.29,
+          "trust": "r",
+          "delta": null
+        }
+      ],
+      "caixa": 0.51
+    }
   }
 }
