@@ -6894,5 +6894,277 @@
       ],
       "caixa": 0.51
     }
+  },
+  "2026-05-21": {
+    "date": "2026-05-21",
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "CASY",
+        "ativo": "Casey's General Stores",
+        "mkt": "USD",
+        "nota": "Saída Casey's — quebra EMA9/ST1/ST2 · lucro +1.90$"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "IGG",
+        "ativo": "IG Group",
+        "mkt": "EUR",
+        "nota": "Entrada IG Group 0.5 @ 18.49€ — Clean Trend"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saída Casey's por quebra dos 3 pontos do protocolo EMA9/ST1/ST2."
+      }
+    ],
+    "eur": {
+      "lucro": 7.71,
+      "positions": [
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "pct": 30.84,
+          "lucro": 3.09,
+          "vol": 0.0881,
+          "valor": 13.11,
+          "atual": 148.8,
+          "abertura": 113.75,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "pct": 25.75,
+          "lucro": 5.59,
+          "vol": 0.4,
+          "valor": 27.3,
+          "atual": 68.25,
+          "abertura": 54.275,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "IG",
+          "mkt": "EUR",
+          "pct": -1.67,
+          "lucro": -0.18,
+          "vol": 0.5,
+          "valor": 10.57,
+          "atual": 18.38,
+          "abertura": 18.49,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Teleperformance",
+          "mkt": "EUR",
+          "pct": -3.86,
+          "lucro": -0.8,
+          "vol": 0.27,
+          "valor": 19.95,
+          "atual": 73.9,
+          "abertura": 76.84,
+          "trust": "r",
+          "delta": null
+        }
+      ],
+      "caixa": 0.09
+    },
+    "usd": {
+      "lucro": 6.12,
+      "positions": [
+        {
+          "name": "Micron",
+          "mkt": "USD",
+          "pct": 18.65,
+          "lucro": 1.8,
+          "vol": 0.015,
+          "valor": 11.45,
+          "atual": 763.45,
+          "abertura": 643,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Nebius Group NV",
+          "mkt": "USD",
+          "pct": 15.12,
+          "lucro": 1.3,
+          "vol": 0.045,
+          "valor": 9.9,
+          "atual": 219.96,
+          "abertura": 191.2,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "STMicroelectronics",
+          "mkt": "USD",
+          "pct": 12.1,
+          "lucro": 1.22,
+          "vol": 0.172,
+          "valor": 11.3,
+          "atual": 65.72,
+          "abertura": 58.62,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "pct": 7.62,
+          "lucro": 1.08,
+          "vol": 0.05,
+          "valor": 15.25,
+          "atual": 305.03,
+          "abertura": 283.49,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Navitas Semiconductor",
+          "mkt": "USD",
+          "pct": 5.99,
+          "lucro": 1.26,
+          "vol": 0.915,
+          "valor": 22.31,
+          "atual": 24.38,
+          "abertura": 23,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": 5.8,
+          "lucro": 1.96,
+          "vol": 0.0232,
+          "valor": 35.78,
+          "atual": 1541.98,
+          "abertura": 1457.66,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Datadog",
+          "mkt": "USD",
+          "pct": 5.11,
+          "lucro": 1.06,
+          "vol": 0.1,
+          "valor": 21.8,
+          "atual": 218.02,
+          "abertura": 207.37,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Cadence",
+          "mkt": "USD",
+          "pct": 1.77,
+          "lucro": 0.28,
+          "vol": 0.045,
+          "valor": 16.13,
+          "atual": 358.43,
+          "abertura": 352.32,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Synopsys",
+          "mkt": "USD",
+          "pct": -1.5,
+          "lucro": -0.23,
+          "vol": 0.03,
+          "valor": 15.07,
+          "atual": 502.25,
+          "abertura": 509.99,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "BigBear.ai",
+          "mkt": "USD",
+          "pct": -1.64,
+          "lucro": -0.28,
+          "vol": 4,
+          "valor": 16.76,
+          "atual": 4.19,
+          "abertura": 4.26,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Chevron",
+          "mkt": "USD",
+          "pct": -2.3,
+          "lucro": -0.45,
+          "vol": 0.1,
+          "valor": 19.12,
+          "atual": 191.22,
+          "abertura": 195.68,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": -3.7,
+          "lucro": -1.5,
+          "vol": 0.54,
+          "valor": 39.07,
+          "atual": 72.36,
+          "abertura": 75.13,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Vertiv",
+          "mkt": "USD",
+          "pct": -5,
+          "lucro": -0.51,
+          "vol": 0.03,
+          "valor": 9.7,
+          "atual": 323.32,
+          "abertura": 340.29,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "pct": -5.82,
+          "lucro": -0.87,
+          "vol": 0.05,
+          "valor": 14.07,
+          "atual": 281.31,
+          "abertura": 298.76,
+          "trust": "r",
+          "delta": null
+        }
+      ],
+      "caixa": 24.3
+    },
+    "posicoes_fechadas": [
+      {
+        "ticker": "CASY",
+        "nome": "Casey's General Stores",
+        "mkt": "USD",
+        "lucro": 1.9,
+        "lucro_pct": 8.68,
+        "tipo": "lucro",
+        "data_entrada": "2025-04-09",
+        "data_saida": "2026-05-21",
+        "preco_entrada": 754.77,
+        "preco_saida": 820.55,
+        "volume": 0.029,
+        "dias_holding": 407,
+        "setup": "Quebra EMA9 e ST2",
+        "nota_entrada": "Posição desde abertura do fundo",
+        "nota_saida": "Quebra EMA9/ST1/ST2 — protocolo de saída",
+        "imagem_setup": null,
+        "rating": 2
+      }
+    ]
   }
 }
