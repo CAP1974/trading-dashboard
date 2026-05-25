@@ -7434,5 +7434,243 @@
         "rating": 1
       }
     ]
+  },
+  "2026-05-25": {
+    "eur": {
+      "saldo": 74.2,
+      "caixa": 0.09,
+      "lucro": 10.88,
+      "positions": [
+        {
+          "name": "IG Group",
+          "mkt": "EUR",
+          "vol": 0.5,
+          "abertura": 18.49,
+          "atual": 18.4,
+          "lucro": -0.15,
+          "pct": -1.4,
+          "trust": "r",
+          "valor": 10.6,
+          "delta": null
+        },
+        {
+          "name": "Infineon",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 54.275,
+          "atual": 76.36,
+          "lucro": 8.83,
+          "pct": 40.67,
+          "trust": "v",
+          "valor": 30.54,
+          "delta": null
+        },
+        {
+          "name": "Prysmian",
+          "mkt": "EUR",
+          "vol": 0.0881,
+          "abertura": 113.75,
+          "atual": 153.3,
+          "lucro": 3.49,
+          "pct": 34.83,
+          "trust": "v",
+          "valor": 13.51,
+          "delta": null
+        },
+        {
+          "name": "Teleperformance",
+          "mkt": "EUR",
+          "vol": 0.27,
+          "abertura": 76.84,
+          "atual": 72.06,
+          "lucro": -1.29,
+          "pct": -6.22,
+          "trust": "r",
+          "valor": 19.46,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "lucro": 10.54,
+      "positions": [
+        {
+          "name": "Navitas Semiconductor Corp",
+          "mkt": "USD",
+          "pct": 27.17,
+          "lucro": 5.72,
+          "vol": 0.915,
+          "valor": 26.77,
+          "atual": 29.26,
+          "abertura": 23,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Micron",
+          "mkt": "USD",
+          "pct": 16.79,
+          "lucro": 1.62,
+          "vol": 0.015,
+          "valor": 11.27,
+          "atual": 751.5,
+          "abertura": 643,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "STMicroelectronics",
+          "mkt": "USD",
+          "pct": 14.19,
+          "lucro": 1.43,
+          "vol": 0.172,
+          "valor": 11.51,
+          "atual": 66.93,
+          "abertura": 58.62,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Nebius Group NV",
+          "mkt": "USD",
+          "pct": 12.44,
+          "lucro": 1.07,
+          "vol": 0.045,
+          "valor": 9.67,
+          "atual": 214.96,
+          "abertura": 191.2,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "pct": 8.96,
+          "lucro": 1.27,
+          "vol": 0.05,
+          "valor": 15.44,
+          "atual": 308.73,
+          "abertura": 283.49,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Datadog",
+          "mkt": "USD",
+          "pct": 7.18,
+          "lucro": 1.49,
+          "vol": 0.1,
+          "valor": 22.23,
+          "atual": 222.29,
+          "abertura": 207.37,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Cadence",
+          "mkt": "USD",
+          "pct": 6.12,
+          "lucro": 0.97,
+          "vol": 0.045,
+          "valor": 16.82,
+          "atual": 373.82,
+          "abertura": 352.32,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Synopsys",
+          "mkt": "USD",
+          "pct": 2.48,
+          "lucro": 0.38,
+          "vol": 0.03,
+          "valor": 15.68,
+          "atual": 522.66,
+          "abertura": 509.99,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "pct": 1.42,
+          "lucro": 0.48,
+          "vol": 0.0232,
+          "valor": 34.3,
+          "atual": 1478.56,
+          "abertura": 1457.66,
+          "trust": "v",
+          "delta": null
+        },
+        {
+          "name": "Astera Labs",
+          "mkt": "USD",
+          "pct": -0.22,
+          "lucro": -0.09,
+          "vol": 0.13,
+          "valor": 39.95,
+          "atual": 307.28,
+          "abertura": 307.93,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Kodiak Gas Services",
+          "mkt": "USD",
+          "pct": -1.97,
+          "lucro": -0.8,
+          "vol": 0.54,
+          "valor": 39.77,
+          "atual": 73.64,
+          "abertura": 75.13,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Chevron",
+          "mkt": "USD",
+          "pct": -2.15,
+          "lucro": -0.42,
+          "vol": 0.1,
+          "valor": 19.15,
+          "atual": 191.47,
+          "abertura": 195.68,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Vertiv",
+          "mkt": "USD",
+          "pct": -3.82,
+          "lucro": -0.39,
+          "vol": 0.03,
+          "valor": 9.82,
+          "atual": 327.3,
+          "abertura": 340.29,
+          "trust": "r",
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "pct": -14.66,
+          "lucro": -2.19,
+          "vol": 0.05,
+          "valor": 12.75,
+          "atual": 255.02,
+          "abertura": 298.76,
+          "trust": "r",
+          "delta": null
+        }
+      ],
+      "caixa": 1.3
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Feriado EUA (Memorial Day) — mercados USD fechados. Apenas EUR activo."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
