@@ -69,7 +69,7 @@ Meta mensal: 10% da base do início do mês
 
 ## REALIZADOS ACUMULADOS MAIO 2026
 REAL_EUR_MAIO = +10.75€  (SMSN +10.55 + TEP -2.34 + IGG -0.38 + PRYS +2.92)
-REAL_USD_MAIO = +17.41$  (FTI -0.52 + VOYA -0.77 + AMZN +0.23 + DELL +3.86 + GOOGL +2.75 + NVDA +2.60 + KGS +4.98 + CASY +1.90 + BBAI +0.00 + VRT -0.49 + CVX -1.14 + MU +4.01)
+REAL_USD_MAIO = +12.77$  (FTI -0.52 + VOYA -0.77 + AMZN +0.23 + DELL +3.86 + GOOGL +2.75 + NVDA +2.60 + KGS +4.98 + CASY +1.90 + BBAI +0.00 + VRT -0.49 + CVX -1.14 + MU +4.01 + KGS2 -3.58 + SNPS -1.06)
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT
