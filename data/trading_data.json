@@ -8595,7 +8595,7 @@
     "eur": {
       "saldo": 73.1,
       "caixa": 0.06,
-      "lucro": 9.87,
+      "lucro": 0,
       "positions": [
         {
           "name": "Infineon",
@@ -8638,7 +8638,7 @@
     "usd": {
       "saldo": 294.09,
       "caixa": 94.44,
-      "lucro": 20.34,
+      "lucro": 0,
       "positions": [
         {
           "name": "Nebius Group NV",
