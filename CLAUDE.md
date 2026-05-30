@@ -65,11 +65,12 @@ Meta mensal: 10% da base do início do mês
 
 ## MESES ACTIVOS
 2026-04: FECHADO · saldo_fim_eur 58.89 · saldo_fim_usd 209.87
-2026-05: EM CURSO · base_eur 58.89 · base_usd 213.83 · base_aj_usd 272.28 (aportes 35.14+23.31$)
+2026-05: FECHADO · saldo_fim_eur 73.10 · saldo_fim_usd 294.09 · real_eur +10.75 · real_usd +12.77 · equity_eur 350.1% · equity_usd 121.6% · 18 trades · WR 50% · PF 3.29
+2026-06: EM CURSO · base_eur 73.10 · base_usd 294.09 · meta_eur 7.31 · meta_usd 29.41
 
-## REALIZADOS ACUMULADOS MAIO 2026
-REAL_EUR_MAIO = +10.75€  (SMSN +10.55 + TEP -2.34 + IGG -0.38 + PRYS +2.92)
-REAL_USD_MAIO = +12.77$  (FTI -0.52 + VOYA -0.77 + AMZN +0.23 + DELL +3.86 + GOOGL +2.75 + NVDA +2.60 + KGS +4.98 + CASY +1.90 + BBAI +0.00 + VRT -0.49 + CVX -1.14 + MU +4.01 + KGS2 -3.58 + SNPS -1.06)
+## REALIZADOS ACUMULADOS JUNHO 2026
+REAL_EUR_JUN = +0.00€
+REAL_USD_JUN = +0.00$
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT
