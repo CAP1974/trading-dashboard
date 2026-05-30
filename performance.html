@@ -746,18 +746,18 @@ if (trajMeses.length) {
     trajMeses.map(ym => MESES[ym].meta_usd), '$', '#00c8ff', '#00c8ff');
 
   // ── GRÁFICO 2 — Equity % Meta por Mês (barras normalizadas) ──
-  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual)
+  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual, só se já há trades)
   const mEquityPctE = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
-    const eq = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
+    const eq = isCur ? (REAL_EUR !== 0 ? REAL_EUR + LUCRO_ABT_EUR : 0)
                      : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]);
     return mes.meta_eur > 0 ? +(eq / mes.meta_eur * 100).toFixed(1) : 0;
   });
   const mEquityPctU = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
-    const eq = isCur ? (REAL_USD + LUCRO_ABT_USD)
+    const eq = isCur ? (REAL_USD !== 0 ? REAL_USD + LUCRO_ABT_USD : 0)
                      : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]);
     return mes.meta_usd > 0 ? +(eq / mes.meta_usd * 100).toFixed(1) : 0;
   });
