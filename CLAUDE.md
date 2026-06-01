@@ -70,7 +70,7 @@ Meta mensal: 10% da base do início do mês
 
 ## REALIZADOS ACUMULADOS JUNHO 2026
 REAL_EUR_JUN = +0.00€
-REAL_USD_JUN = +0.00$
+REAL_USD_JUN = +3.61$  (NVTS +1.63 + ALAB +1.98)
 (actualizar a cada fecho com realizados)
 
 ## FORMATO EVENTOS_DD_MM.TXT
