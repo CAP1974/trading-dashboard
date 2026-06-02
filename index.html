@@ -653,6 +653,9 @@ function fmtCur(v,s='€'){return(v>0?'+':'')+v.toFixed(2)+' '+s;}
 function trustCls(t){return t==='v'?'trust-v':t==='a'?'trust-a':'trust-r';}
 function trustLbl(t){return t==='v'?'Verde':t==='a'?'Amarelo':'Vermelho';}
 
+/* ── DIAS ACTIVOS (dinâmico) ── */
+document.getElementById('fh-dias').textContent = ALL_DATES.length;
+
 /* ── DATE TABS ── */
 function buildDateTabs(){
   const c=document.getElementById('date-tabs-container');
