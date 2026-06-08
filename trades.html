@@ -204,6 +204,7 @@ body{
 }
 .filter-btn:hover{border-color:var(--border-hi);color:var(--txt-2);}
 .filter-btn.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.filter-btn-v10.active{background:linear-gradient(135deg,rgba(192,132,252,0.20),rgba(167,139,250,0.14))!important;border-color:rgba(192,132,252,0.55)!important;color:#c084fc!important;}
 
 /* ── TRADE TABLE ── */
 .trade-table{width:100%;border-collapse:collapse;}
@@ -232,6 +233,13 @@ body{
 .setup-breakout{background:rgba(77,166,255,0.12);color:var(--blue);}
 .setup-pullback{background:rgba(255,179,64,0.12);color:var(--amber);}
 .setup-vcp{background:rgba(0,200,255,0.12);color:var(--accent2);}
+.setup-protocolo-v10{
+  background:linear-gradient(135deg,rgba(192,132,252,0.15),rgba(167,139,250,0.10));
+  color:#c084fc;
+  border:1px solid rgba(192,132,252,0.3);
+  font-weight:700;
+  letter-spacing:.09em;
+}
 .td-rating{letter-spacing:-.5px;}
 .star-on{color:#ffb340;}
 .star-off{color:#1c2a3d;}
@@ -428,6 +436,7 @@ body{
         <button class="filter-btn" data-filter="prejuizo">Perdedores</button>
         <button class="filter-btn" data-filter="USD">USD</button>
         <button class="filter-btn" data-filter="EUR">EUR</button>
+        <button class="filter-btn filter-btn-v10" data-filter="protocolo-v10" style="background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(167,139,250,0.08));border-color:rgba(192,132,252,0.25);color:#c084fc;font-weight:700;letter-spacing:.07em;">⚙ PROTOCOLO V10</button>
       </div>
       <table class="trade-table" id="tradeTable">
         <thead>
@@ -737,10 +746,11 @@ body{
 
   function renderTable() {
     let data = [...trades];
-    if (currentFilter === 'lucro')   data = data.filter(t=>t.tipo==='lucro');
-    if (currentFilter === 'prejuizo')data = data.filter(t=>t.tipo==='prejuizo');
-    if (currentFilter === 'USD')     data = data.filter(t=>t.mkt==='USD');
-    if (currentFilter === 'EUR')     data = data.filter(t=>t.mkt==='EUR');
+    if (currentFilter === 'lucro')        data = data.filter(t=>t.tipo==='lucro');
+    if (currentFilter === 'prejuizo')     data = data.filter(t=>t.tipo==='prejuizo');
+    if (currentFilter === 'USD')          data = data.filter(t=>t.mkt==='USD');
+    if (currentFilter === 'EUR')          data = data.filter(t=>t.mkt==='EUR');
+    if (currentFilter === 'protocolo-v10')data = data.filter(t=>t.setup&&t.setup.toLowerCase().includes('protocolo'));
 
     data.sort((a,b)=>{
       let va = a[sortCol], vb = b[sortCol];
