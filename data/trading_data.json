@@ -9899,6 +9899,20 @@
       {
         "tipo": "diario",
         "nota": "Balanceamento de carteira via Protocolo Macro Detector. 3 saidas V10 + 1 entrada VCP (RPRX)."
+      },
+      {
+        "tipo": "aporte",
+        "ticker": "FFIV",
+        "ativo": "F5 Networks",
+        "mkt": "USD",
+        "nota": "APORTE FFIV +0.03 @ 398.56 (09/06 15:11) -- avg 401.79"
+      },
+      {
+        "tipo": "aporte",
+        "ticker": "MS",
+        "ativo": "Morgan Stanley",
+        "mkt": "USD",
+        "nota": "APORTE MS +0.05 @ 213.25 (09/06 15:30) -- avg 214.56"
       }
     ],
     "posicoes_fechadas": [
