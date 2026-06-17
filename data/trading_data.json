@@ -1596,8 +1596,8 @@
       "meta_usd": 29.409,
       "ajustes_eur": 0,
       "ajustes_usd": 0,
-      "realizado_eur": -0.9,
-      "realizado_usd": 14.54,
+      "realizado_eur": 8.19,
+      "realizado_usd": 11.01,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -10834,6 +10834,256 @@
         "nota_saida": null,
         "imagem_setup": null,
         "rating": 1
+      }
+    ]
+  },
+  "2026-06-17": {
+    "eur": {
+      "saldo": 73.29,
+      "caixa": 1.89,
+      "lucro": -0.02,
+      "positions": [
+        {
+          "name": "Delivery Hero",
+          "mkt": "EUR",
+          "vol": 1.06,
+          "abertura": 37.971,
+          "atual": 37.97,
+          "lucro": 0.0,
+          "pct": 0.0,
+          "trust": "v",
+          "valor": 40.25,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 29.26,
+          "lucro": -0.02,
+          "pct": -0.07,
+          "trust": "r",
+          "valor": 29.26,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 317.06,
+      "caixa": 39.24,
+      "lucro": -6.5,
+      "positions": [
+        {
+          "name": "Morgan Stanley",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 214.56,
+          "atual": 225.08,
+          "lucro": 2.1,
+          "pct": 4.89,
+          "trust": "v",
+          "valor": 45.01,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 360.54,
+          "atual": 361.58,
+          "lucro": 0.11,
+          "pct": 0.31,
+          "trust": "v",
+          "valor": 36.16,
+          "delta": null
+        },
+        {
+          "name": "Apple Hospitality",
+          "mkt": "USD",
+          "vol": 1.9,
+          "abertura": 16.25,
+          "atual": 16.24,
+          "lucro": -0.02,
+          "pct": -0.06,
+          "trust": "r",
+          "valor": 30.86,
+          "delta": null
+        },
+        {
+          "name": "Astera Labs",
+          "mkt": "USD",
+          "vol": 0.075,
+          "abertura": 376.18,
+          "atual": 374.4,
+          "lucro": -0.13,
+          "pct": -0.46,
+          "trust": "r",
+          "valor": 28.08,
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "vol": 0.035,
+          "abertura": 1999.66,
+          "atual": 1960.0,
+          "lucro": -1.39,
+          "pct": -1.99,
+          "trust": "r",
+          "valor": 68.6,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 191.75,
+          "lucro": -2.92,
+          "pct": -13.21,
+          "trust": "r",
+          "valor": 19.18,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 213.71,
+          "lucro": -4.25,
+          "pct": -28.45,
+          "trust": "r",
+          "valor": 10.69,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "IFX",
+        "ativo": "Infineon",
+        "mkt": "EUR",
+        "nota": "SAIDA IFX +9.09EUR @ 77.01 -- Lateralizacao -- 54 dias"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "PST",
+        "ativo": "Poste Italiane",
+        "mkt": "EUR",
+        "nota": "ENTRADA PST 1 @ 29.28 -- WMS 87"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "RPRX",
+        "ativo": "Royalty Pharma",
+        "mkt": "USD",
+        "nota": "SAIDA RPRX -0.85$ @ 53.89 -- Exaustao IEC"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "LLY",
+        "ativo": "Eli Lilly",
+        "mkt": "USD",
+        "nota": "SAIDA LLY -0.90$ @ 1115.10 -- Exaustao IEC"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "FFIV",
+        "ativo": "F5 Networks",
+        "mkt": "USD",
+        "nota": "SAIDA FFIV -1.78$ @ 388.07 -- Exaustao IEC"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "SNDK",
+        "ativo": "SanDisk",
+        "mkt": "USD",
+        "nota": "ENTRADA SNDK 0.035 @ 1999.66 -- WMS 87"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Entrada em pratica novos processos no projeto com introducao criterio WMS. Saida IFX (Lateralizacao). 3 saidas USD por Exaustao IEC. Entradas PST e SNDK (WMS 87)."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "IFX",
+        "nome": "Infineon",
+        "mkt": "EUR",
+        "lucro": 9.09,
+        "lucro_pct": 41.89,
+        "tipo": "lucro",
+        "data_entrada": "2026-04-24",
+        "data_saida": "2026-06-17",
+        "preco_entrada": 54.275,
+        "preco_saida": 77.01,
+        "volume": 0.4,
+        "dias_holding": 54,
+        "setup": "Lateralizacao",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 5
+      },
+      {
+        "ticker": "RPRX",
+        "nome": "Royalty Pharma",
+        "mkt": "USD",
+        "lucro": -0.85,
+        "lucro_pct": -3.08,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-09",
+        "data_saida": "2026-06-17",
+        "preco_entrada": 55.6,
+        "preco_saida": 53.89,
+        "volume": 0.5,
+        "dias_holding": 8,
+        "setup": "Exaustao IEC",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "LLY",
+        "nome": "Eli Lilly",
+        "mkt": "USD",
+        "lucro": -0.9,
+        "lucro_pct": -2.91,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-05",
+        "data_saida": "2026-06-17",
+        "preco_entrada": 1148.55,
+        "preco_saida": 1115.1,
+        "volume": 0.027,
+        "dias_holding": 12,
+        "setup": "Exaustao IEC",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "FFIV",
+        "nome": "F5 Networks",
+        "mkt": "USD",
+        "lucro": -1.78,
+        "lucro_pct": -3.41,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-02",
+        "data_saida": "2026-06-17",
+        "preco_entrada": 401.79,
+        "preco_saida": 388.07,
+        "volume": 0.13,
+        "dias_holding": 15,
+        "setup": "Exaustao IEC",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 0
       }
     ]
   }
