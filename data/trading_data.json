@@ -1597,7 +1597,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 8.19,
-      "realizado_usd": 11.01,
+      "realizado_usd": 11.64,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -11084,6 +11084,166 @@
         "nota_saida": null,
         "imagem_setup": null,
         "rating": 0
+      }
+    ]
+  },
+  "2026-06-18": {
+    "eur": {
+      "saldo": 71.9,
+      "caixa": 1.86,
+      "lucro": -1.35,
+      "positions": [
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 28.72,
+          "lucro": -0.56,
+          "pct": -1.91,
+          "trust": "r",
+          "valor": 28.72,
+          "delta": null
+        },
+        {
+          "name": "Delivery Hero",
+          "mkt": "EUR",
+          "vol": 1.06,
+          "abertura": 37.971,
+          "atual": 37.22,
+          "lucro": -0.79,
+          "pct": -1.96,
+          "trust": "r",
+          "valor": 39.46,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 395.92,
+      "caixa": 106.8,
+      "lucro": 4.17,
+      "positions": [
+        {
+          "name": "Astera Labs",
+          "mkt": "USD",
+          "vol": 0.075,
+          "abertura": 376.18,
+          "atual": 416.5,
+          "lucro": 3.03,
+          "pct": 10.74,
+          "trust": "v",
+          "valor": 31.24,
+          "delta": null
+        },
+        {
+          "name": "SanDisk",
+          "mkt": "USD",
+          "vol": 0.035,
+          "abertura": 1999.66,
+          "atual": 2177.2,
+          "lucro": 6.21,
+          "pct": 8.87,
+          "trust": "v",
+          "valor": 76.2,
+          "delta": null
+        },
+        {
+          "name": "Morgan Stanley",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 214.56,
+          "atual": 223.35,
+          "lucro": 1.76,
+          "pct": 4.1,
+          "trust": "v",
+          "valor": 44.67,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 185.12,
+          "lucro": -3.59,
+          "pct": -16.24,
+          "trust": "r",
+          "valor": 18.51,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 234.0,
+          "lucro": -3.24,
+          "pct": -21.69,
+          "trust": "r",
+          "valor": 11.7,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "APLE",
+        "ativo": "Apple Hospitality",
+        "mkt": "USD",
+        "nota": "SAIDA APLE +0.57$ @ 16.55 -- Quebra WMS"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "HUM",
+        "ativo": "Humana",
+        "mkt": "USD",
+        "nota": "SAIDA HUM +0.06$ @ 361.06 -- Quebra WMS"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saidas APLE e HUM por Quebra WMS. ALAB e SNDK em forte alta."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "APLE",
+        "nome": "Apple Hospitality",
+        "mkt": "USD",
+        "lucro": 0.57,
+        "lucro_pct": 1.85,
+        "tipo": "lucro",
+        "data_entrada": "2026-06-12",
+        "data_saida": "2026-06-18",
+        "preco_entrada": 16.25,
+        "preco_saida": 16.55,
+        "volume": 1.9,
+        "dias_holding": 6,
+        "setup": "Quebra WMS",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 1
+      },
+      {
+        "ticker": "HUM",
+        "nome": "Humana",
+        "mkt": "USD",
+        "lucro": 0.06,
+        "lucro_pct": 0.14,
+        "tipo": "lucro",
+        "data_entrada": "2026-06-10",
+        "data_saida": "2026-06-18",
+        "preco_entrada": 360.54,
+        "preco_saida": 361.06,
+        "volume": 0.1,
+        "dias_holding": 8,
+        "setup": "Quebra WMS",
+        "nota_entrada": null,
+        "nota_saida": null,
+        "imagem_setup": null,
+        "rating": 1
       }
     ]
   }
