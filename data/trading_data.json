@@ -1597,7 +1597,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 7.32,
-      "realizado_usd": 11.64,
+      "realizado_usd": 12.0,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -11528,5 +11528,153 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-06-23": {
+    "eur": {
+      "saldo": 67.18,
+      "caixa": 0.26,
+      "lucro": -3.39,
+      "positions": [
+        {
+          "name": "ASML Holding",
+          "mkt": "EUR",
+          "vol": 0.025,
+          "abertura": 1641.0,
+          "atual": 1562.0,
+          "lucro": -1.98,
+          "pct": -4.83,
+          "trust": "r",
+          "valor": 39.05,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 27.87,
+          "lucro": -1.41,
+          "pct": -4.82,
+          "trust": "r",
+          "valor": 27.87,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 277.79,
+      "caixa": 114.74,
+      "lucro": -7.52,
+      "positions": [
+        {
+          "name": "Morgan Stanley",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 214.56,
+          "atual": 226.2,
+          "lucro": 2.33,
+          "pct": 5.43,
+          "trust": "v",
+          "valor": 45.24,
+          "delta": null
+        },
+        {
+          "name": "Veracyte",
+          "mkt": "USD",
+          "vol": 1.7,
+          "abertura": 53.31,
+          "atual": 53.41,
+          "lucro": 0.18,
+          "pct": 0.2,
+          "trust": "v",
+          "valor": 90.8,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 227.25,
+          "lucro": -3.58,
+          "pct": -23.96,
+          "trust": "r",
+          "valor": 11.36,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 156.54,
+          "lucro": -6.45,
+          "pct": -29.19,
+          "trust": "r",
+          "valor": 15.65,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "SNDK",
+        "ativo": "SanDisk",
+        "mkt": "USD",
+        "nota": "SAIDA SNDK 0.035 @ 1956 -- WMS 87 -- -1.53$"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "ALAB",
+        "ativo": "Astera Labs",
+        "mkt": "USD",
+        "nota": "SAIDA ALAB 0.075 @ 401.27 -- Earnings MU -- +1.89$"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saidas SNDK (-1.53$) e ALAB (+1.89$). EUR em forte queda: ASML -4.83%, PST -4.82%. USD flutuante negativo por CBRS e SpaceX."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "SNDK",
+        "nome": "SanDisk",
+        "mkt": "USD",
+        "lucro": -1.53,
+        "lucro_pct": -2.18,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-17",
+        "data_saida": "2026-06-23",
+        "preco_entrada": 1999.66,
+        "preco_saida": 1956.0,
+        "volume": 0.035,
+        "dias_holding": 6,
+        "setup": "WMS 87",
+        "nota_entrada": "ENTRADA SNDK WMS 87",
+        "nota_saida": "saida WMS",
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "ALAB",
+        "nome": "Astera Labs",
+        "mkt": "USD",
+        "lucro": 1.89,
+        "lucro_pct": 6.67,
+        "tipo": "lucro",
+        "data_entrada": "2026-06-16",
+        "data_saida": "2026-06-23",
+        "preco_entrada": 376.18,
+        "preco_saida": 401.27,
+        "volume": 0.075,
+        "dias_holding": 7,
+        "setup": "VCP",
+        "nota_entrada": "ENTRADA ALAB VCP",
+        "nota_saida": "saida por Earnings MU",
+        "imagem_setup": null,
+        "rating": 2
+      }
+    ]
   }
 }
