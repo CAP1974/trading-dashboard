@@ -1596,7 +1596,7 @@
       "meta_usd": 29.409,
       "ajustes_eur": 0,
       "ajustes_usd": 0,
-      "realizado_eur": 7.32,
+      "realizado_eur": 6.2,
       "realizado_usd": 12.43,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
@@ -12095,6 +12095,166 @@
         "setup": "Ajuste Macro",
         "nota_entrada": "ENTRADA JPM Ajuste Macro",
         "nota_saida": "saida WMS 53C",
+        "imagem_setup": null,
+        "rating": 0
+      }
+    ]
+  },
+  "2026-06-29": {
+    "eur": {
+      "saldo": 69.16,
+      "caixa": 1.83,
+      "lucro": -0.92,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 409.6,
+          "lucro": -0.06,
+          "pct": -0.15,
+          "trust": "r",
+          "valor": 38.91,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 28.42,
+          "lucro": -0.86,
+          "pct": -2.94,
+          "trust": "r",
+          "valor": 28.42,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 286.7,
+      "caixa": 11.33,
+      "lucro": 0.96,
+      "positions": [
+        {
+          "name": "Veracyte",
+          "mkt": "USD",
+          "vol": 1.7,
+          "abertura": 53.31,
+          "atual": 0.0,
+          "lucro": 11.14,
+          "pct": 12.29,
+          "trust": "v",
+          "valor": 101.76,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.94,
+          "abertura": 68.74,
+          "atual": 0.0,
+          "lucro": 0.23,
+          "pct": 0.36,
+          "trust": "v",
+          "valor": 64.84,
+          "delta": null
+        },
+        {
+          "name": "Apple Hospitality",
+          "mkt": "USD",
+          "vol": 3.0,
+          "abertura": 16.9,
+          "atual": 0.0,
+          "lucro": -0.06,
+          "pct": -0.12,
+          "trust": "r",
+          "valor": 50.64,
+          "delta": null
+        },
+        {
+          "name": "Caterpillar",
+          "mkt": "USD",
+          "vol": 0.03,
+          "abertura": 1048.01,
+          "atual": 0.0,
+          "lucro": -0.44,
+          "pct": -1.4,
+          "trust": "r",
+          "valor": 31.0,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 0.0,
+          "lucro": -5.69,
+          "pct": -25.75,
+          "trust": "r",
+          "valor": 16.41,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 0.0,
+          "lucro": -4.22,
+          "pct": -28.25,
+          "trust": "r",
+          "valor": 10.72,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "ASML",
+        "ativo": "ASML Holding",
+        "mkt": "EUR",
+        "nota": "SAIDA ASML 0.025 @ 1596 -- Mudanca Macro Detector -- -1.12EUR"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "ALV",
+        "ativo": "Allianz",
+        "mkt": "EUR",
+        "nota": "ENTRADA ALV 0.095 @ 410.20 -- WMS 84A"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "APLE",
+        "ativo": "Apple Hospitality",
+        "mkt": "USD",
+        "nota": "ENTRADA APLE 3 @ 16.90 -- WMS 83A"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saida ASML por mudanca Macro Detector. Entrada ALV EUR e APLE USD. Caixa EUR: screenshot 1.83 (eventos erraram 0.92)."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "ASML",
+        "nome": "ASML Holding",
+        "mkt": "EUR",
+        "lucro": -1.12,
+        "lucro_pct": -2.74,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-19",
+        "data_saida": "2026-06-29",
+        "preco_entrada": 1641.0,
+        "preco_saida": 1596.0,
+        "volume": 0.025,
+        "dias_holding": 10,
+        "setup": "Macro Detector",
+        "nota_entrada": "ENTRADA ASML Clean Trend",
+        "nota_saida": "saida mudanca Macro Detector",
         "imagem_setup": null,
         "rating": 0
       }
