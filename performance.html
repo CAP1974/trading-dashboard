@@ -288,9 +288,11 @@ setInterval(()=>{
 const META_PCT = 10;
 const EUR_RATE = 0.92;
 const MO_PT_P  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-const curYM_m  = LATEST_DATE.slice(0,7);
 const MESES    = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
 const mesKeys  = Object.keys(MESES).sort();
+// mês activo = o que tem status 'EM CURSO' (juro composto já aberto), nao necessariamente o mes do ultimo dia de dados
+const mesEmCurso = mesKeys.find(k => MESES[k].status === 'EM CURSO');
+const curYM_m  = mesEmCurso || LATEST_DATE.slice(0,7);
 const mesKey   = MESES[curYM_m] ? curYM_m : (mesKeys.length ? mesKeys[mesKeys.length-1] : null);
 const mesData  = mesKey ? MESES[mesKey] : {};
 const CAP_EUR  = mesData.base_eur  || 79.39;
@@ -314,7 +316,7 @@ function pctStr(v){ return (v>=0?'+':'')+v.toFixed(1)+'%'; }
 
 const ALL_D  = Object.keys(TRADING_DATA).sort();
 const LATEST = TRADING_DATA[LATEST_DATE];
-const curYM  = LATEST_DATE.slice(0,7);
+const curYM  = curYM_m;
 
 // ── group days by month ──
 const byMonth = {};

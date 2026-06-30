@@ -322,7 +322,10 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
   // Bases do mês actual via MESES_DATA
   const MESES   = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
-  const curYM   = LATEST_DATE.slice(0, 7);
+  // mês activo = o que tem status 'EM CURSO', nao necessariamente o mes do ultimo dia de dados
+  const mesKeysTop = Object.keys(MESES).sort();
+  const mesEmCursoTop = mesKeysTop.find(k => MESES[k].status === 'EM CURSO');
+  const curYM   = mesEmCursoTop || LATEST_DATE.slice(0, 7);
 
   // Realizado e lucro aberto — calculados automaticamente
   let _rEur = 0, _rUsd = 0;
@@ -652,7 +655,10 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
   const BASE_USD      = 176.67;
   const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
   const MONTHS_PT     = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const curYM_m       = LATEST_DATE.slice(0, 7);
+  // mês activo = o que tem status 'EM CURSO' (juro composto ja aberto), nao necessariamente o mes do ultimo dia de dados
+  const mesKeysAll    = Object.keys(MESES).sort();
+  const mesEmCurso    = mesKeysAll.find(k => MESES[k].status === 'EM CURSO');
+  const curYM_m       = mesEmCurso || LATEST_DATE.slice(0, 7);
 
   // Realizado e lucro aberto — calculados automaticamente
   let _rmEur = 0, _rmUsd = 0;
