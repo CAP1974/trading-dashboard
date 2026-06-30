@@ -699,9 +699,9 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
     const flutuEur = isCur ? LUCRO_ABT_EUR : (mesInfo.flutuante_fim_eur != null ? mesInfo.flutuante_fim_eur : null);
     const flutuUsd = isCur ? LUCRO_ABT_USD : (mesInfo.flutuante_fim_usd != null ? mesInfo.flutuante_fim_usd : null);
     const eqEur    = isCur ? (LUCRO_ABT_EUR + REAL_EUR)
-                   : (isClosed ? mesInfo.saldo_fim_eur - baseEur : null);
+                   : (mesInfo.equity_eur != null ? mesInfo.equity_eur : (isClosed ? mesInfo.saldo_fim_eur - baseEur : null));
     const eqUsd    = isCur ? (LUCRO_ABT_USD + REAL_USD)
-                   : (isClosed ? mesInfo.saldo_fim_usd - baseUsd : null);
+                   : (mesInfo.equity_usd != null ? mesInfo.equity_usd : (isClosed ? mesInfo.saldo_fim_usd - baseUsd : null));
     const metaEur  = mesInfo.meta_eur || (baseEur * 0.10);
     const metaUsd  = mesInfo.meta_usd || (baseUsd * 0.10);
     const pctEur   = eqEur != null ? eqEur / metaEur * 100 : null;

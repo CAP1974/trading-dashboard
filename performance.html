@@ -349,11 +349,12 @@ const curStats  = monthStats(curYM);
 
 // ── valores do mês actual — calculados automaticamente ──
 // REAL    = soma posicoes_fechadas do mês (auto, via curStats)
-// LUCRO_ABT = lucro aberto último dia (auto, via curStats.nrEur/nrUsd)
+// LUCRO_ABT = lucro aberto do ultimo dia conhecido (LATEST_DATE) -- continua do mes anterior
+// se o mes activo ainda nao tem nenhum dia processado (ex: 1º dia do mes novo)
 const REAL_EUR      = parseFloat((curStats.realEur || 0).toFixed(2));
 const REAL_USD      = parseFloat((curStats.realUsd || 0).toFixed(2));
-const LUCRO_ABT_EUR = parseFloat((curStats.nrEur   || 0).toFixed(2));
-const LUCRO_ABT_USD = parseFloat((curStats.nrUsd   || 0).toFixed(2));
+const LUCRO_ABT_EUR = parseFloat((LATEST?.eur?.lucro || 0).toFixed(2));
+const LUCRO_ABT_USD = parseFloat((LATEST?.usd?.lucro || 0).toFixed(2));
 // referência de saldo (actualizar manualmente para historico.html)
 // SALDO_EUR = 69.49  SALDO_USD = 275.23
 
@@ -748,19 +749,19 @@ if (trajMeses.length) {
     trajMeses.map(ym => MESES[ym].meta_usd), '$', '#00c8ff', '#00c8ff');
 
   // ── GRÁFICO 2 — Equity % Meta por Mês (barras normalizadas) ──
-  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual, só se já há trades)
+  // equity = campo equity_eur/usd guardado (meses fechados) | REAL+LUCRO_ABT (mês actual, flutuante continua do ultimo dia conhecido)
   const mEquityPctE = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
-    const eq = isCur ? (REAL_EUR !== 0 ? REAL_EUR + LUCRO_ABT_EUR : 0)
-                     : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]);
+    const eq = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
+                     : (mes.equity_eur != null ? mes.equity_eur : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]));
     return mes.meta_eur > 0 ? +(eq / mes.meta_eur * 100).toFixed(1) : 0;
   });
   const mEquityPctU = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
-    const eq = isCur ? (REAL_USD !== 0 ? REAL_USD + LUCRO_ABT_USD : 0)
-                     : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]);
+    const eq = isCur ? (REAL_USD + LUCRO_ABT_USD)
+                     : (mes.equity_usd != null ? mes.equity_usd : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]));
     return mes.meta_usd > 0 ? +(eq / mes.meta_usd * 100).toFixed(1) : 0;
   });
   new Chart(document.getElementById('chartAcum'), {
@@ -793,9 +794,10 @@ if (trajMeses.length) {
           const realArr = c.datasetIndex === 0 ? mRealE : mRealU;
           const fluArr  = c.datasetIndex === 0 ? mFlutuE : mFlutuU;
           const sfArr   = c.datasetIndex === 0 ? 'saldo_fim_eur' : 'saldo_fim_usd';
+          const eqArr   = c.datasetIndex === 0 ? 'equity_eur' : 'equity_usd';
           const eq = isCur
             ? (c.datasetIndex === 0 ? REAL_EUR+LUCRO_ABT_EUR : REAL_USD+LUCRO_ABT_USD)
-            : (mes[sfArr] != null ? mes[sfArr] - baseAj : realArr[c.dataIndex] + fluArr[c.dataIndex]);
+            : (mes[eqArr] != null ? mes[eqArr] : (mes[sfArr] != null ? mes[sfArr] - baseAj : realArr[c.dataIndex] + fluArr[c.dataIndex]));
           return `${c.dataset.label}: ${c.raw >= 0 ? '+' : ''}${c.raw.toFixed(1)}% · equity ${eq >= 0 ? '+' : ''}${eq.toFixed(2)}${sym} / meta +${meta.toFixed(2)}${sym}`;
         }}}
       },
@@ -823,19 +825,19 @@ if (trajMeses.length) {
   });
 
   // ── GRÁFICO 3 — Défice / Excesso por Mês ──
-  // equity = saldo_fim − base_aj (meses fechados) | REAL+LUCRO_ABT (mês actual) — consistente com tabela
+  // equity = campo equity_eur/usd guardado (meses fechados) | REAL+LUCRO_ABT (mês actual) — consistente com tabela
   const mDesvE = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjE = mes.base_ajustada_eur != null ? mes.base_ajustada_eur : mes.base_eur;
     const eq = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
-                     : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]);
+                     : (mes.equity_eur != null ? mes.equity_eur : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : mRealE[i] + mFlutuE[i]));
     return +(eq - mes.meta_eur).toFixed(2);
   });
   const mDesvU = trajMeses.map((ym, i) => {
     const mes = MESES[ym]; const isCur = ym === curYM;
     const baseAjU = mes.base_ajustada_usd != null ? mes.base_ajustada_usd : mes.base_usd;
     const eq = isCur ? (REAL_USD + LUCRO_ABT_USD)
-                     : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]);
+                     : (mes.equity_usd != null ? mes.equity_usd : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]));
     return +(eq - mes.meta_usd).toFixed(2);
   });
   new Chart(document.getElementById('chartDefice'), {
@@ -878,9 +880,9 @@ if (trajMeses.length) {
     const flutuE = isCur ? LUCRO_ABT_EUR : (mes.flutuante_fim_eur != null ? mes.flutuante_fim_eur : null);
     const flutuU = isCur ? LUCRO_ABT_USD : (mes.flutuante_fim_usd != null ? mes.flutuante_fim_usd : null);
     const eqE = isCur ? (REAL_EUR + LUCRO_ABT_EUR)
-              : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : null);
+              : (mes.equity_eur != null ? mes.equity_eur : (mes.saldo_fim_eur != null ? mes.saldo_fim_eur - baseAjE : null));
     const eqU = isCur ? (REAL_USD + LUCRO_ABT_USD)
-              : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : null);
+              : (mes.equity_usd != null ? mes.equity_usd : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : null));
     const pctE = eqE != null ? eqE / mes.meta_eur * 100 : null;
     const pctU = eqU != null ? eqU / mes.meta_usd * 100 : null;
     // falta = max(0, meta - equity); negativo = excesso
