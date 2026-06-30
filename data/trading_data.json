@@ -1597,7 +1597,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 6.2,
-      "realizado_usd": 12.43,
+      "realizado_usd": 12.79,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -12257,6 +12257,159 @@
         "nota_saida": "saida mudanca Macro Detector",
         "imagem_setup": null,
         "rating": 0
+      }
+    ]
+  },
+  "2026-06-30": {
+    "eur": {
+      "saldo": 69.64,
+      "caixa": 1.83,
+      "lucro": -0.44,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 413.0,
+          "lucro": 0.27,
+          "pct": 0.69,
+          "trust": "v",
+          "valor": 39.24,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 28.57,
+          "lucro": -0.71,
+          "pct": -2.42,
+          "trust": "r",
+          "valor": 28.57,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 286.87,
+      "caixa": 7.08,
+      "lucro": 0.77,
+      "positions": [
+        {
+          "name": "Veracyte",
+          "mkt": "USD",
+          "vol": 1.7,
+          "abertura": 53.31,
+          "atual": 0.0,
+          "lucro": 9.17,
+          "pct": 10.12,
+          "trust": "v",
+          "valor": 99.79,
+          "delta": null
+        },
+        {
+          "name": "Caterpillar",
+          "mkt": "USD",
+          "vol": 0.03,
+          "abertura": 1048.01,
+          "atual": 0.0,
+          "lucro": 0.42,
+          "pct": 1.34,
+          "trust": "v",
+          "valor": 31.86,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 0.0,
+          "lucro": 0.34,
+          "pct": 0.49,
+          "trust": "v",
+          "valor": 69.56,
+          "delta": null
+        },
+        {
+          "name": "Apple Hospitality",
+          "mkt": "USD",
+          "vol": 3.0,
+          "abertura": 16.9,
+          "atual": 0.0,
+          "lucro": -0.24,
+          "pct": -0.47,
+          "trust": "r",
+          "valor": 50.46,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 0.0,
+          "lucro": -5.01,
+          "pct": -22.67,
+          "trust": "r",
+          "valor": 17.09,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 0.0,
+          "lucro": -3.91,
+          "pct": -26.17,
+          "trust": "r",
+          "valor": 11.03,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "BTSG",
+        "ativo": "Brightspring Health Services",
+        "mkt": "USD",
+        "nota": "SAIDA BTSG 0.94 @ 59.12 -- Lateralizacao -- +0.36$"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "HUM",
+        "ativo": "Humana",
+        "mkt": "USD",
+        "nota": "ENTRADA HUM 0.175 @ 395.53 -- Clean Trend"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saida BTSG (+0.36$) e entrada HUM (Clean Trend). Caixa USD 7.08$ confirmada pelo utilizador (calculo manual nao reconciliou)."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "BTSG",
+        "nome": "Brightspring Health Services",
+        "mkt": "USD",
+        "lucro": 0.36,
+        "lucro_pct": 0.55,
+        "tipo": "lucro",
+        "data_entrada": "2026-06-24",
+        "data_saida": "2026-06-30",
+        "preco_entrada": 68.74,
+        "preco_saida": 59.12,
+        "volume": 0.94,
+        "dias_holding": 6,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "entrada 0.5 + aporte 0.44 (preco medio 68.74)",
+        "nota_saida": "saida Lateralizacao",
+        "imagem_setup": null,
+        "rating": 1
       }
     ]
   }
