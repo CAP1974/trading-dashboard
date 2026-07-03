@@ -12779,5 +12779,136 @@
         "rating": 2
       }
     ]
+  },
+  "2026-07-03": {
+    "eur": {
+      "saldo": 70.98,
+      "caixa": 1.83,
+      "lucro": 0.9,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 420.7,
+          "lucro": 1.0,
+          "pct": 2.57,
+          "trust": "v",
+          "valor": 39.97,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 29.18,
+          "lucro": -0.1,
+          "pct": -0.34,
+          "trust": "r",
+          "valor": 29.18,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 277.56,
+      "caixa": 1.38,
+      "lucro": -12.66,
+      "positions": [
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 0.0,
+          "lucro": 0.1,
+          "pct": 0.14,
+          "trust": "v",
+          "valor": 69.32,
+          "delta": null
+        },
+        {
+          "name": "JFrog",
+          "mkt": "USD",
+          "vol": 1.0,
+          "abertura": 95.4,
+          "atual": 0.0,
+          "lucro": -0.62,
+          "pct": -0.65,
+          "trust": "r",
+          "valor": 94.78,
+          "delta": null
+        },
+        {
+          "name": "Apple Hospitality",
+          "mkt": "USD",
+          "vol": 3.0,
+          "abertura": 16.9,
+          "atual": 0.0,
+          "lucro": -0.78,
+          "pct": -1.54,
+          "trust": "r",
+          "valor": 49.92,
+          "delta": null
+        },
+        {
+          "name": "Axos Financial",
+          "mkt": "USD",
+          "vol": 0.088,
+          "abertura": 99.09,
+          "atual": 0.0,
+          "lucro": -0.15,
+          "pct": -1.72,
+          "trust": "r",
+          "valor": 8.57,
+          "delta": null
+        },
+        {
+          "name": "Crowdstrike",
+          "mkt": "USD",
+          "vol": 0.14,
+          "abertura": 198.25,
+          "atual": 0.0,
+          "lucro": -0.6,
+          "pct": -2.16,
+          "trust": "r",
+          "valor": 27.16,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 0.0,
+          "lucro": -5.91,
+          "pct": -26.74,
+          "trust": "r",
+          "valor": 16.19,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 0.0,
+          "lucro": -4.7,
+          "pct": -31.46,
+          "trust": "r",
+          "valor": 10.24,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Mercado USD fechado (4 de Julho - Independence Day). EUR: Allianz +2.57%, Poste Italiane -0.34%. Caixa EUR 1.83EUR inalterada."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
