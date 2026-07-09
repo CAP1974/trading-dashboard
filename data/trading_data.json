@@ -13489,5 +13489,148 @@
         "rating": 0
       }
     ]
+  },
+  "2026-07-09": {
+    "eur": {
+      "saldo": 70.68,
+      "caixa": 1.83,
+      "lucro": 0.6,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 421.9,
+          "lucro": 1.11,
+          "pct": 2.85,
+          "trust": "v",
+          "valor": 40.08,
+          "delta": null
+        },
+        {
+          "name": "Poste Italiane",
+          "mkt": "EUR",
+          "vol": 1.0,
+          "abertura": 29.28,
+          "atual": 28.77,
+          "lucro": -0.51,
+          "pct": -1.74,
+          "trust": "r",
+          "valor": 28.77,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 268.22,
+      "caixa": 0.03,
+      "lucro": -14.79,
+      "positions": [
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.128,
+          "abertura": 70.7,
+          "atual": 71.6,
+          "lucro": 0.11,
+          "pct": 1.22,
+          "trust": "v",
+          "valor": 9.16,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 396.77,
+          "lucro": 0.22,
+          "pct": 0.32,
+          "trust": "v",
+          "valor": 69.44,
+          "delta": null
+        },
+        {
+          "name": "Canadian Natural",
+          "mkt": "USD",
+          "vol": 0.62,
+          "abertura": 42.3,
+          "atual": 41.88,
+          "lucro": -0.26,
+          "pct": -0.99,
+          "trust": "r",
+          "valor": 25.97,
+          "delta": null
+        },
+        {
+          "name": "Astrana Health",
+          "mkt": "USD",
+          "vol": 1.0,
+          "abertura": 47.09,
+          "atual": 46.48,
+          "lucro": -0.61,
+          "pct": -1.3,
+          "trust": "r",
+          "valor": 46.48,
+          "delta": null
+        },
+        {
+          "name": "Seadrill",
+          "mkt": "USD",
+          "vol": 1.0,
+          "abertura": 40.65,
+          "atual": 39.74,
+          "lucro": -0.91,
+          "pct": -2.24,
+          "trust": "r",
+          "valor": 39.74,
+          "delta": null
+        },
+        {
+          "name": "Occidental",
+          "mkt": "USD",
+          "vol": 1.0,
+          "abertura": 53.7,
+          "atual": 52.26,
+          "lucro": -1.44,
+          "pct": -2.68,
+          "trust": "r",
+          "valor": 52.26,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 152.15,
+          "lucro": -6.88,
+          "pct": -31.13,
+          "trust": "r",
+          "valor": 15.22,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 198.4,
+          "lucro": -5.02,
+          "pct": -33.6,
+          "trust": "r",
+          "valor": 9.92,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem entradas/saidas hoje. EUR: Allianz +2.85%, Poste Italiane -1.74%. USD: BTSG e Humana positivos, resto negativo. Caixa EUR confirmada em 1.83EUR (eventos reportou 0.60 por erro)."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
