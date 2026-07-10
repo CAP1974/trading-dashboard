@@ -6,8 +6,16 @@
 - Pasta local: C:\Users\Utilizador\trading-dashboard\
 - Stack: HTML estático + data.js + Chart.js
 
-## COMANDO DIÁRIO — "processa watched"
-Quando o utilizador disser "processa watched" ou "processa hoje":
+## FLUXO PREFERIDO (2026-07-11) — "fecho-dia" (ZERO leitura de imagens aqui)
+Se existir `watched/fecho_YYYY-MM-DD.json` (gerado na página **Fecho do Dia** da app CTM PRO,
+que transcreve os screenshots XTB com Haiku e valida):
+1. node scripts/ingest.js        ← aplica tudo (dia, saídas, realizado, depósitos→fund_metrics)
+                                    e corre sozinho validate + nav + _regen. exit 1 = NÃO commitar.
+2. Rever o resumo (alerta de stop duro incluído) e commit único + push.
+NÃO ler screenshots nem editar o JSON à mão neste fluxo. `--force` só com ordem explícita.
+
+## COMANDO DIÁRIO (fallback) — "processa watched"
+Quando o utilizador disser "processa watched" ou "processa hoje" E não houver fecho_*.json:
 
 PASTA WATCHED (sempre aqui):
 C:\Users\Utilizador\trading-dashboard\watched\
@@ -39,24 +47,39 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
 
 6. Corre: node scripts/_regen.js
 
+6b. VALIDAÇÃO OBRIGATÓRIA (novo 2026-07-10): node scripts/validate.js
+    • exit 1 = HÁ ERROS → corrigir ANTES de continuar. NUNCA commitar com validação a falhar.
+    • Regras: saldo=caixa+Σposições · variação diária >8% exige aporte/depósito registado no dia
+      · valor=vol×atual · datas/ano corretos · fund_metrics coerente.
+    • ⚠ REGRA saldo: o saldo do dia é SEMPRE caixa + Σvalor das posições. NUNCA somar a caixa duas
+      vezes (bug de 15-19/06/2026 — corrigido na auditoria Fable).
+
+6c. NAV (quotas): node scripts/nav.mjs — recalcula o NAV unitizado (retorno oficial TWR).
+    • Depósito/levantamento/transferência EXTERNOS: registar SEMPRE em fund_metrics
+      (usd.aportes / eur.transferencias, com data) — o NAV lê dali. Aportes a posições
+      financiados pela caixa NÃO são fluxos externos.
+
 7. Actualiza index.html:
    • Capital EUR / USD (saldo do screenshot)
    • Caixa EUR / USD
    • Retorno EUR/USD % meta (= (REAL+LUCRO_ABT) / meta × 100)
    • Equity sub (realizado + lucro aberto)
-   • AUM (SALDO_EUR + SALDO_USD × 0.92)
+   • AUM (SALDO_EUR + SALDO_USD × fx do dia; fallback 0.92)
 
 8. Move para ./watched/processados/YYYY-MM-DD/:
    eur_DD_MM.png, usd_DD_MM.png, eventos_DD_MM.txt
 
-9. Commit único + push
+9. Commit único + push (SÓ com validate.js verde)
 
 ## REGRAS CRÍTICAS
 - NUNCA ler o trading_data.json completo
 - NUNCA substituir dados existentes — sempre acumular
-- NUNCA fazer push sem validação passar
+- NUNCA fazer push sem `node scripts/validate.js` passar (exit 0)
 - Backup automático antes de qualquer escrita
 - Realizados SEMPRE acumulados (nunca substituir)
+- Datas SEMPRE no ano corrente (2026) — nunca 2025 (bug corrigido 2026-07-10)
+- STOPS: cada posição aberta deve ter campo `stop` (preço). pct ≤ −10% = STOP DURO violado →
+  alertar o utilizador no resumo do dia. (CBRS/SpaceX são exceção histórica marcada.)
 
 ## BASES DO FUNDO (não alterar sem ordem explícita)
 EUR · 8MSN: capital_base = 58.41€

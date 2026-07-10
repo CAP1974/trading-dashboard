@@ -1,0 +1,3 @@
+---- PUBLICAR 10/07/2026 23:09:09,07 ---- 
+⚠  R6 2026-04: ledger 10.44 vs Σfechadas 9.43
+✓ validacao OK (67 dias, 1 avisos)

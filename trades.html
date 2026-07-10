@@ -532,7 +532,7 @@ body{
 (function(){
   'use strict';
 
-  const EUR_RATE = 0.92;
+  const EUR_RATE = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
 
   // ── TRADES (vindos do TRADES_DATA gerado pelo _regen.js) ──
   // Filtramos apenas os que têm o campo ticker (formato novo)

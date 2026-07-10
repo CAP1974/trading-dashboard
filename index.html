@@ -613,7 +613,7 @@ body{
     <div>
       <div class="total-label">AUM consolidado ~EUR</div>
       <div class="total-value grad" id="foot-total">—</div>
-      <div class="total-sub">EUR + USD × 0.92</div>
+      <div class="total-sub">EUR + USD × fx do dia (fallback 0.92)</div>
     </div>
     <div class="divider"></div>
     <div>
@@ -687,7 +687,7 @@ function renderKPIs(){
   set('kpi-usd-lucro',fmtCur(uL,'$')); cls('kpi-usd-lucro',uL>=0?'kpi-value up':'kpi-value dn');
   set('kpi-eur-pos',d.eur.positions.length+' posições');
   set('kpi-usd-pos',d.usd.positions.length+' posições');
-  set('kpi-total','≈ '+(eL+uL*0.92).toFixed(2)+' €');
+  set('kpi-total','≈ '+(eL+uL*((TRADING_DATA[LATEST_DATE]&&TRADING_DATA[LATEST_DATE].fx)||0.92)).toFixed(2)+' €');
   set('kpi-pos-pos',pos+' / '+allPos.length);
   set('kpi-pos-pct',Math.round(pos/allPos.length*100)+'% em ganho');
   set('kpi-best',best.name); set('kpi-best-val',fmt(best.pct)+'% '+best.mkt);
@@ -753,7 +753,7 @@ function renderKPIs(){
   // Footer
   const[y,m,dd]=currentDay.split('-');
   set('foot-eur',fmtCur(eL,'€')); set('foot-usd',fmtCur(uL,'$'));
-  set('foot-total','≈ '+(eL+uL*0.92).toFixed(2)+' €');
+  set('foot-total','≈ '+(eL+uL*((TRADING_DATA[LATEST_DATE]&&TRADING_DATA[LATEST_DATE].fx)||0.92)).toFixed(2)+' €');
   set('foot-date',String(dd).padStart(2,'0')+' / '+MONTHS[parseInt(m)-1].toUpperCase()+' / '+y);
   set('fl-eur',fmtCur(eL,'€')); set('fl-usd',fmtCur(uL,'$'));
 
@@ -856,7 +856,7 @@ function exportExcel(){
   const histHeader=['Data','Lucro EUR (€)','Lucro USD ($)','Total ~EUR','Nº Pos EUR','Nº Pos USD','Eventos'];
   const histRows=ALL_DATES.map(d=>{
     const day=DATA[d];
-    return[d,day.eur.lucro,day.usd.lucro,(day.eur.lucro+day.usd.lucro*0.92).toFixed(2),
+    return[d,day.eur.lucro,day.usd.lucro,(day.eur.lucro+day.usd.lucro*((day.fx)||0.92)).toFixed(2),
       day.eur.positions.length,day.usd.positions.length,(day.eventos||[]).length];
   });
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([histHeader,...histRows]),'Histórico Diário');

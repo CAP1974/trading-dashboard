@@ -316,7 +316,7 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 
 /* ── KPIs topo ── */
 (function(){
-  const EUR_RATE      = 0.92;
+  const EUR_RATE      = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
   const FALLBACK_EUR  = 79.39;
   const FALLBACK_USD  = 176.67;
 
@@ -608,7 +608,7 @@ let prevEur=null,prevUsd=null;
 document.getElementById('hist-tbody').innerHTML=DATES.map(d=>{
   const day=TRADING_DATA[d];
   const eL=day.eur.lucro,uL=day.usd.lucro;
-  const total=(eL+uL*0.92).toFixed(2);
+  const total=(eL+uL*EUR_RATE).toFixed(2);
   const allPos=[...day.eur.positions,...day.usd.positions];
   const posPos=allPos.filter(p=>p.pct>=0).length;
   const pct=Math.round(posPos/allPos.length*100);
@@ -650,7 +650,7 @@ document.getElementById('timeline-body').innerHTML=allEvs.length?allEvs.map(ev=>
 
 /* ── Análise Mensal ── */
 (function(){
-  const EUR_RATE      = 0.92;
+  const EUR_RATE      = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
   const CAP_EUR       = 79.39;
   const BASE_USD      = 176.67;
   const MESES         = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};

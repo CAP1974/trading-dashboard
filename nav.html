@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAV · Triple Seven Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#060a0d;--bg2:#0f1923;--bg3:#152030;--border:rgba(255,255,255,.06);--txt:#ddeaf7;--txt2:#6b8aaa;--txt3:#334455;--green:#1eff8e;--red:#ff4d6a;--blue:#00c8ff;--mono:'JetBrains Mono',monospace;--disp:'Syne',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12px;padding:24px 28px}
+a{color:var(--txt2);text-decoration:none;font-size:11px}
+h1{font-family:var(--disp);font-size:22px;background:linear-gradient(135deg,#3dffb0,#00c8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:6px 0 2px}
+.sub{color:var(--txt2);font-size:11px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.kpi .l{font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:6px}
+.kpi .v{font-size:20px;font-weight:600}
+.kpi .s{font-size:10px;color:var(--txt2);margin-top:3px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{font-family:var(--disp);font-size:13px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{color:var(--txt3);font-weight:400;text-transform:uppercase;font-size:9px;letter-spacing:.08em;text-align:right;padding:6px 8px;border-bottom:1px solid var(--border)}
+th:first-child,td:first-child{text-align:left}
+td{padding:6px 8px;text-align:right;border-bottom:1px solid rgba(255,255,255,.03)}
+.up{color:var(--green)}.dn{color:var(--red)}
+.note{font-size:10px;color:var(--txt2);line-height:1.6;margin-top:8px}
+</style>
+</head>
+<body>
+<a href="index.html">← Triple Seven Capital</a>
+<h1>NAV · Retorno oficial (TWR)</h1>
+<div class="sub">Unitização por quotas — imune a aportes/levantamentos (padrão de fundo). Fonte: scripts/nav.mjs · fluxos externos em fund_metrics.</div>
+
+<div class="grid" id="kpis"></div>
+
+<div class="card"><h2>Curva NAV (base 100 · início da série diária)</h2>
+  <div style="position:relative;height:280px"><canvas id="navChart"></canvas></div>
+</div>
+
+<div class="card"><h2>TWR mensal</h2><table id="twrTbl"><thead><tr><th>Mês</th><th>EUR</th><th>USD</th></tr></thead><tbody></tbody></table>
+  <div class="note">TWR = variação do NAV no mês (encadeado ao fecho do mês anterior). Números oficiais para comparação com a meta de 10%/mês. A série diária começa a 26/05/2026 — antes disso só existem agregados mensais (ver fund_metrics.notas).</div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const NAV=(typeof TRADING_DATA!=='undefined'&&TRADING_DATA.nav)||null;
+if(!NAV){document.body.insertAdjacentHTML('beforeend','<div class="card">Sem dados NAV — corre node scripts/nav.mjs</div>');}
+else{
+  const le=NAV.eur[NAV.eur.length-1], lu=NAV.usd[NAV.usd.length-1];
+  const k=(l,v,s,cls)=>`<div class="kpi"><div class="l">${l}</div><div class="v ${cls||''}">${v}</div><div class="s">${s}</div></div>`;
+  document.getElementById('kpis').innerHTML=
+    k('NAV EUR',le[1].toFixed(2),'quota · '+le[0],le[1]>=100?'up':'dn')+
+    k('NAV USD',lu[1].toFixed(2),'quota · '+lu[0],lu[1]>=100?'up':'dn')+
+    k('Desde 26/05 EUR',((le[1]-100)>=0?'+':'')+(le[1]-100).toFixed(1)+'%','TWR real',le[1]>=100?'up':'dn')+
+    k('Desde 26/05 USD',((lu[1]-100)>=0?'+':'')+(lu[1]-100).toFixed(1)+'%','TWR real',lu[1]>=100?'up':'dn');
+  const lbl=NAV.eur.map(x=>x[0].slice(5));
+  const mapU={};NAV.usd.forEach(x=>mapU[x[0]]=x[1]);
+  new Chart(document.getElementById('navChart'),{type:'line',data:{labels:lbl,datasets:[
+    {label:'NAV EUR',data:NAV.eur.map(x=>x[1]),borderColor:'#3dffb0',borderWidth:2,pointRadius:0,tension:.25},
+    {label:'NAV USD',data:NAV.eur.map(x=>mapU[x[0]]??null),borderColor:'#00c8ff',borderWidth:2,pointRadius:0,tension:.25},
+    {label:'Base 100',data:NAV.eur.map(()=>100),borderColor:'rgba(255,255,255,.25)',borderWidth:1,borderDash:[5,4],pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#6b8aaa',font:{size:10}}}},
+      scales:{x:{ticks:{color:'#334455',maxTicksLimit:12},grid:{display:false}},y:{ticks:{color:'#334455'},grid:{color:'rgba(255,255,255,.04)'}}}}});
+  const tb=document.querySelector('#twrTbl tbody');
+  Object.keys(NAV.twr_mensal).sort().forEach(m=>{
+    const t=NAV.twr_mensal[m];
+    const c=v=>v==null?'—':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(1)}%</span>`;
+    tb.insertAdjacentHTML('beforeend',`<tr><td>${m}</td><td>${c(t.eur)}</td><td>${c(t.usd)}</td></tr>`);
+  });
+}
+</script>
+</body>
+</html>

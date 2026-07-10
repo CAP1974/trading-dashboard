@@ -158,7 +158,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     <div class="page-sub" id="page-sub">Triple Seven Capital · Registo de decisões e compliance</div>
   </div>
 
-  <!-- SECÇÃO 1 — KPIs -->
+  <!-- SECÇÍO 1 — KPIs -->
   <div class="zone-label">Resumo de Decisões</div>
   <div class="grid-4">
     <div class="kpi-mini">
@@ -183,7 +183,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- SECÇÃO 2+3 — Timeline + Stats -->
+  <!-- SECÇÍO 2+3 — Timeline + Stats -->
   <div class="zone-label">Histórico de Decisões</div>
   <div class="split">
 
@@ -242,7 +242,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- SECÇÃO 4 — Checklist diária -->
+  <!-- SECÇÍO 4 — Checklist diária -->
   <div class="zone-label">Checklist Diária</div>
   <div class="card">
     <div class="card-header">
@@ -255,7 +255,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- SECÇÃO 5 — Notas livres -->
+  <!-- SECÇÍO 5 — Notas livres -->
   <div class="zone-label">Notas do Dia</div>
   <div class="card">
     <div class="card-header">
@@ -281,7 +281,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     </div>
   </div>
 
-  <!-- SECÇÃO 6 — Histórico do Diário -->
+  <!-- SECÇÍO 6 — Histórico do Diário -->
   <div class="zone-label">Histórico do Diário</div>
   <div id="diario-historico" style="display:flex;flex-direction:column;gap:10px;"></div>
 
@@ -325,7 +325,7 @@ const counts = {entrada:0, saida:0, aporte:0, caixa:0};
 allEvents.forEach(ev => { if(counts[ev.tipo]!==undefined) counts[ev.tipo]++; });
 const total = Object.values(counts).reduce((a,b)=>a+b,0);
 
-// ── SECÇÃO 1: KPIs ──
+// ── SECÇÍO 1: KPIs ──
 setText('kpi-total', total);
 setText('kpi-total-sub', ALL_D.length+' sessões · '+allEvents.length+' eventos');
 setText('kpi-entradas', counts.entrada);
@@ -335,7 +335,7 @@ setText('kpi-saidas-sub', 'posições encerradas');
 setText('kpi-aportes', counts.aporte);
 setText('kpi-aportes-sub', 'reforços de capital');
 
-// ── SECÇÃO 2: Timeline (desc) ──
+// ── SECÇÍO 2: Timeline (desc) ──
 const TIPO_ICON  = {entrada:'🟢', saida:'🔴', aporte:'💰', caixa:'📦'};
 const TIPO_BADGE = {
   entrada: '<span class="badge badge-g">Entrada</span>',
@@ -371,7 +371,7 @@ if (!evDesc.length) {
   }).join('');
 }
 
-// ── SECÇÃO 3: Stats ──
+// ── SECÇÍO 3: Stats ──
 function mktStats(tipo) {
   const m = {EUR:0, USD:0};
   allEvents.filter(e=>e.tipo===tipo).forEach(e => { if(e.mkt && m[e.mkt]!==undefined) m[e.mkt]++; });
@@ -432,7 +432,7 @@ if (!aportesEvs.length) {
   }).join('');
 }
 
-// ── SECÇÃO 4: Checklist ──
+// ── SECÇÍO 4: Checklist ──
 const TODAY = todayKey();
 const TODAY_FMT = fmtDate(TODAY);
 const CL_KEY = 'gov_checklist_'+TODAY;
@@ -514,7 +514,7 @@ $('checklist-grid').querySelectorAll('input[type=checkbox]').forEach(cb => {
 
 updateBadge();
 
-// ── SECÇÃO 5: Notas ──
+// ── SECÇÍO 5: Notas ──
 const NOTA_KEY = 'gov_nota_'+TODAY;
 setText('nota-date-tag', fmtDate(LATEST_DATE).short);
 
@@ -556,7 +556,7 @@ $('btn-copy-prompt').addEventListener('click', () => {
   });
 });
 
-// ── SECÇÃO 6: Histórico do Diário ──
+// ── SECÇÍO 6: Histórico do Diário ──
 const CL_LABELS = [
   {k:'revisao', l:'Revisão'},
   {k:'stoploss', l:'Stop-loss'},

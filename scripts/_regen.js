@@ -23,7 +23,7 @@ function calcRating(t) {
 
 // Escreve ratings calculados de volta para trading_data.json
 let jsonModified = false;
-Object.keys(data).filter(k => k !== 'meses' && k !== 'fund_metrics').forEach(k => {
+Object.keys(data).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).forEach(k => {
   const pf = data[k].posicoes_fechadas;
   if (Array.isArray(pf)) {
     pf.forEach(t => {
@@ -41,10 +41,11 @@ if (jsonModified) {
 
 // Build dateData (já com ratings actualizados)
 const dateData = {};
-Object.keys(data).filter(k => k !== 'meses' && k !== 'fund_metrics').sort().forEach(k => { dateData[k] = data[k]; });
+Object.keys(data).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).sort().forEach(k => { dateData[k] = data[k]; });
 const sorted = Object.keys(dateData);
 const latest = sorted[sorted.length - 1];
 const last7  = sorted.slice(-7);
+if (data.nav) dateData.nav = data.nav;   // [Fable] NAV exportado p/ nav.html (nunca contado como data)
 
 // Flatten posicoes_fechadas → TRADES_DATA (rating já está no objecto)
 const tradesData = [];

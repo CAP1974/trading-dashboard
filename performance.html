@@ -286,7 +286,7 @@ setInterval(()=>{
 
 // ── meses dinâmicos (juros compostos) ──
 const META_PCT = 10;
-const EUR_RATE = 0.92;
+const EUR_RATE = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
 const MO_PT_P  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const MESES    = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
 const mesKeys  = Object.keys(MESES).sort();
