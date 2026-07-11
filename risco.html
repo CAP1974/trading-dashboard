@@ -93,8 +93,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <a class="nav-item" href="posicoes.html">Posições</a>
   <a class="nav-item active" href="risco.html" class="active">Risco</a>
   <a class="nav-item" href="historico.html">Histórico</a>
-  <a class="nav-item" href="performance.html">Performance</a>
   <a class="nav-item" href="nav.html">NAV</a>
+  <a class="nav-item" href="performance.html">Performance</a>
   <a class="nav-item" href="governanca.html">Governança</a>
   <a class="nav-item" href="trades.html">Trades</a>
 </div>
@@ -263,7 +263,7 @@ function riskBar(label,val,limit,suffix=''){
   const style=pct>80?'color:var(--red)':pct>60?'color:var(--amber)':'color:var(--green)';
   return`<div class="risk-bar-wrap"><div class="risk-bar-label"><span>${label}</span><span style="${style}">${val.toFixed(1)}${suffix} / ${limit}${suffix}</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${pct.toFixed(1)}%;background:${color};"></div></div></div>`;
 }
-// [Fable 2026-07-10] métricas de stop REAIS (antes: "Stop-loss activos N/N" hardcoded)
+// [Fable] metricas de stop REAIS (antes: 'Stop-loss activos N/N' hardcoded)
 const stopsDecl=allPos.filter(p=>p.stop!=null&&p.stop>0).length;
 const stopViol=allPos.filter(p=>(p.pct||0)<=-10);
 const eurNeg=eurPos.filter(p=>p.pct<0).length;
@@ -303,7 +303,7 @@ setHTML('limites-container',`<div style="display:grid;grid-template-columns:1fr 
     <div class="stat-row"><span class="stat-key">Alavancagem</span><span class="stat-val up">0×</span></div>
     <div class="stat-row"><span class="stat-key">Compliance</span><span class="stat-val ${stopViol.length||usdMaxConc>25||eurMaxConc>50?'dn':'up'}">${stopViol.length||usdMaxConc>25||eurMaxConc>50?'✗ Não conforme':'✓ Conforme'}</span></div>
   </div>
-</div>${stopViol.length?`<div style="margin-top:10px;padding:9px 14px;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:12px;"><b>⚠ STOP DURO −10% violado:</b> ${stopViol.map(p=>p.name+' ('+p.pct.toFixed(1)+'%)').join(' · ')} — regra do protocolo desde 16/06: sair ou justificar como exceção marcada.</div>`:''}`);
+</div>${stopViol.length?`<div style="margin-top:10px;padding:9px 14px;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:12px;"><b>⚠ STOP DURO −10% violado:</b> ${stopViol.map(p=>p.name+' ('+(p.pct||0).toFixed(1)+'%)').join(' · ')} — regra do protocolo desde 16/06: sair ou justificar como exceção marcada.</div>`:''}`);
 
 /* ── Concentração EUR ── */
 const eurVals=eurPos.map(p=>p.valor);
@@ -402,4 +402,22 @@ new Chart(document.getElementById('drawdownChart').getContext('2d'),{
   type:'bar',
   data:{labels,datasets:[
     {label:'Δ EUR',data:eurDD,backgroundColor:eurDD.map(v=>v>=0?'rgba(30,255,142,0.5)':'rgba(255,77,106,0.5)'),borderColor:eurDD.map(v=>v>=0?'#1eff8e':'#ff4d6a'),borderWidth:1.5,borderRadius:3},
-    {label:'Δ USD',dat
+    {label:'Δ USD',data:usdDD,backgroundColor:usdDD.map(v=>v>=0?'rgba(0,200,255,0.4)':'rgba(255,77,106,0.4)'),borderColor:usdDD.map(v=>v>=0?'#00c8ff':'#ff4d6a'),borderWidth:1.5,borderRadius:3}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#6b8aaa',font:{size:11}}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10}}},
+      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10},callback:v=>fmt(v)}}
+    }
+  }
+});
+</script>
+
+<script>
+function tick(){const d=new Date();const p=n=>String(n).padStart(2,'0');
+document.getElementById('clock').textContent=p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds())+' UTC';}
+tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
