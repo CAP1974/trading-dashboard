@@ -609,7 +609,7 @@ let prevEur=null,prevUsd=null;
 document.getElementById('hist-tbody').innerHTML=DATES.map(d=>{
   const day=TRADING_DATA[d];
   const eL=day.eur.lucro,uL=day.usd.lucro;
-  const total=(eL+uL*EUR_RATE).toFixed(2);
+  const total=(eL+uL*(((typeof TRADING_DATA!=='undefined')&&TRADING_DATA[LATEST_DATE]&&TRADING_DATA[LATEST_DATE].fx)||0.92)).toFixed(2);
   const allPos=[...day.eur.positions,...day.usd.positions];
   const posPos=allPos.filter(p=>p.pct>=0).length;
   const pct=Math.round(posPos/allPos.length*100);
