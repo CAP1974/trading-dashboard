@@ -45,7 +45,6 @@ Object.keys(data).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).sort().forEach(k =>
 const sorted = Object.keys(dateData);
 const latest = sorted[sorted.length - 1];
 const last7  = sorted.slice(-7);
-if (data.nav) dateData.nav = data.nav;   // [Fable] NAV exportado p/ nav.html (nunca contado como data)
 
 // Flatten posicoes_fechadas → TRADES_DATA (rating já está no objecto)
 const tradesData = [];
@@ -60,6 +59,7 @@ const lines = [
   'const TRADING_DATA = ' + JSON.stringify(dateData, null, 2) + ';',
   'const DATA_DATES   = ' + JSON.stringify(last7) + ';',
   'const LATEST_DATE  = ' + JSON.stringify(latest) + ';',
+  'const NAV_DATA     = ' + JSON.stringify(data.nav || null) + ';',
   'const MESES_DATA   = ' + JSON.stringify(meses, null, 2) + ';',
   'const FUND_METRICS_DATA = ' + JSON.stringify(data.fund_metrics || {}) + ';',
   'const TRADES_DATA  = ' + JSON.stringify(tradesData, null, 2) + ';',
