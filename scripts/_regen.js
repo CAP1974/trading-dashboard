@@ -67,3 +67,13 @@ const lines = [
 ];
 fs.writeFileSync(path.join(ROOT, 'data.js'), lines.join('\n'));
 console.log('data.js OK | latest: ' + latest + ' | dias: ' + sorted.length + ' | meses: ' + Object.keys(meses).join(', '));
+
+// [cache-buster] atualiza ?v= no include do data.js nos HTML — força o browser a rebuscar o data.js novo
+// (sem isto, o browser mantém o data.js antigo em cache e o site "não atualiza")
+const cbVer = Date.now();
+fs.readdirSync(ROOT).filter((f) => f.endsWith('.html')).forEach((f) => {
+  const p = path.join(ROOT, f);
+  const html = fs.readFileSync(p, 'utf8');
+  const novo = html.replace(/(src=["'])data\.js(?:\?v=\d+)?(["'])/g, '$1data.js?v=' + cbVer + '$2');
+  if (novo !== html) { fs.writeFileSync(p, novo); console.log('cache-buster ' + f + ' -> v=' + cbVer); }
+});
