@@ -1,3 +1,11 @@
 ---- PUBLICAR 11/07/2026  8:36:54,74 ---- 
 ⚠  R6 2026-04: ledger 10.44 vs Σfechadas 9.43
 ✓ validacao OK (67 dias, 1 avisos)
+warning: in the working copy of 'publicar_log.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'risco.html', LF will be replaced by CRLF the next time Git touches it
+[main 216f706] atualizacao dashboard
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+To https://github.com/CAP1974/trading-dashboard.git
+   5eaf3f5..216f706  main -> main
+ 
+RESULTADO: PUBLICADO COM SUCESSO. O site atualiza em 1-2 minutos. 

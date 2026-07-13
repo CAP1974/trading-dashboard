@@ -1,0 +1,13 @@
+---- FECHO DO DIA 13/07/2026 22:50:58,52 ---- 
+A ingerir fecho_2026-07-13.json → dia 2026-07-13
+Dia 2026-07-13 escrito: 2 pos EUR, 7 pos USD, 1 saídas, 0 depósitos.
+⚠  R6 2026-04: ledger 10.44 vs Σfechadas 9.43
+✓ validacao OK (68 dias, 1 avisos)
+NAV EUR: 94.43 (2026-07-13) — desde 26/05 -5.6%
+NAV USD: 91.17 (2026-07-13) — desde 26/05 -8.8%
+TWR mensal: {"2026-05":{"eur":-1.5,"usd":-0.2},"2026-06":{"eur":-4.7,"usd":-2.5},"2026-07":{"eur":0.6,"usd":-6.4}}
+trading_data.json → ratings recalculados
+data.js OK | latest: 2026-07-13 | dias: 68 | meses: 2026-04, 2026-05, 2026-06, 2026-07
+
+✓ TUDO OK. Rever e commitar: git add -A && git commit -m "diario 2026-07-13 (fecho-dia)" && git push
+⚠ STOP DURO −10% violado: Cerebras Systems -32.05% · SpaceX -37.18%

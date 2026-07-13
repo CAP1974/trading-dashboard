@@ -129,7 +129,7 @@
       "meta_usd": 29.395,
       "ajustes_eur": 0,
       "ajustes_usd": 0,
-      "realizado_eur": 0,
+      "realizado_eur": -0.56,
       "realizado_usd": -4.67,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-10",
+    "gerado": "2026-07-13",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -13973,6 +13973,10 @@
       [
         "2026-07-10",
         95.15
+      ],
+      [
+        "2026-07-13",
+        94.43
       ]
     ],
     "usd": [
@@ -14111,6 +14115,10 @@
       [
         "2026-07-10",
         90.97
+      ],
+      [
+        "2026-07-13",
+        91.17
       ]
     ],
     "twr_mensal": {
@@ -14123,9 +14131,156 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": 1.4,
-        "usd": -6.6
+        "eur": 0.6,
+        "usd": -6.4
       }
     }
+  },
+  "2026-07-13": {
+    "date": "2026-07-13",
+    "eur": {
+      "saldo": 70.07,
+      "caixa": 2.45,
+      "lucro": 0.55,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 421.7,
+          "lucro": 1.09,
+          "pct": 2.8,
+          "trust": "v",
+          "valor": 40.06,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0295,
+          "abertura": 939,
+          "atual": 934.4,
+          "lucro": -0.54,
+          "pct": -0.49,
+          "trust": "v",
+          "valor": 27.56,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 268.61,
+      "caixa": 17.06,
+      "lucro": -12.87,
+      "positions": [
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 405.82,
+          "lucro": 1.8,
+          "pct": 2.6,
+          "trust": "v",
+          "valor": 71.02,
+          "delta": null
+        },
+        {
+          "name": "CNRL",
+          "mkt": "USD",
+          "vol": 0.62,
+          "abertura": 42.3,
+          "atual": 43.06,
+          "lucro": 0.47,
+          "pct": 1.8,
+          "trust": "v",
+          "valor": 26.7,
+          "delta": null
+        },
+        {
+          "name": "Astrena Health",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 47.09,
+          "atual": 47.4,
+          "lucro": 0.31,
+          "pct": 0.66,
+          "trust": "v",
+          "valor": 47.4,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health Services",
+          "mkt": "USD",
+          "vol": 0.628,
+          "abertura": 71.09,
+          "atual": 69.6,
+          "lucro": -0.94,
+          "pct": -2.1,
+          "trust": "v",
+          "valor": 43.71,
+          "delta": null
+        },
+        {
+          "name": "Dave Inc",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 401.93,
+          "atual": 386.94,
+          "lucro": -1.5,
+          "pct": -3.73,
+          "trust": "v",
+          "valor": 38.69,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 203,
+          "lucro": -4.79,
+          "pct": -32.05,
+          "trust": "v",
+          "valor": 10.15,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221,
+          "atual": 138.84,
+          "lucro": -8.22,
+          "pct": -37.18,
+          "trust": "v",
+          "valor": 13.88,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ativo": "PST",
+        "mkt": "EUR",
+        "nota": "SAIDA PST -0.56 (saida 28.72 / entrada 29.28)"
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "PST",
+        "mkt": "EUR",
+        "lucro": -0.56,
+        "lucro_pct": -1.91,
+        "entrada": 29.28,
+        "saida": 28.72,
+        "vol": 1,
+        "setup": "lateralizaçao",
+        "nota": "via fecho-dia",
+        "rating": 0
+      }
+    ]
   }
 }
