@@ -13976,7 +13976,7 @@
       ],
       [
         "2026-07-13",
-        94.43
+        91.66
       ]
     ],
     "usd": [
@@ -14131,7 +14131,7 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": 0.6,
+        "eur": -2.3,
         "usd": -6.4
       }
     }
@@ -14139,8 +14139,8 @@
   "2026-07-13": {
     "date": "2026-07-13",
     "eur": {
-      "saldo": 70.07,
-      "caixa": 2.45,
+      "saldo": 68.01,
+      "caixa": 0.39,
       "lucro": 0.55,
       "positions": [
         {
@@ -14266,6 +14266,12 @@
         "ativo": "PST",
         "mkt": "EUR",
         "nota": "SAIDA PST -0.56 (saida 28.72 / entrada 29.28)"
+      },
+      {
+        "tipo": "entrada",
+        "ativo": "Swiss Life",
+        "mkt": "EUR",
+        "nota": "ENTRADA Swiss Life 0.0295 @ 939 (reconciliação — não detetada no fecho)"
       }
     ],
     "posicoes_fechadas": [

@@ -1,0 +1,10 @@
+---- CORRIGIR DIA 13 13/07/2026 23:19:33,54 ---- 
+EUR caixa 2.45 → 0.39 · saldo 70.07 → 68.01 (Σpos 67.62)
+Evento de entrada adicionado: Swiss Life 0.0295 @ 939
+✓ Patch aplicado. Backup em data\backups\trading_data_pre_patch_2026-07-13.json
+data.js OK | latest: 2026-07-13 | dias: 68 | meses: 2026-04, 2026-05, 2026-06, 2026-07
+NAV EUR: 91.66 (2026-07-13) — desde 26/05 -8.3%
+NAV USD: 91.17 (2026-07-13) — desde 26/05 -8.8%
+TWR mensal: {"2026-05":{"eur":-1.5,"usd":-0.2},"2026-06":{"eur":-4.7,"usd":-2.5},"2026-07":{"eur":-2.3,"usd":-6.4}}
+⚠  R6 2026-04: ledger 10.44 vs Σfechadas 9.43
+✓ validacao OK (68 dias, 1 avisos)
