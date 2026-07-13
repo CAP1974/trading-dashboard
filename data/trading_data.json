@@ -14285,7 +14285,8 @@
         "vol": 1,
         "setup": "lateralizaçao",
         "nota": "via fecho-dia",
-        "rating": 0
+        "rating": 0,
+        "data_saida": "2026-07-13"
       }
     ]
   }

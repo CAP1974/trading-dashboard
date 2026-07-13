@@ -1,85 +1,18 @@
----- CORRIGIR DIA 13 13/07/2026 23:19:33,54 ---- 
-EUR caixa 2.45 → 0.39 · saldo 70.07 → 68.01 (Σpos 67.62)
-Evento de entrada adicionado: Swiss Life 0.0295 @ 939
+---- CORRIGIR DIA 13 13/07/2026 23:58:03,68 ---- 
+data_saida preenchido em PST -> 2026-07-13
 ✓ Patch aplicado. Backup em data\backups\trading_data_pre_patch_2026-07-13.json
 data.js OK | latest: 2026-07-13 | dias: 68 | meses: 2026-04, 2026-05, 2026-06, 2026-07
+cache-buster contas.html -> v=1783983483875
+cache-buster governanca.html -> v=1783983483875
+cache-buster historico.html -> v=1783983483875
+cache-buster index.html -> v=1783983483875
+cache-buster nav.html -> v=1783983483875
+cache-buster performance.html -> v=1783983483875
+cache-buster posicoes.html -> v=1783983483875
+cache-buster risco.html -> v=1783983483875
+cache-buster trades.html -> v=1783983483875
 NAV EUR: 91.66 (2026-07-13) — desde 26/05 -8.3%
 NAV USD: 91.17 (2026-07-13) — desde 26/05 -8.8%
 TWR mensal: {"2026-05":{"eur":-1.5,"usd":-0.2},"2026-06":{"eur":-4.7,"usd":-2.5},"2026-07":{"eur":-2.3,"usd":-6.4}}
 ⚠  R6 2026-04: ledger 10.44 vs Σfechadas 9.43
 ✓ validacao OK (68 dias, 1 avisos)
-warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'CLAUDE.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'MODELO_eventos.txt', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'contas.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'data.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'data/trading_data.json', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'fecho_log.txt', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'governanca.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'historico.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'nav.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'package-lock.json', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'performance.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'posicoes.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'risco.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_01_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_01_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_02_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_02_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_03_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_03_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_04_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_05_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_06_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_07_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_08_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_08_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_09_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_09_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_10_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_10_07.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_11_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_12_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_15_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_16_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_17_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_18_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_19_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_22_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_23_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_24_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_25_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_26_05.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_26_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_27_05.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_28_05.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_29_05.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_29_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_30_06.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_fecho_junho.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_fecho_maio.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_arquivo/tmp_stub_jun.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/_regen.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/deploy.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/extract.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/ingest.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/nav.mjs', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/pipeline.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/restore.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/validate.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'trades.html', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'watched/.gitignore', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'CORRIGIR_DIA13.bat', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'corrigir_log.txt', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'scripts/patch_2026-07-13.js', LF will be replaced by CRLF the next time Git touches it
-[main 570ae43] correcao dia 13: entrada Swiss Life + caixa EUR 0.39
- 6 files changed, 182 insertions(+), 7 deletions(-)
- create mode 100644 CORRIGIR_DIA13.bat
- create mode 100644 corrigir_log.txt
- create mode 100644 scripts/patch_2026-07-13.js
-To https://github.com/CAP1974/trading-dashboard.git
-   e83242a..570ae43  main -> main
- 
-RESULTADO: CORRECAO PUBLICADA COM SUCESSO. Site atualiza em 1-2 minutos. 

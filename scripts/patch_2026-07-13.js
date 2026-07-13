@@ -42,6 +42,11 @@ if (!jaTem && sl) {
   mudou = true;
 }
 
+// (c) backfill data_saida nas posições fechadas do dia (fecho-dia antigo não gravava — partia os gráficos)
+(day.posicoes_fechadas || []).forEach((pf) => {
+  if (!pf.data_saida) { pf.data_saida = DATE; console.log('data_saida preenchido em ' + pf.ticker + ' -> ' + DATE); mudou = true; }
+});
+
 if (!mudou) { console.log('Nada a alterar (já aplicado).'); process.exit(0); }
 fs.writeFileSync(FILE, JSON.stringify(d, null, 2));
 console.log('✓ Patch aplicado. Backup em ' + path.relative(ROOT, bkp));

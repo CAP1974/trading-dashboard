@@ -69,7 +69,7 @@ d.meses = d.meses || {}; d.meses[mes] = d.meses[mes] || {};
 for (const s of (F.saidas || [])) {
   if (s.lucro == null) { console.error(`Saída ${s.name} sem lucro exato — abortar.`); process.exit(1); }
   const pctL = (s.entrada > 0 && s.saida > 0) ? Math.round((s.saida / s.entrada - 1) * 10000) / 100 : null;
-  day.posicoes_fechadas.push({ ticker: s.name, mkt: s.mkt, lucro: s.lucro, lucro_pct: pctL, entrada: s.entrada, saida: s.saida, vol: s.vol, setup: s.setup || null, nota: 'via fecho-dia' });
+  day.posicoes_fechadas.push({ ticker: s.name, mkt: s.mkt, lucro: s.lucro, lucro_pct: pctL, entrada: s.entrada, saida: s.saida, vol: s.vol, setup: s.setup || null, data_saida: date, nota: 'via fecho-dia' });
   day.eventos.push({ tipo: 'saida', ativo: s.name, mkt: s.mkt, nota: `SAIDA ${s.name} ${s.lucro > 0 ? '+' : ''}${s.lucro} (saida ${s.saida} / entrada ${s.entrada})` });
   const k = s.mkt === 'EUR' ? 'realizado_eur' : 'realizado_usd';
   d.meses[mes][k] = Math.round(((d.meses[mes][k] || 0) + s.lucro) * 100) / 100;

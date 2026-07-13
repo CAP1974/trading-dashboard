@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="data.js?v=20260713"></script>
+<script src="data.js?v=1783983483875"></script>
 <style>
 :root {
   --bg:       #060a0d;
@@ -643,13 +643,13 @@ body{
   // ── EQUITY CURVE ──
   (function(){
     // Ordena por data_saida
-    const sorted = [...trades].sort((a,b)=>a.data_saida.localeCompare(b.data_saida));
+    const sorted = [...trades].sort((a,b)=>(a.data_saida||'9999-99-99').localeCompare(b.data_saida||'9999-99-99'));
     let cum = 0;
     const labels = ['Início'];
     const vals   = [0];
     sorted.forEach(t => {
       cum += lucroUsd(t);
-      labels.push(t.ticker + '\n' + t.data_saida);
+      labels.push(t.ticker + '\n' + (t.data_saida || ''));
       vals.push(parseFloat(cum.toFixed(2)));
     });
     const ctx = document.getElementById('equityChart').getContext('2d');
@@ -687,7 +687,7 @@ body{
 
   // ── BAR CHART ──
   (function(){
-    const sorted = [...trades].sort((a,b)=>a.data_saida.localeCompare(b.data_saida));
+    const sorted = [...trades].sort((a,b)=>(a.data_saida||'9999-99-99').localeCompare(b.data_saida||'9999-99-99'));
     const labels = sorted.map(t=>t.ticker+(t.nome&&t.nome.includes('lote')?' L'+(t.nome.match(/\d+/)||[''])[0]:''));
     const vals   = sorted.map(t=>parseFloat(lucroUsd(t).toFixed(2)));
     const colors = vals.map(v=>v>=0?'rgba(30,255,142,0.7)':'rgba(255,77,106,0.7)');
