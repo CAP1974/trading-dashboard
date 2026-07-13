@@ -582,10 +582,10 @@ body{
   <div>
     <div class="zone-label">Fluxo de capital</div>
     <div class="flow-grid">
-      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up">70,60 €</div></div>
-      <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac">1,83 €</div></div>
-      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up">268,02 $</div></div>
-      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac">17,06 $</div></div>
+      <div class="flow-item"><div class="flow-label">Capital EUR</div><div class="flow-val up" id="fl-cap-eur">—</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa EUR</div><div class="flow-val ac" id="fl-cx-eur">—</div></div>
+      <div class="flow-item"><div class="flow-label">Capital USD</div><div class="flow-val up" id="fl-cap-usd">—</div></div>
+      <div class="flow-item"><div class="flow-label">Caixa USD</div><div class="flow-val ac" id="fl-cx-usd">—</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje EUR</div><div class="flow-val up" id="fl-eur">—</div></div>
       <div class="flow-item"><div class="flow-label">P&L hoje USD</div><div class="flow-val up" id="fl-usd">—</div></div>
     </div>
@@ -628,7 +628,7 @@ body{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="data.js?v=1783983483875"></script>
+<script src="data.js?v=1783984131732"></script>
 <script>
 /* ── CLOCK ── */
 function tick(){
@@ -750,6 +750,12 @@ function renderKPIs(){
   else uar.style.display='none';
   if(d.usd.caixa){ucr.style.display='flex';set('m-usd-caixa',d.usd.caixa.toFixed(2)+' $');}
   else ucr.style.display='none';
+
+  // Fluxo de capital (secção de baixo) — dinâmico a partir do dia (deixou de ser fixo no HTML)
+  set('fl-cap-eur', d.eur.saldo!=null?d.eur.saldo.toFixed(2)+' €':'—');
+  set('fl-cx-eur',  d.eur.caixa!=null?d.eur.caixa.toFixed(2)+' €':'—');
+  set('fl-cap-usd', d.usd.saldo!=null?d.usd.saldo.toFixed(2)+' $':'—');
+  set('fl-cx-usd',  d.usd.caixa!=null?d.usd.caixa.toFixed(2)+' $':'—');
 
   // Footer
   const[y,m,dd]=currentDay.split('-');

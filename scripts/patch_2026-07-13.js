@@ -42,9 +42,18 @@ if (!jaTem && sl) {
   mudou = true;
 }
 
-// (c) backfill data_saida nas posições fechadas do dia (fecho-dia antigo não gravava — partia os gráficos)
+// (c) backfill dos campos em falta nas posições fechadas (o fecho-dia não os gravava → "undefined"/sem dias/partia gráficos)
 (day.posicoes_fechadas || []).forEach((pf) => {
-  if (!pf.data_saida) { pf.data_saida = DATE; console.log('data_saida preenchido em ' + pf.ticker + ' -> ' + DATE); mudou = true; }
+  if (!pf.data_saida) { pf.data_saida = DATE; mudou = true; }
+  // PST (Poste Italiane): entrada 2026-06-17 (histórico do dashboard)
+  if (/^PST$/i.test(pf.ticker || '')) {
+    if (!pf.nome) { pf.nome = 'Poste Italiane'; mudou = true; }
+    if (!pf.data_entrada) { pf.data_entrada = '2026-06-17'; mudou = true; }
+    if (pf.dias_holding == null) { pf.dias_holding = Math.round((new Date(pf.data_saida) - new Date('2026-06-17')) / 86400000); mudou = true; }
+  }
+  // qualquer outra sem nome → usa o ticker (evita "undefined")
+  if (!pf.nome) { pf.nome = pf.ticker; mudou = true; }
+  if (mudou) console.log('backfill ' + pf.ticker + ': nome=' + pf.nome + ' entrada=' + (pf.data_entrada || '?') + ' dias=' + (pf.dias_holding == null ? '?' : pf.dias_holding));
 });
 
 if (!mudou) { console.log('Nada a alterar (já aplicado).'); process.exit(0); }

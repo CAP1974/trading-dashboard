@@ -14286,7 +14286,10 @@
         "setup": "lateralizaçao",
         "nota": "via fecho-dia",
         "rating": 0,
-        "data_saida": "2026-07-13"
+        "data_saida": "2026-07-13",
+        "nome": "Poste Italiane",
+        "data_entrada": "2026-06-17",
+        "dias_holding": 26
       }
     ]
   }

@@ -66,10 +66,25 @@ for (const a of (F.aportes || [])) day.eventos.push({ tipo: 'aporte', ativo: a.n
 
 // saídas → posicoes_fechadas + realizado mensal (ACUMULAR, nunca substituir)
 d.meses = d.meses || {}; d.meses[mes] = d.meses[mes] || {};
+// 1ª aparição da posição no histórico → data de entrada (para dias de holding)
+function primeiraEntrada(nome) {
+  const chave = (nome || '').toLowerCase().slice(0, 6);
+  const dias = Object.keys(d).filter((k) => /^\d{4}-\d\d-\d\d$/.test(k)).sort();
+  for (const k of dias) {
+    if (k >= date) break;
+    for (const acc of ['eur', 'usd']) {
+      const p = ((d[k] && d[k][acc] && d[k][acc].positions) || []).find((pp) => (pp.name || '').toLowerCase().slice(0, 6) === chave);
+      if (p) return k;
+    }
+  }
+  return null;
+}
 for (const s of (F.saidas || [])) {
   if (s.lucro == null) { console.error(`Saída ${s.name} sem lucro exato — abortar.`); process.exit(1); }
   const pctL = (s.entrada > 0 && s.saida > 0) ? Math.round((s.saida / s.entrada - 1) * 10000) / 100 : null;
-  day.posicoes_fechadas.push({ ticker: s.name, mkt: s.mkt, lucro: s.lucro, lucro_pct: pctL, entrada: s.entrada, saida: s.saida, vol: s.vol, setup: s.setup || null, data_saida: date, nota: 'via fecho-dia' });
+  const dEntrada = s.data_entrada || primeiraEntrada(s.name);
+  const diasH = dEntrada ? Math.round((new Date(date) - new Date(dEntrada)) / 86400000) : null;
+  day.posicoes_fechadas.push({ ticker: s.name, nome: s.name, mkt: s.mkt, lucro: s.lucro, lucro_pct: pctL, entrada: s.entrada, saida: s.saida, vol: s.vol, setup: s.setup || null, data_entrada: dEntrada, dias_holding: diasH, data_saida: date, nota: 'via fecho-dia' });
   day.eventos.push({ tipo: 'saida', ativo: s.name, mkt: s.mkt, nota: `SAIDA ${s.name} ${s.lucro > 0 ? '+' : ''}${s.lucro} (saida ${s.saida} / entrada ${s.entrada})` });
   const k = s.mkt === 'EUR' ? 'realizado_eur' : 'realizado_usd';
   d.meses[mes][k] = Math.round(((d.meses[mes][k] || 0) + s.lucro) * 100) / 100;
