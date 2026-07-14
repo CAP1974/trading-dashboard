@@ -130,7 +130,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": -0.56,
-      "realizado_usd": -4.67,
+      "realizado_usd": -4.12,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -14290,6 +14290,171 @@
         "nome": "Poste Italiane",
         "data_entrada": "2026-06-17",
         "dias_holding": 26
+      }
+    ]
+  },
+  "2026-07-17": {
+    "eur": {
+      "saldo": 70.05,
+      "caixa": 0.39,
+      "lucro": 0.53,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.095,
+          "abertura": 410.2,
+          "atual": 421.2,
+          "lucro": 1.04,
+          "pct": 2.67,
+          "trust": "v",
+          "valor": 40.01,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0295,
+          "abertura": 939.0,
+          "atual": 933.8,
+          "lucro": -0.51,
+          "pct": -1.69,
+          "trust": "r",
+          "valor": 29.65,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 271.91,
+      "caixa": 3.04,
+      "lucro": -10.11,
+      "positions": [
+        {
+          "name": "Dave Inc",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 401.93,
+          "atual": 0.0,
+          "lucro": 1.49,
+          "pct": 3.71,
+          "trust": "v",
+          "valor": 41.68,
+          "delta": null
+        },
+        {
+          "name": "Astrana Health",
+          "mkt": "USD",
+          "vol": 1.0,
+          "abertura": 47.09,
+          "atual": 0.0,
+          "lucro": 1.65,
+          "pct": 3.5,
+          "trust": "v",
+          "valor": 48.74,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 0.0,
+          "lucro": 1.72,
+          "pct": 2.48,
+          "trust": "v",
+          "valor": 70.94,
+          "delta": null
+        },
+        {
+          "name": "Loews",
+          "mkt": "USD",
+          "vol": 0.35,
+          "abertura": 116.55,
+          "atual": 0.0,
+          "lucro": -0.75,
+          "pct": -1.84,
+          "trust": "r",
+          "valor": 40.04,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.628,
+          "abertura": 71.09,
+          "atual": 0.0,
+          "lucro": -0.92,
+          "pct": -2.06,
+          "trust": "r",
+          "valor": 43.73,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 0.0,
+          "lucro": -4.81,
+          "pct": -32.2,
+          "trust": "r",
+          "valor": 10.13,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221.0,
+          "atual": 0.0,
+          "lucro": -8.49,
+          "pct": -38.42,
+          "trust": "r",
+          "valor": 13.61,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "CNQ",
+        "ativo": "Canadian Natural",
+        "mkt": "USD",
+        "nota": "SAIDA CNQ 0.62 @ 43.18 -- mudanca macro -- +0.55$"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "L",
+        "ativo": "Loews",
+        "mkt": "USD",
+        "nota": "ENTRADA L 0.35 @ 116.55 -- Momento Macro"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Nota: dias 11,12,14,15,16/07 sem screenshot/registo individual (gap no pipeline). Composicao da carteira entre o fecho do dia 13 (ultimo commit valido) e hoje manteve-se identica, excepto as 2 operacoes de hoje (CNQ saida, Loews entrada) -- sem impacto nos realizados desses dias."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "CNQ",
+        "nome": "Canadian Natural",
+        "mkt": "USD",
+        "lucro": 0.55,
+        "lucro_pct": 2.08,
+        "tipo": "lucro",
+        "data_entrada": "2026-07-08",
+        "data_saida": "2026-07-17",
+        "preco_entrada": 42.3,
+        "preco_saida": 43.18,
+        "volume": 0.62,
+        "dias_holding": 9,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "ENTRADA CNQ Ajuste Macro",
+        "nota_saida": "mudanca macro",
+        "imagem_setup": null,
+        "rating": 1
       }
     ]
   }
