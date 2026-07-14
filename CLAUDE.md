@@ -6,16 +6,15 @@
 - Pasta local: C:\Users\Utilizador\trading-dashboard\
 - Stack: HTML estático + data.js + Chart.js
 
-## FLUXO PREFERIDO (2026-07-11) — "fecho-dia" (ZERO leitura de imagens aqui)
-Se existir `watched/fecho_YYYY-MM-DD.json` (gerado na página **Fecho do Dia** da app CTM PRO,
-que transcreve os screenshots XTB com Haiku e valida):
-1. node scripts/ingest.js        ← aplica tudo (dia, saídas, realizado, depósitos→fund_metrics)
-                                    e corre sozinho validate + nav + _regen. exit 1 = NÃO commitar.
-2. Rever o resumo (alerta de stop duro incluído) e commit único + push.
-NÃO ler screenshots nem editar o JSON à mão neste fluxo. `--force` só com ordem explícita.
+## NOTA (2026-07-17)
+Houve uma tentativa de automatizar este fluxo com uma app externa ("Fecho do Dia" / CTM PRO)
+que gerava `watched/fecho_YYYY-MM-DD.json` e um script `scripts/ingest.js` para o aplicar sem
+ler screenshots. Não resultou (validação falhava e exigia correção manual na mesma) e foi
+removida em 2026-07-17. O fluxo activo é sempre o "COMANDO DIÁRIO" abaixo — ler sempre os
+screenshots e o eventos.txt à mão.
 
-## COMANDO DIÁRIO (fallback) — "processa watched"
-Quando o utilizador disser "processa watched" ou "processa hoje" E não houver fecho_*.json:
+## COMANDO DIÁRIO — "processa watched"
+Quando o utilizador disser "processa watched" ou "processa hoje":
 
 PASTA WATCHED (sempre aqui):
 C:\Users\Utilizador\trading-dashboard\watched\
@@ -34,10 +33,11 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
    b) Read usd_DD_MM.png   → saldo USD, caixa USD, posições abertas USD
    c) Read eventos_DD_MM.txt → saídas, entradas, aportes, caixa, diário
 
-4. Corre extract.js (posições abertas):
-   node scripts/extract.js --date YYYY-MM-DD --eur ./watched/eur_DD_MM.png --usd ./watched/usd_DD_MM.png
+4. Escreve o dia YYYY-MM-DD no trading_data.json (posições abertas lidas dos screenshots,
+   saldo = valor das posições, caixa = campo separado). Um script Python `scripts/tmp_DD_MM.py`
+   por dia é o padrão usado — cria, corre, e mantém como registo do que foi escrito.
 
-5. Aplica eventos do .txt ao JSON (extract.js NÃO processa o .txt):
+5. Aplica eventos do .txt ao JSON:
    Para cada linha activa (sem #):
    • SAIDA  → adicionar a posicoes_fechadas + eventos[] + actualizar REAL_MAIO
    • ENTRADA→ adicionar a eventos[] (posição já captada pelo extract.js)
@@ -47,34 +47,36 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
 
 6. Corre: node scripts/_regen.js
 
-6b. VALIDAÇÃO OBRIGATÓRIA (novo 2026-07-10): node scripts/validate.js
-    • exit 1 = HÁ ERROS → corrigir ANTES de continuar. NUNCA commitar com validação a falhar.
-    • Regras: saldo=caixa+Σposições · variação diária >8% exige aporte/depósito registado no dia
-      · valor=vol×atual · datas/ano corretos · fund_metrics coerente.
-    • ⚠ REGRA saldo: o saldo do dia é SEMPRE caixa + Σvalor das posições. NUNCA somar a caixa duas
-      vezes (bug de 15-19/06/2026 — corrigido na auditoria Fable).
+6b. Verificação opcional recomendada: node scripts/validate.js
+    • Não é bloqueante — algumas regras dão falso positivo em casos legítimos (ex: ativos
+      cotados em moeda diferente do EUR/USD como Swiss Life; "atual"=0 fora de horas de
+      mercado é normal, não um erro). Ler o resultado com juízo antes de "corrigir" algo
+      que na verdade está certo.
+    • NOTA schema: neste projecto `saldo` de cada dia é SEMPRE só o valor das posições
+      (o "Valor das Minhas Operações" do screenshot) — a caixa fica sempre no campo `caixa`
+      à parte. O capital total de uma conta = saldo + caixa (usado no index.html e no NAV).
 
-6c. NAV (quotas): node scripts/nav.mjs — recalcula o NAV unitizado (retorno oficial TWR).
+6c. NAV (quotas), opcional: node scripts/nav.mjs — recalcula o NAV unitizado (retorno oficial TWR).
+    Usa saldo+caixa como capital total. Corre quando quiseres que a aba NAV reflita o dia.
     • Depósito/levantamento/transferência EXTERNOS: registar SEMPRE em fund_metrics
       (usd.aportes / eur.transferencias, com data) — o NAV lê dali. Aportes a posições
       financiados pela caixa NÃO são fluxos externos.
 
 7. Actualiza index.html:
-   • Capital EUR / USD (saldo do screenshot)
-   • Caixa EUR / USD
+   • Capital EUR / USD = saldo + caixa do dia (capital total, não só posições)
    • Retorno EUR/USD % meta (= (REAL+LUCRO_ABT) / meta × 100)
    • Equity sub (realizado + lucro aberto)
-   • AUM (SALDO_EUR + SALDO_USD × fx do dia; fallback 0.92)
+   • AUM (capital total EUR + capital total USD × fx do dia; fallback 0.92)
 
 8. Move para ./watched/processados/YYYY-MM-DD/:
    eur_DD_MM.png, usd_DD_MM.png, eventos_DD_MM.txt
 
-9. Commit único + push (SÓ com validate.js verde)
+9. Commit único + push
 
 ## REGRAS CRÍTICAS
 - NUNCA ler o trading_data.json completo
 - NUNCA substituir dados existentes — sempre acumular
-- NUNCA fazer push sem `node scripts/validate.js` passar (exit 0)
+- Se CAIXA do eventos.txt divergir do screenshot, PARAR e perguntar ao utilizador antes de processar
 - Backup automático antes de qualquer escrita
 - Realizados SEMPRE acumulados (nunca substituir)
 - Datas SEMPRE no ano corrente (2026) — nunca 2025 (bug corrigido 2026-07-10)
@@ -87,14 +89,12 @@ USD · OMV: capital_base = 213.83$
 Meta mensal: 10% da base do início do mês
 
 ## MESES ACTIVOS
-2026-04: FECHADO · saldo_fim_eur 58.89 · saldo_fim_usd 209.87
-2026-05: FECHADO · saldo_fim_eur 73.10 · saldo_fim_usd 294.09 · real_eur +10.75 · real_usd +12.77 · equity_eur 350.1% · equity_usd 121.6% · 18 trades · WR 50% · PF 3.29
-2026-06: EM CURSO · base_eur 73.10 · base_usd 294.09 · meta_eur 7.31 · meta_usd 29.41
+Ver sempre `meses` no trading_data.json — é a fonte única e actual (status FECHADO/EM CURSO,
+base, meta, realizado, saldo_fim). Não duplicar esses números aqui, ficam desatualizados.
 
-## REALIZADOS ACUMULADOS JUNHO 2026
-REAL_EUR_JUN = +0.00€
-REAL_USD_JUN = +3.61$  (NVTS +1.63 + ALAB +1.98)
-(actualizar a cada fecho com realizados)
+## REALIZADOS ACUMULADOS DO MÊS EM CURSO
+Ver `meses["YYYY-MM"].realizado_eur` / `.realizado_usd` no JSON — actualizar a cada dia
+processado com saídas, nunca substituir manualmente aqui.
 
 ## FORMATO EVENTOS_DD_MM.TXT
 Ver modelo completo em: watched/MODELO_eventos.txt
