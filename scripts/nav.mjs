@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 // ═══════════════════════════════════════════════════════════════
 // NAV UNITIZADO (quotas) — padrão de fundo. node scripts/nav.mjs
-// Dia 0: NAV=100, quotas=capital/100 (capital = caixa + Σvalor posições).
+// Dia 0: NAV=100, quotas=capital/100 (capital = campo 'saldo', que já é
+// caixa + Σvalor posições -- confirmado por saldo-Σvalor==caixa em todos os dias).
 // Aporte compra quotas ao NAV do dia (NAV_pre = (capital_fim − fluxo)/quotas_antigas);
 // levantamento vende. Retorno oficial = variação do NAV (TWR — imune a aportes/levantamentos).
 // Escreve d.nav em trading_data.json. Fluxos = fund_metrics (fonte única).
-// NOTA 2026-07-17: 'saldo' no schema deste projecto é so o valor das posicoes
-// (Valor das Minhas Operacoes do screenshot) -- a caixa vem sempre em campo separado.
-// Por isso o capital total usado aqui e saldo+caixa, nao saldo sozinho.
+// NOTA 2026-07-15: NAO somar caixa outra vez aqui -- 'saldo' ja e o capital total.
 // ═══════════════════════════════════════════════════════════════
 import fs from 'fs';
 const F = new URL('../data/trading_data.json', import.meta.url);
@@ -23,7 +22,7 @@ const nav = { gerado: new Date().toISOString().slice(0, 10), metodo: 'unitizacao
 for (const acc of ['eur', 'usd']) {
   let units = null, out = [];
   for (const k of days) {
-    const s = d[k] && d[k][acc] && d[k][acc].saldo != null ? d[k][acc].saldo + (d[k][acc].caixa || 0) : null;
+    const s = d[k] && d[k][acc] ? d[k][acc].saldo : null;
     if (s == null) continue;
     const fl = flows[acc][k] || 0;
     if (units == null) { units = (s - fl) > 0 ? (s - fl) / 100 : s / 100; if (fl) units += fl / (s / ((s - fl) / 100 > 0 ? (s - fl) / ((s - fl) / 100) : 100)); }

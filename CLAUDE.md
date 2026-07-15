@@ -33,9 +33,9 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
    b) Read usd_DD_MM.png   → saldo USD, caixa USD, posições abertas USD
    c) Read eventos_DD_MM.txt → saídas, entradas, aportes, caixa, diário
 
-4. Escreve o dia YYYY-MM-DD no trading_data.json (posições abertas lidas dos screenshots,
-   saldo = valor das posições, caixa = campo separado). Um script Python `scripts/tmp_DD_MM.py`
-   por dia é o padrão usado — cria, corre, e mantém como registo do que foi escrito.
+4. Escreve o dia YYYY-MM-DD no trading_data.json (posições abertas lidas dos screenshots).
+   Um script Python `scripts/tmp_DD_MM.py` por dia é o padrão usado — cria, corre, e mantém
+   como registo do que foi escrito.
 
 5. Aplica eventos do .txt ao JSON:
    Para cada linha activa (sem #):
@@ -52,21 +52,27 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
       cotados em moeda diferente do EUR/USD como Swiss Life; "atual"=0 fora de horas de
       mercado é normal, não um erro). Ler o resultado com juízo antes de "corrigir" algo
       que na verdade está certo.
-    • NOTA schema: neste projecto `saldo` de cada dia é SEMPRE só o valor das posições
-      (o "Valor das Minhas Operações" do screenshot) — a caixa fica sempre no campo `caixa`
-      à parte. O capital total de uma conta = saldo + caixa (usado no index.html e no NAV).
+    • ⚠️ NOTA schema (confirmado empiricamente 2026-07-15, saldo−Σvalor(posições)==caixa em
+      TODOS os dias desde 29/05): `saldo` de cada dia JÁ É o capital total da conta (caixa +
+      Σvalor das posições) — é literalmente o que a XTB mostra em "Valor das Minhas Operações"
+      no fundo do ecrã, apesar do nome sugerir "só posições". O campo `caixa` é guardado
+      também, em separado, só para referência/exibição (ex: tabela XLSX) — NUNCA somar caixa
+      a saldo outra vez (AUM, Capital EUR/USD, NAV). Bug cometido e corrigido em 2026-07-15:
+      "correcao" da caixa tinha introduzido dupla contagem em index.html, no fecho de Junho/
+      base de Julho, e no nav.mjs.
 
 6c. NAV (quotas), opcional: node scripts/nav.mjs — recalcula o NAV unitizado (retorno oficial TWR).
-    Usa saldo+caixa como capital total. Corre quando quiseres que a aba NAV reflita o dia.
+    Usa `saldo` sozinho como capital total (NÃO somar caixa). Corre quando quiseres que a aba
+    NAV reflita o dia.
     • Depósito/levantamento/transferência EXTERNOS: registar SEMPRE em fund_metrics
       (usd.aportes / eur.transferencias, com data) — o NAV lê dali. Aportes a posições
       financiados pela caixa NÃO são fluxos externos.
 
 7. Actualiza index.html:
-   • Capital EUR / USD = saldo + caixa do dia (capital total, não só posições)
+   • Capital EUR / USD = saldo do dia (já é o capital total, NÃO somar caixa outra vez)
    • Retorno EUR/USD % meta (= (REAL+LUCRO_ABT) / meta × 100)
    • Equity sub (realizado + lucro aberto)
-   • AUM (capital total EUR + capital total USD × fx do dia; fallback 0.92)
+   • AUM (saldo_EUR + saldo_USD × fx do dia; fallback 0.92)
 
 8. Move para ./watched/processados/YYYY-MM-DD/:
    eur_DD_MM.png, usd_DD_MM.png, eventos_DD_MM.txt
