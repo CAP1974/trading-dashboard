@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-14",
+    "gerado": "2026-07-15",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -13979,7 +13979,7 @@
         92.07
       ],
       [
-        "2026-07-17",
+        "2026-07-14",
         94.82
       ]
     ],
@@ -14125,7 +14125,7 @@
         84.59
       ],
       [
-        "2026-07-17",
+        "2026-07-14",
         81.41
       ]
     ],
@@ -14301,7 +14301,7 @@
       }
     ]
   },
-  "2026-07-17": {
+  "2026-07-14": {
     "eur": {
       "saldo": 70.05,
       "caixa": 0.39,
@@ -14441,7 +14441,7 @@
       },
       {
         "tipo": "diario",
-        "nota": "Nota: dias 11,12,14,15,16/07 sem screenshot/registo individual (gap no pipeline). Composicao da carteira entre o fecho do dia 13 (ultimo commit valido) e hoje manteve-se identica, excepto as 2 operacoes de hoje (CNQ saida, Loews entrada) -- sem impacto nos realizados desses dias."
+        "nota": "Nota: dias 11,12,15,16/07 sem screenshot/registo individual (gap no pipeline). Composicao da carteira entre o fecho do dia 13 (ultimo commit valido) e hoje manteve-se identica, excepto as 2 operacoes de hoje (CNQ saida, Loews entrada) -- sem impacto nos realizados desses dias."
       }
     ],
     "posicoes_fechadas": [
@@ -14453,11 +14453,11 @@
         "lucro_pct": 2.08,
         "tipo": "lucro",
         "data_entrada": "2026-07-08",
-        "data_saida": "2026-07-17",
+        "data_saida": "2026-07-14",
         "preco_entrada": 42.3,
         "preco_saida": 43.18,
         "volume": 0.62,
-        "dias_holding": 9,
+        "dias_holding": 6,
         "setup": "Ajuste Macro",
         "nota_entrada": "ENTRADA CNQ Ajuste Macro",
         "nota_saida": "mudanca macro",
