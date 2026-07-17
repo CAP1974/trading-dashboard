@@ -130,7 +130,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": -0.08,
-      "realizado_usd": -5.45,
+      "realizado_usd": -8.46,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-16",
+    "gerado": "2026-07-17",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -13989,6 +13989,10 @@
       [
         "2026-07-16",
         93.32
+      ],
+      [
+        "2026-07-17",
+        93.56
       ]
     ],
     "usd": [
@@ -14143,6 +14147,10 @@
       [
         "2026-07-16",
         89.47
+      ],
+      [
+        "2026-07-17",
+        89.9
       ]
     ],
     "twr_mensal": {
@@ -14155,8 +14163,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": -0.6,
-        "usd": -8.1
+        "eur": -0.3,
+        "usd": -7.7
       }
     }
   },
@@ -14805,5 +14813,170 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-07-17": {
+    "eur": {
+      "saldo": 69.42,
+      "caixa": 1.09,
+      "lucro": -0.58,
+      "positions": [
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 948.4,
+          "lucro": -0.02,
+          "pct": -0.04,
+          "trust": "r",
+          "valor": 49.6,
+          "delta": null
+        },
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 53.85,
+          "lucro": -0.56,
+          "pct": -2.9,
+          "trust": "r",
+          "valor": 18.73,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 264.86,
+      "caixa": 1.73,
+      "lucro": -12.99,
+      "positions": [
+        {
+          "name": "Dave Inc",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 401.93,
+          "atual": 0,
+          "lucro": 3.58,
+          "pct": 8.91,
+          "trust": "v",
+          "valor": 43.77,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 0,
+          "lucro": 0.76,
+          "pct": 1.1,
+          "trust": "v",
+          "valor": 69.98,
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 334.12,
+          "atual": 0,
+          "lucro": -0.06,
+          "pct": -0.14,
+          "trust": "r",
+          "valor": 43.38,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.628,
+          "abertura": 71.09,
+          "atual": 0,
+          "lucro": -0.3,
+          "pct": -0.67,
+          "trust": "r",
+          "valor": 44.35,
+          "delta": null
+        },
+        {
+          "name": "Crowdstrike",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 207.88,
+          "atual": 0,
+          "lucro": -0.98,
+          "pct": -2.36,
+          "trust": "r",
+          "valor": 40.6,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 0,
+          "lucro": -6.28,
+          "pct": -42.03,
+          "trust": "r",
+          "valor": 8.66,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221,
+          "atual": 0,
+          "lucro": -9.71,
+          "pct": -43.94,
+          "trust": "r",
+          "valor": 12.39,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "ASTH",
+        "ativo": "Astrana Health",
+        "mkt": "USD",
+        "nota": "SAIDA ASTH 1 @ 44.08 -- EMA21+ST1 -- -3.01$"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "AAPL",
+        "ativo": "Apple",
+        "mkt": "USD",
+        "nota": "ENTRADA AAPL 0.13 @ 334.12 -- VCP"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saida ASTH por EMA21+ST1. Entrada AAPL (VCP). Cerebras e SpaceX seguem a piorar (-42.03%% e -43.94%%)."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "ASTH",
+        "nome": "Astrana Health",
+        "mkt": "USD",
+        "lucro": -3.01,
+        "lucro_pct": -6.39,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-07-08",
+        "data_saida": "2026-07-17",
+        "preco_entrada": 47.09,
+        "preco_saida": 44.08,
+        "volume": 1,
+        "dias_holding": 9,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "ENTRADA ASTH Ajuste Macro",
+        "nota_saida": "EMA21+ST1",
+        "imagem_setup": null,
+        "rating": 0
+      }
+    ]
   }
 }
