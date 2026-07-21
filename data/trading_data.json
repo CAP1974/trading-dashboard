@@ -130,7 +130,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": -0.08,
-      "realizado_usd": -8.46,
+      "realizado_usd": -11.64,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-20",
+    "gerado": "2026-07-21",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -13997,6 +13997,10 @@
       [
         "2026-07-20",
         93.32
+      ],
+      [
+        "2026-07-21",
+        93.96
       ]
     ],
     "usd": [
@@ -14159,6 +14163,10 @@
       [
         "2026-07-20",
         88.78
+      ],
+      [
+        "2026-07-21",
+        89.97
       ]
     ],
     "twr_mensal": {
@@ -14171,8 +14179,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": -0.6,
-        "usd": -8.8
+        "eur": 0.1,
+        "usd": -7.6
       }
     }
   },
@@ -15117,5 +15125,151 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-07-21": {
+    "eur": {
+      "saldo": 69.72,
+      "caixa": 1.09,
+      "lucro": -0.28,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 56.21,
+          "lucro": 0.33,
+          "pct": 1.71,
+          "trust": "v",
+          "valor": 19.62,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 941.6,
+          "lucro": -0.61,
+          "pct": -1.23,
+          "trust": "r",
+          "valor": 49.01,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 265.06,
+      "caixa": 40.12,
+      "lucro": -9.6,
+      "positions": [
+        {
+          "name": "Dave Inc",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 401.93,
+          "atual": 435.27,
+          "lucro": 3.34,
+          "pct": 8.31,
+          "trust": "v",
+          "valor": 43.53,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 404.06,
+          "lucro": 1.49,
+          "pct": 2.15,
+          "trust": "v",
+          "valor": 70.71,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.628,
+          "abertura": 71.09,
+          "atual": 72.3,
+          "lucro": 0.75,
+          "pct": 1.68,
+          "trust": "v",
+          "valor": 45.4,
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 334.12,
+          "atual": 327.63,
+          "lucro": -0.85,
+          "pct": -1.96,
+          "trust": "r",
+          "valor": 42.59,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 207.37,
+          "lucro": -4.57,
+          "pct": -30.59,
+          "trust": "r",
+          "valor": 10.37,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221,
+          "atual": 123.43,
+          "lucro": -9.76,
+          "pct": -44.16,
+          "trust": "r",
+          "valor": 12.34,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "CRWD",
+        "ativo": "Crowdstrike",
+        "mkt": "USD",
+        "nota": "SAIDA CRWD 0.2 @ 191.98 -- quebra ema21 -- -3.18$"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Saida CRWD por quebra ema21. Dave Inc, Humana e Brightspring recuperam bem. Cerebras (-30.59%) e SpaceX (-44.16%) continuam pesados."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "CRWD",
+        "nome": "Crowdstrike",
+        "mkt": "USD",
+        "lucro": -3.18,
+        "lucro_pct": -1.53,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-07-15",
+        "data_saida": "2026-07-21",
+        "preco_entrada": 207.88,
+        "preco_saida": 191.98,
+        "volume": 0.2,
+        "dias_holding": 6,
+        "setup": "PB4/5",
+        "nota_entrada": "ENTRADA CRWD PB4/5",
+        "nota_saida": "quebra ema21",
+        "imagem_setup": null,
+        "rating": 0
+      }
+    ]
   }
 }
