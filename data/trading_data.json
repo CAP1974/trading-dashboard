@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-21",
+    "gerado": "2026-07-22",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14001,6 +14001,10 @@
       [
         "2026-07-21",
         93.96
+      ],
+      [
+        "2026-07-22",
+        94.42
       ]
     ],
     "usd": [
@@ -14167,6 +14171,10 @@
       [
         "2026-07-21",
         89.97
+      ],
+      [
+        "2026-07-22",
+        88.18
       ]
     ],
     "twr_mensal": {
@@ -14179,8 +14187,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": 0.1,
-        "usd": -7.6
+        "eur": 0.6,
+        "usd": -9.4
       }
     }
   },
@@ -15271,5 +15279,124 @@
         "rating": 0
       }
     ]
+  },
+  "2026-07-22": {
+    "eur": {
+      "saldo": 70.06,
+      "caixa": 1.09,
+      "lucro": 0.06,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 56,
+          "lucro": 0.24,
+          "pct": 1.24,
+          "trust": "v",
+          "valor": 19.53,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 951.6,
+          "lucro": -0.18,
+          "pct": -0.36,
+          "trust": "r",
+          "valor": 49.44,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 259.8,
+      "caixa": 40.12,
+      "lucro": -14.86,
+      "positions": [
+        {
+          "name": "Dave Inc",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 401.93,
+          "atual": 423.26,
+          "lucro": 2.14,
+          "pct": 5.32,
+          "trust": "v",
+          "valor": 42.33,
+          "delta": null
+        },
+        {
+          "name": "Humana",
+          "mkt": "USD",
+          "vol": 0.175,
+          "abertura": 395.53,
+          "atual": 396.35,
+          "lucro": 0.14,
+          "pct": 0.2,
+          "trust": "v",
+          "valor": 69.36,
+          "delta": null
+        },
+        {
+          "name": "Brightspring Health",
+          "mkt": "USD",
+          "vol": 0.628,
+          "abertura": 71.09,
+          "atual": 69.49,
+          "lucro": -1.02,
+          "pct": -2.28,
+          "trust": "r",
+          "valor": 43.63,
+          "delta": null
+        },
+        {
+          "name": "Apple",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 334.12,
+          "atual": 326.31,
+          "lucro": -1.02,
+          "pct": -2.35,
+          "trust": "r",
+          "valor": 42.42,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.05,
+          "abertura": 298.76,
+          "atual": 208.18,
+          "lucro": -4.53,
+          "pct": -30.32,
+          "trust": "r",
+          "valor": 10.41,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 221,
+          "atual": 115.28,
+          "lucro": -10.57,
+          "pct": -47.83,
+          "trust": "r",
+          "valor": 11.53,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades hoje. EUR: Copper +1.24%, Swiss Life -0.36%. USD: Dave Inc e Humana positivos, mas Cerebras -30.32% e SpaceX -47.83% continuam a dominar o floating negativo."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
