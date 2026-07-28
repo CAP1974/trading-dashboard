@@ -130,7 +130,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": -0.08,
-      "realizado_usd": -12.42,
+      "realizado_usd": -14.78,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-27",
+    "gerado": "2026-07-28",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14017,6 +14017,10 @@
       [
         "2026-07-27",
         93.42
+      ],
+      [
+        "2026-07-28",
+        93.02
       ]
     ],
     "usd": [
@@ -14199,6 +14203,10 @@
       [
         "2026-07-27",
         85.64
+      ],
+      [
+        "2026-07-28",
+        86.31
       ]
     ],
     "twr_mensal": {
@@ -14211,8 +14219,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": -0.5,
-        "usd": -12
+        "eur": -0.9,
+        "usd": -11.4
       }
     }
   },
@@ -15996,6 +16004,197 @@
         "nota_saida": "earnings proximo -- saida completa",
         "imagem_setup": null,
         "rating": 1
+      }
+    ]
+  },
+  "2026-07-28": {
+    "eur": {
+      "saldo": 69.02,
+      "caixa": 1.09,
+      "lucro": -0.98,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 54.56,
+          "lucro": -0.24,
+          "pct": -1.24,
+          "trust": "r",
+          "valor": 19.05,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 943.6,
+          "lucro": -0.74,
+          "pct": -1.49,
+          "trust": "r",
+          "valor": 48.88,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 254.28,
+      "caixa": 24.69,
+      "lucro": -17.24,
+      "positions": [
+        {
+          "name": "Travelers",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 387.77,
+          "atual": 397.33,
+          "lucro": 0.95,
+          "pct": 2.45,
+          "trust": "v",
+          "valor": 39.73,
+          "delta": null
+        },
+        {
+          "name": "MetLife",
+          "mkt": "USD",
+          "vol": 0.5,
+          "abertura": 95.32,
+          "atual": 97.52,
+          "lucro": 1.1,
+          "pct": 2.31,
+          "trust": "v",
+          "valor": 48.76,
+          "delta": null
+        },
+        {
+          "name": "J&J",
+          "mkt": "USD",
+          "vol": 0.045,
+          "abertura": 262.46,
+          "atual": 266.62,
+          "lucro": 0.19,
+          "pct": 1.61,
+          "trust": "v",
+          "valor": 12,
+          "delta": null
+        },
+        {
+          "name": "Eli Lilly",
+          "mkt": "USD",
+          "vol": 0.04,
+          "abertura": 1223.54,
+          "atual": 1218.99,
+          "lucro": -0.18,
+          "pct": -0.37,
+          "trust": "r",
+          "valor": 48.76,
+          "delta": null
+        },
+        {
+          "name": "Canadian Natural",
+          "mkt": "USD",
+          "vol": 1.12,
+          "abertura": 46.97,
+          "atual": 44.2,
+          "lucro": -3.1,
+          "pct": -5.89,
+          "trust": "r",
+          "valor": 49.5,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 191.21,
+          "lucro": -5.85,
+          "pct": -30.42,
+          "trust": "r",
+          "valor": 13.38,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.15,
+          "abertura": 185.37,
+          "atual": 116.38,
+          "lucro": -10.35,
+          "pct": -37.22,
+          "trust": "r",
+          "valor": 17.46,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "HUM",
+        "ativo": "Humana",
+        "mkt": "USD",
+        "nota": "SAIDA HUM 0.15 @ 382.05 -- lateralizacao/distribuicao -- -2.02$ (tranche 1/2)"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "HUM",
+        "ativo": "Humana",
+        "mkt": "USD",
+        "nota": "SAIDA HUM 0.025 @ 382.05 -- lateralizacao/distribuicao -- -0.34$ (tranche 2/2, saida completa)"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "LLY",
+        "ativo": "Eli Lilly",
+        "mkt": "USD",
+        "nota": "ENTRADA LLY 0.04 @ 1223.54 -- WMS 84+"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Humana fechada por completo (2 tranches) por lateralizacao/distribuicao. Entrada Eli Lilly. Cerebras -30.42% e SpaceX -37.22% continuam pesados."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "HUM",
+        "nome": "Humana (tranche 1/2)",
+        "mkt": "USD",
+        "lucro": -2.02,
+        "lucro_pct": -3.41,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-29",
+        "data_saida": "2026-07-28",
+        "preco_entrada": 395.5,
+        "preco_saida": 382.05,
+        "volume": 0.15,
+        "dias_holding": 29,
+        "setup": "Lateralizacao",
+        "nota_entrada": "entrada anterior (data aproximada)",
+        "nota_saida": "lateralizacao/distribuicao",
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "HUM",
+        "nome": "Humana (tranche 2/2)",
+        "mkt": "USD",
+        "lucro": -0.34,
+        "lucro_pct": -3.45,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-06-29",
+        "data_saida": "2026-07-28",
+        "preco_entrada": 395.69,
+        "preco_saida": 382.05,
+        "volume": 0.025,
+        "dias_holding": 29,
+        "setup": "Lateralizacao",
+        "nota_entrada": "entrada anterior (data aproximada)",
+        "nota_saida": "lateralizacao/distribuicao -- saida completa",
+        "imagem_setup": null,
+        "rating": 0
       }
     ]
   }
