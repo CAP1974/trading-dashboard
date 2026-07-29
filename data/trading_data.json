@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-28",
+    "gerado": "2026-07-29",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14021,6 +14021,10 @@
       [
         "2026-07-28",
         93.02
+      ],
+      [
+        "2026-07-29",
+        92.25
       ]
     ],
     "usd": [
@@ -14207,6 +14211,10 @@
       [
         "2026-07-28",
         86.31
+      ],
+      [
+        "2026-07-29",
+        85.96
       ]
     ],
     "twr_mensal": {
@@ -14219,8 +14227,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": -0.9,
-        "usd": -11.4
+        "eur": -1.7,
+        "usd": -11.7
       }
     }
   },
@@ -16197,5 +16205,136 @@
         "rating": 0
       }
     ]
+  },
+  "2026-07-29": {
+    "eur": {
+      "saldo": 68.45,
+      "caixa": 1.09,
+      "lucro": -1.55,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 54.25,
+          "lucro": -0.43,
+          "pct": -2.23,
+          "trust": "r",
+          "valor": 18.86,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 938.2,
+          "lucro": -1.12,
+          "pct": -2.26,
+          "trust": "r",
+          "valor": 48.5,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 253.27,
+      "caixa": 24.69,
+      "lucro": -18.25,
+      "positions": [
+        {
+          "name": "MetLife",
+          "mkt": "USD",
+          "vol": 0.5,
+          "abertura": 95.32,
+          "atual": 96.99,
+          "lucro": 0.84,
+          "pct": 1.76,
+          "trust": "v",
+          "valor": 48.5,
+          "delta": null
+        },
+        {
+          "name": "J&J",
+          "mkt": "USD",
+          "vol": 0.045,
+          "abertura": 262.46,
+          "atual": 265.73,
+          "lucro": 0.15,
+          "pct": 1.27,
+          "trust": "v",
+          "valor": 11.96,
+          "delta": null
+        },
+        {
+          "name": "Travelers",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 387.77,
+          "atual": 389.34,
+          "lucro": 0.15,
+          "pct": 0.39,
+          "trust": "v",
+          "valor": 38.93,
+          "delta": null
+        },
+        {
+          "name": "Eli Lilly",
+          "mkt": "USD",
+          "vol": 0.04,
+          "abertura": 1223.54,
+          "atual": 1210.9,
+          "lucro": -0.5,
+          "pct": -1.02,
+          "trust": "r",
+          "valor": 48.44,
+          "delta": null
+        },
+        {
+          "name": "Canadian Natural",
+          "mkt": "USD",
+          "vol": 1.12,
+          "abertura": 46.97,
+          "atual": 46.48,
+          "lucro": -0.54,
+          "pct": -1.03,
+          "trust": "r",
+          "valor": 52.06,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 169.16,
+          "lucro": -7.39,
+          "pct": -38.43,
+          "trust": "r",
+          "valor": 11.84,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.15,
+          "abertura": 185.37,
+          "atual": 112.34,
+          "lucro": -10.96,
+          "pct": -39.41,
+          "trust": "r",
+          "valor": 16.85,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades hoje. EUR: Copper e Swiss Life ambas negativas. USD: MetLife, J&J e Travelers positivos, mas Cerebras -38.43% e SpaceX -39.41% dominam o floating negativo."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
