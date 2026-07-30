@@ -13830,7 +13830,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-07-29",
+    "gerado": "2026-07-30",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14025,6 +14025,10 @@
       [
         "2026-07-29",
         92.25
+      ],
+      [
+        "2026-07-30",
+        93.68
       ]
     ],
     "usd": [
@@ -14215,6 +14219,10 @@
       [
         "2026-07-29",
         85.96
+      ],
+      [
+        "2026-07-30",
+        85.68
       ]
     ],
     "twr_mensal": {
@@ -14227,8 +14235,8 @@
         "usd": -2.5
       },
       "2026-07": {
-        "eur": -1.7,
-        "usd": -11.7
+        "eur": -0.2,
+        "usd": -12
       }
     }
   },
@@ -16333,6 +16341,137 @@
       {
         "tipo": "diario",
         "nota": "Sem trades hoje. EUR: Copper e Swiss Life ambas negativas. USD: MetLife, J&J e Travelers positivos, mas Cerebras -38.43% e SpaceX -39.41% dominam o floating negativo."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-07-30": {
+    "eur": {
+      "saldo": 69.51,
+      "caixa": 1.09,
+      "lucro": -0.49,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 55.46,
+          "lucro": -0.14,
+          "pct": -0.73,
+          "trust": "r",
+          "valor": 19.15,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 947.6,
+          "lucro": -0.35,
+          "pct": -0.71,
+          "trust": "r",
+          "valor": 49.27,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 252.43,
+      "caixa": 24.69,
+      "lucro": -19.09,
+      "positions": [
+        {
+          "name": "MetLife",
+          "mkt": "USD",
+          "vol": 0.5,
+          "abertura": 95.32,
+          "atual": 97.08,
+          "lucro": 0.88,
+          "pct": 1.85,
+          "trust": "v",
+          "valor": 48.54,
+          "delta": null
+        },
+        {
+          "name": "Canadian Natural",
+          "mkt": "USD",
+          "vol": 1.12,
+          "abertura": 46.97,
+          "atual": 47.26,
+          "lucro": 0.33,
+          "pct": 0.63,
+          "trust": "v",
+          "valor": 52.93,
+          "delta": null
+        },
+        {
+          "name": "J&J",
+          "mkt": "USD",
+          "vol": 0.045,
+          "abertura": 262.46,
+          "atual": 255.77,
+          "lucro": -0.3,
+          "pct": -2.54,
+          "trust": "r",
+          "valor": 11.51,
+          "delta": null
+        },
+        {
+          "name": "Travelers",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 387.77,
+          "atual": 375.94,
+          "lucro": -1.19,
+          "pct": -3.07,
+          "trust": "r",
+          "valor": 37.59,
+          "delta": null
+        },
+        {
+          "name": "Eli Lilly",
+          "mkt": "USD",
+          "vol": 0.04,
+          "abertura": 1223.54,
+          "atual": 1155.62,
+          "lucro": -2.72,
+          "pct": -5.56,
+          "trust": "r",
+          "valor": 46.22,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 201.56,
+          "lucro": -5.12,
+          "pct": -26.63,
+          "trust": "r",
+          "valor": 14.11,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.15,
+          "abertura": 185.37,
+          "atual": 112.29,
+          "lucro": -10.97,
+          "pct": -39.45,
+          "trust": "r",
+          "valor": 16.84,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades hoje. EUR: Copper e Swiss Life ambas ligeiramente negativas. USD: MetLife e CNRL positivos, mas Cerebras -26.63% e SpaceX -39.45% continuam a pesar."
       }
     ],
     "posicoes_fechadas": []
