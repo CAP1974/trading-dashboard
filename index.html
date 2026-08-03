@@ -341,27 +341,27 @@ body{
 <div class="fund-header">
   <div class="fh-item">
     <div class="fh-label">Capital EUR</div>
-    <div class="fh-value up" id="fh-cap-eur">69,87 €</div>
+    <div class="fh-value down" id="fh-cap-eur">69,78 €</div>
     <div class="fh-sub" id="fh-cap-eur-sub">base 69,87€ · lucro real Ago +0,00€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Capital USD</div>
-    <div class="fh-value down" id="fh-cap-usd">250,40 $</div>
-    <div class="fh-sub" id="fh-cap-usd-sub">base 250,40$ · lucro real Ago +0,00$</div>
+    <div class="fh-value up" id="fh-cap-usd">251,60 $</div>
+    <div class="fh-sub" id="fh-cap-usd-sub">base 250,40$ · lucro real Ago +0,40$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno EUR Agosto</div>
-    <div class="fh-value down" id="fh-ret-eur">-1,9% meta</div>
-    <div class="fh-sub">equity -0,13€ · realizado +0,00€</div>
+    <div class="fh-value down" id="fh-ret-eur">-3,1% meta</div>
+    <div class="fh-sub">equity -0,22€ · realizado +0,00€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno USD Agosto</div>
-    <div class="fh-value down" id="fh-ret-usd">-63,1% meta</div>
-    <div class="fh-sub">equity -15,79$ · realizado +0,00$</div>
+    <div class="fh-value down" id="fh-ret-usd">-58,3% meta</div>
+    <div class="fh-sub">equity -14,59$ · realizado +0,40$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">AUM Total ~EUR</div>
-    <div class="fh-value grad" id="fh-aum">≈ 300 €</div>
+    <div class="fh-value grad" id="fh-aum">≈ 398 €</div>
     <div class="fh-sub">EUR + USD convertido</div>
   </div>
   <div class="fh-item">
@@ -628,7 +628,7 @@ body{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="data.js?v=1785529576926"></script>
+<script src="data.js?v=1785788205176"></script>
 <script>
 /* ── CLOCK ── */
 function tick(){
@@ -848,8 +848,8 @@ function exportExcel(){
     ['Data de exportação',new Date().toLocaleDateString('pt-PT'),'',''],
     ['','','',''],
     ['CAPITAL ACTUAL','','',''],
-    ['Conta EUR (8MSN)','69.87 €','Caixa EUR','1.09 €'],
-    ['Conta USD (OMV)','250.40 USD','Caixa USD','117.80 USD'],
+    ['Conta EUR (8MSN)','69.78 €','Caixa EUR','1.09 €'],
+    ['Conta USD (OMV)','251.60 USD','Caixa USD','103.53 USD'],
     ['AUM Total ~EUR','≈ 325 €','',''],
     ['','','',''],
     ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
