@@ -158,7 +158,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 0,
-      "realizado_usd": 0.4,
+      "realizado_usd": -0.83,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13858,7 +13858,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-03",
+    "gerado": "2026-08-04",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14065,6 +14065,10 @@
       [
         "2026-08-03",
         94.04
+      ],
+      [
+        "2026-08-04",
+        94.87
       ]
     ],
     "usd": [
@@ -14267,6 +14271,10 @@
       [
         "2026-08-03",
         85.4
+      ],
+      [
+        "2026-08-04",
+        86.11
       ]
     ],
     "twr_mensal": {
@@ -14283,8 +14291,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -0.1,
-        "usd": 0.5
+        "eur": 0.8,
+        "usd": 1.3
       }
     }
   },
@@ -16831,6 +16839,168 @@
         "nota_saida": "Earnings 3 Sessoes",
         "imagem_setup": null,
         "rating": 1
+      }
+    ]
+  },
+  "2026-08-04": {
+    "eur": {
+      "saldo": 70.39,
+      "caixa": 1.09,
+      "lucro": 0.39,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 57.16,
+          "lucro": 0.46,
+          "pct": 2.38,
+          "trust": "v",
+          "valor": 19.75,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 957.6,
+          "lucro": -0.07,
+          "pct": -0.14,
+          "trust": "r",
+          "valor": 49.55,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 253.71,
+      "caixa": 154.91,
+      "lucro": -11.66,
+      "positions": [
+        {
+          "name": "Bank of America",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 62.33,
+          "atual": 62.91,
+          "lucro": 0.58,
+          "pct": 0.93,
+          "trust": "v",
+          "valor": 62.91,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 225.04,
+          "lucro": -3.48,
+          "pct": -18.1,
+          "trust": "r",
+          "valor": 15.75,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 125.87,
+          "lucro": -8.76,
+          "pct": -30.31,
+          "trust": "r",
+          "valor": 20.14,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "CNQ",
+        "ativo": "Canadian Natural",
+        "mkt": "USD",
+        "nota": "SAIDA CNQ 0.5 @ 45.85 -- Earnings 3 sessoes -- -0.54$ (tranche 1/3)"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "CNQ",
+        "ativo": "Canadian Natural",
+        "mkt": "USD",
+        "nota": "SAIDA CNQ 0.5 @ 45.85 -- Earnings 3 sessoes -- -0.56$ (tranche 2/3)"
+      },
+      {
+        "tipo": "saida",
+        "ticker": "CNQ",
+        "ativo": "Canadian Natural",
+        "mkt": "USD",
+        "nota": "SAIDA CNQ 0.12 @ 45.91 -- Earnings 3 sessoes -- -0.13$ (tranche 3/3, saida completa)"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Canadian Natural fechada por completo (3 tranches, earnings 3 sessoes). Cerebras -18.10% e SpaceX -30.31% continuam a pesar."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "CNQ",
+        "nome": "Canadian Natural (tranche 1/3)",
+        "mkt": "USD",
+        "lucro": -0.54,
+        "lucro_pct": -2.32,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-07-23",
+        "data_saida": "2026-08-04",
+        "preco_entrada": 46.94,
+        "preco_saida": 45.85,
+        "volume": 0.5,
+        "dias_holding": 12,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "ENTRADA CNRL nao registada, confirmada pela caixa (23/07)",
+        "nota_saida": "Earnings 3 sessoes",
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "CNQ",
+        "nome": "Canadian Natural (tranche 2/3)",
+        "mkt": "USD",
+        "lucro": -0.56,
+        "lucro_pct": -1.19,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-07-23",
+        "data_saida": "2026-08-04",
+        "preco_entrada": 46.99,
+        "preco_saida": 45.85,
+        "volume": 0.5,
+        "dias_holding": 12,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "ENTRADA CNRL nao registada, confirmada pela caixa (23/07)",
+        "nota_saida": "Earnings 3 sessoes",
+        "imagem_setup": null,
+        "rating": 0
+      },
+      {
+        "ticker": "CNQ",
+        "nome": "Canadian Natural (tranche 3/3)",
+        "mkt": "USD",
+        "lucro": -0.13,
+        "lucro_pct": -2.3,
+        "tipo": "prejuizo",
+        "data_entrada": "2026-07-23",
+        "data_saida": "2026-08-04",
+        "preco_entrada": 46.99,
+        "preco_saida": 45.91,
+        "volume": 0.12,
+        "dias_holding": 12,
+        "setup": "Ajuste Macro",
+        "nota_entrada": "ENTRADA CNRL nao registada, confirmada pela caixa (23/07)",
+        "nota_saida": "Earnings 3 sessoes -- saida completa",
+        "imagem_setup": null,
+        "rating": 0
       }
     ]
   }
