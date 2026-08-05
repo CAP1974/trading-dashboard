@@ -13858,7 +13858,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-04",
+    "gerado": "2026-08-05",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14069,6 +14069,10 @@
       [
         "2026-08-04",
         94.87
+      ],
+      [
+        "2026-08-05",
+        94.29
       ]
     ],
     "usd": [
@@ -14275,6 +14279,10 @@
       [
         "2026-08-04",
         86.11
+      ],
+      [
+        "2026-08-05",
+        83.88
       ]
     ],
     "twr_mensal": {
@@ -14291,8 +14299,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": 0.8,
-        "usd": 1.3
+        "eur": 0.1,
+        "usd": -1.3
       }
     }
   },
@@ -17003,5 +17011,121 @@
         "rating": 0
       }
     ]
+  },
+  "2026-08-05": {
+    "eur": {
+      "saldo": 69.96,
+      "caixa": 1.09,
+      "lucro": -0.04,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 57.55,
+          "lucro": 0.55,
+          "pct": 2.85,
+          "trust": "v",
+          "valor": 19.84,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 947.2,
+          "lucro": -0.59,
+          "pct": -1.19,
+          "trust": "r",
+          "valor": 49.03,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 247.12,
+      "caixa": 50.52,
+      "lucro": -18.24,
+      "positions": [
+        {
+          "name": "Bank of America",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 62.33,
+          "atual": 63.22,
+          "lucro": 0.89,
+          "pct": 1.43,
+          "trust": "v",
+          "valor": 63.22,
+          "delta": null
+        },
+        {
+          "name": "Palo Alto",
+          "mkt": "USD",
+          "vol": 0.28,
+          "abertura": 372.77,
+          "atual": 361.34,
+          "lucro": -3.21,
+          "pct": -3.08,
+          "trust": "r",
+          "valor": 101.17,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 212.7,
+          "lucro": -4.34,
+          "pct": -22.57,
+          "trust": "r",
+          "valor": 14.89,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 108.26,
+          "lucro": -11.58,
+          "pct": -40.07,
+          "trust": "r",
+          "valor": 17.32,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ticker": "PANW",
+        "ativo": "Palo Alto",
+        "mkt": "USD",
+        "nota": "ENTRADA PANW 0.2 @ 376.18 -- Clean Trend (tranche 1/3)"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "PANW",
+        "ativo": "Palo Alto",
+        "mkt": "USD",
+        "nota": "ENTRADA PANW 0.04 @ 364.48 -- Clean Trend (tranche 2/3)"
+      },
+      {
+        "tipo": "entrada",
+        "ticker": "PANW",
+        "ativo": "Palo Alto",
+        "mkt": "USD",
+        "nota": "ENTRADA PANW 0.04 @ 363.98 -- Clean Trend (tranche 3/3) -- vol total 0.28 preco medio 372.77"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Entrada Palo Alto em 3 tranches (Clean Trend). Cerebras -22.57% e SpaceX -40.07% continuam a pesar."
+      }
+    ],
+    "posicoes_fechadas": []
   }
 }
