@@ -13858,7 +13858,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-05",
+    "gerado": "2026-08-06",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14073,6 +14073,10 @@
       [
         "2026-08-05",
         94.29
+      ],
+      [
+        "2026-08-06",
+        94.65
       ]
     ],
     "usd": [
@@ -14283,6 +14287,10 @@
       [
         "2026-08-05",
         83.88
+      ],
+      [
+        "2026-08-06",
+        83.88
       ]
     ],
     "twr_mensal": {
@@ -14299,7 +14307,7 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": 0.1,
+        "eur": 0.5,
         "usd": -1.3
       }
     }
@@ -17124,6 +17132,123 @@
       {
         "tipo": "diario",
         "nota": "Entrada Palo Alto em 3 tranches (Clean Trend). Cerebras -22.57% e SpaceX -40.07% continuam a pesar."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-06": {
+    "eur": {
+      "saldo": 70.23,
+      "caixa": 1.09,
+      "lucro": 0.23,
+      "positions": [
+        {
+          "name": "Copper (WisdomTree)",
+          "mkt": "EUR",
+          "vol": 0.4,
+          "abertura": 55,
+          "atual": 57.84,
+          "lucro": 0.69,
+          "pct": 3.58,
+          "trust": "v",
+          "valor": 19.98,
+          "delta": null
+        },
+        {
+          "name": "Swiss Life",
+          "mkt": "EUR",
+          "vol": 0.0485,
+          "abertura": 940.33,
+          "atual": 953.4,
+          "lucro": -0.46,
+          "pct": -0.93,
+          "trust": "r",
+          "valor": 49.16,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 247.12,
+      "caixa": 0.36,
+      "lucro": -18.24,
+      "positions": [
+        {
+          "name": "Bank of America",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 62.33,
+          "atual": 62.97,
+          "lucro": 0.64,
+          "pct": 1.03,
+          "trust": "v",
+          "valor": 62.97,
+          "delta": null
+        },
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.03,
+          "abertura": 497.97,
+          "atual": 499.62,
+          "lucro": 0.05,
+          "pct": 0.33,
+          "trust": "v",
+          "valor": 14.99,
+          "delta": null
+        },
+        {
+          "name": "Palo Alto",
+          "mkt": "USD",
+          "vol": 0.38,
+          "abertura": 367.35,
+          "atual": 357.65,
+          "lucro": -3.68,
+          "pct": -2.64,
+          "trust": "r",
+          "valor": 135.92,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 207.43,
+          "lucro": -4.71,
+          "pct": -24.49,
+          "trust": "r",
+          "valor": 14.52,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 114.72,
+          "lucro": -10.54,
+          "pct": -36.47,
+          "trust": "r",
+          "valor": 18.36,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ticker": "MSFT",
+        "ativo": "Microsoft",
+        "mkt": "USD",
+        "nota": "ENTRADA MSFT 0.03 @ 497.97"
+      },
+      {
+        "tipo": "aporte",
+        "ticker": "PANW",
+        "ativo": "Palo Alto",
+        "mkt": "USD",
+        "nota": "APORTE PANW +0.10 @ 352.18 -- vol total 0.38 preco medio 367.35 (eventos.txt tinha vol:0.01, corrigido para 0.10 -- caixa e preco medio so batem certo com 0.10)"
       }
     ],
     "posicoes_fechadas": []
