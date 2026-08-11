@@ -13858,7 +13858,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-10",
+    "gerado": "2026-08-11",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14085,6 +14085,10 @@
       [
         "2026-08-10",
         93.4
+      ],
+      [
+        "2026-08-11",
+        93.23
       ]
     ],
     "usd": [
@@ -14307,6 +14311,10 @@
       [
         "2026-08-10",
         89.5
+      ],
+      [
+        "2026-08-11",
+        89.31
       ]
     ],
     "twr_mensal": {
@@ -14323,8 +14331,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -0.8,
-        "usd": 5.3
+        "eur": -1,
+        "usd": 5.1
       }
     }
   },
@@ -17579,6 +17587,113 @@
       {
         "tipo": "diario",
         "nota": "Sem trades hoje. EUR: Allianz e Schneider ambas ligeiramente negativas. USD: Palo Alto forte +4.58%, Bank of America +2.47% e Microsoft +1.61%, mas Cerebras -16.28% e SpaceX -23.25% ainda pesam."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-11": {
+    "eur": {
+      "saldo": 69.18,
+      "caixa": 1.45,
+      "lucro": -0.27,
+      "positions": [
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 305.2,
+          "lucro": 0.07,
+          "pct": 0.29,
+          "trust": "v",
+          "valor": 24.11,
+          "delta": null
+        },
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 436.2,
+          "lucro": -0.34,
+          "pct": -0.77,
+          "trust": "r",
+          "valor": 43.62,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 263.12,
+      "caixa": 0.36,
+      "lucro": -2.24,
+      "positions": [
+        {
+          "name": "Palo Alto",
+          "mkt": "USD",
+          "vol": 0.38,
+          "abertura": 367.35,
+          "atual": 383.88,
+          "lucro": 6.29,
+          "pct": 4.51,
+          "trust": "v",
+          "valor": 145.89,
+          "delta": null
+        },
+        {
+          "name": "Bank of America",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 62.33,
+          "atual": 63.98,
+          "lucro": 1.65,
+          "pct": 2.65,
+          "trust": "v",
+          "valor": 63.98,
+          "delta": null
+        },
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.03,
+          "abertura": 497.97,
+          "atual": 503.37,
+          "lucro": 0.16,
+          "pct": 1.07,
+          "trust": "v",
+          "valor": 15.1,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 235,
+          "lucro": -2.78,
+          "pct": -14.46,
+          "trust": "r",
+          "valor": 16.45,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 133.39,
+          "lucro": -7.56,
+          "pct": -26.16,
+          "trust": "r",
+          "valor": 21.34,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades hoje. EUR: Schneider +0.29%, Allianz -0.77%. USD: Palo Alto, Bank of America e Microsoft positivos, mas Cerebras -14.46% e SpaceX -26.16% ainda pesam."
       }
     ],
     "posicoes_fechadas": []
