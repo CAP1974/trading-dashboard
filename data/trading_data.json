@@ -7,6 +7,11 @@
           "data": "2026-04-27",
           "valor": -20,
           "nota": "Transferência para USD"
+        },
+        {
+          "data": "2026-08-12",
+          "valor": 20,
+          "nota": "Deposito Carlos - financiou entrada BAE Systems"
         }
       ],
       "capital_ajustado": 58.41
@@ -13858,7 +13863,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-11",
+    "gerado": "2026-08-12",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14089,6 +14094,10 @@
       [
         "2026-08-11",
         93.23
+      ],
+      [
+        "2026-08-12",
+        93.83
       ]
     ],
     "usd": [
@@ -14315,6 +14324,10 @@
       [
         "2026-08-11",
         89.31
+      ],
+      [
+        "2026-08-12",
+        91.18
       ]
     ],
     "twr_mensal": {
@@ -14331,8 +14344,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -1,
-        "usd": 5.1
+        "eur": -0.4,
+        "usd": 7.3
       }
     }
   },
@@ -17694,6 +17707,132 @@
       {
         "tipo": "diario",
         "nota": "Sem trades hoje. EUR: Schneider +0.29%, Allianz -0.77%. USD: Palo Alto, Bank of America e Microsoft positivos, mas Cerebras -14.46% e SpaceX -26.16% ainda pesam."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-12": {
+    "eur": {
+      "saldo": 89.62,
+      "caixa": 0.12,
+      "lucro": 0.17,
+      "positions": [
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 310.25,
+          "lucro": 0.46,
+          "pct": 1.91,
+          "trust": "v",
+          "valor": 24.5,
+          "delta": null
+        },
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 438.7,
+          "lucro": -0.09,
+          "pct": -0.2,
+          "trust": "r",
+          "valor": 43.87,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 22.68,
+          "lucro": -0.2,
+          "pct": -0.94,
+          "trust": "r",
+          "valor": 21.13,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 268.64,
+      "caixa": 0.36,
+      "lucro": 3.28,
+      "positions": [
+        {
+          "name": "Palo Alto",
+          "mkt": "USD",
+          "vol": 0.38,
+          "abertura": 367.35,
+          "atual": 386.93,
+          "lucro": 7.44,
+          "pct": 5.33,
+          "trust": "v",
+          "valor": 147.04,
+          "delta": null
+        },
+        {
+          "name": "Bank of America",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 62.33,
+          "atual": 64.8,
+          "lucro": 2.47,
+          "pct": 3.96,
+          "trust": "v",
+          "valor": 64.8,
+          "delta": null
+        },
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.03,
+          "abertura": 497.97,
+          "atual": 492.52,
+          "lucro": -0.16,
+          "pct": -1.07,
+          "trust": "r",
+          "valor": 14.78,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.07,
+          "abertura": 274.71,
+          "atual": 262.07,
+          "lucro": -0.89,
+          "pct": -4.63,
+          "trust": "r",
+          "valor": 18.34,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 145.71,
+          "lucro": -5.58,
+          "pct": -19.31,
+          "trust": "r",
+          "valor": 23.32,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ticker": "BA.L",
+        "ativo": "BAE Systems",
+        "mkt": "EUR",
+        "nota": "ENTRADA BA.L 0.8 @ 22.65 -- financiada por deposito externo de 20EUR (registado em fund_metrics). Cotacao GBX, cambio diario -- P&L nao bate com formula simples preco x volume."
+      },
+      {
+        "tipo": "diario",
+        "nota": "Deposito Carlos de 20EUR na conta EUR, usado para abrir posicao BAE Systems (LSE, GBX). Sem trades USD hoje -- boa recuperacao geral (Palo Alto +5.33%, BofA +3.96%)."
       }
     ],
     "posicoes_fechadas": []
