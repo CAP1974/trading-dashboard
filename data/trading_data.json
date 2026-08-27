@@ -13863,7 +13863,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-26",
+    "gerado": "2026-08-27",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14138,6 +14138,10 @@
       [
         "2026-08-26",
         92.54
+      ],
+      [
+        "2026-08-27",
+        91.69
       ]
     ],
     "usd": [
@@ -14408,6 +14412,10 @@
       [
         "2026-08-26",
         87.92
+      ],
+      [
+        "2026-08-27",
+        88.25
       ]
     ],
     "twr_mensal": {
@@ -14424,8 +14432,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -1.7,
-        "usd": 3.4
+        "eur": -2.6,
+        "usd": 3.8
       }
     }
   },
@@ -19267,6 +19275,125 @@
       {
         "tipo": "diario",
         "nota": "Sem trades. Caixa inalterada (EUR 0.12 / USD 95.22). EUR positivo em Allianz +2.80%, negativo no total por BAE -8.91%. SpaceX -22.73% e Cerebras -25.93% continuam pesados."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-27": {
+    "eur": {
+      "saldo": 87.58,
+      "caixa": 0.12,
+      "lucro": -1.87,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 444.6,
+          "lucro": 0.5,
+          "pct": 1.14,
+          "trust": "v",
+          "valor": 44.46,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 297.8,
+          "lucro": -0.51,
+          "pct": -2.12,
+          "trust": "v",
+          "valor": 23.53,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 20.99,
+          "lucro": -1.86,
+          "pct": -8.72,
+          "trust": "v",
+          "valor": 19.47,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 259.99,
+      "caixa": 95.22,
+      "lucro": -10.6,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 504.96,
+          "lucro": 0.93,
+          "pct": 3.17,
+          "trust": "v",
+          "valor": 30.3,
+          "delta": null
+        },
+        {
+          "name": "Bio-Rad",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 378.71,
+          "atual": 389.74,
+          "lucro": 1.1,
+          "pct": 2.9,
+          "trust": "v",
+          "valor": 38.97,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 436.94,
+          "lucro": 0.23,
+          "pct": 0.44,
+          "trust": "v",
+          "valor": 52.43,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 140.9,
+          "lucro": -6.35,
+          "pct": -21.97,
+          "trust": "v",
+          "valor": 22.55,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 186.55,
+          "lucro": -6.51,
+          "pct": -24.08,
+          "trust": "v",
+          "valor": 20.52,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades. Caixa inalterada (EUR 0.12 / USD 95.22). Preco de abertura confirmado no screenshot para todas as posicoes, incluindo Cerebras 245.75 (media ponderada do aporte de 25/08). EUR negativo por BAE -8.72%. SpaceX -21.97% e Cerebras -24.08% continuam pesados."
       }
     ],
     "posicoes_fechadas": []
