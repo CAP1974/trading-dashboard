@@ -134,6 +134,12 @@ body{
 .date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
 .date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
 .date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
+.date-picker{
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;background:var(--bg-01);color:var(--txt-3);
+}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
 
 /* ── MAIN ── */
 .main{padding:16px 28px;display:flex;flex-direction:column;gap:14px;}
@@ -352,12 +358,12 @@ body{
   <div class="fh-item">
     <div class="fh-label">Retorno EUR Agosto</div>
     <div class="fh-value down" id="fh-ret-eur">-34,6% meta</div>
-    <div class="fh-sub">equity -2,42€ · realizado -0,55€</div>
+    <div class="fh-sub" id="fh-ret-eur-sub">equity -2,42€ · realizado -0,55€</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">Retorno USD Agosto</div>
     <div class="fh-value down" id="fh-ret-usd">-24,7% meta</div>
-    <div class="fh-sub">equity -6,19$ · realizado +4,41$</div>
+    <div class="fh-sub" id="fh-ret-usd-sub">equity -6,19$ · realizado +4,41$</div>
   </div>
   <div class="fh-item">
     <div class="fh-label">AUM Total ~EUR</div>
@@ -374,6 +380,7 @@ body{
 <!-- DATE BAR -->
 <div class="date-bar">
   <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
   <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
@@ -628,7 +635,8 @@ body{
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="data.js?v=1787866386226"></script>
+<script src="data.js?v=1787915649838"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 /* ── CLOCK ── */
 function tick(){
@@ -640,8 +648,9 @@ tick();setInterval(tick,1000);
 
 /* ── DATA BRIDGE ── */
 const DATA = typeof TRADING_DATA!=='undefined'?TRADING_DATA:{};
-const ALL_DATES = typeof DATA_DATES!=='undefined'?DATA_DATES:Object.keys(DATA).sort();
-let currentDay = typeof LATEST_DATE!=='undefined'?LATEST_DATE:ALL_DATES[ALL_DATES.length-1];
+const ALL_DATES = Object.keys(DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let currentDay = DateSync.read() || (typeof LATEST_DATE!=='undefined'?LATEST_DATE:ALL_DATES[ALL_DATES.length-1]);
+if(!DATA[currentDay]) currentDay = typeof LATEST_DATE!=='undefined'?LATEST_DATE:ALL_DATES[ALL_DATES.length-1];
 let currentAccount = 'all';
 
 /* ── HELPERS ── */
@@ -653,6 +662,45 @@ function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 function fmtCur(v,s='€'){return(v>0?'+':'')+v.toFixed(2)+' '+s;}
 function trustCls(t){return t==='v'?'trust-v':t==='a'?'trust-a':'trust-r';}
 function trustLbl(t){return t==='v'?'Verde':t==='a'?'Amarelo':'Vermelho';}
+function fmtPt(v,dec=2){return v.toFixed(dec).replace('.',',');}
+function fmtPtSigned(v,dec=2){return(v>0?'+':'')+fmtPt(v,dec);}
+function daySaldo(acc){return acc.saldo!=null?acc.saldo:acc.positions.reduce((s,p)=>s+(p.valor||0),0);}
+
+/* ── FUND HEADER (dinâmico por dia seleccionado) ── */
+function renderFundHeader(){
+  const d=DATA[currentDay];if(!d)return;
+  const ym=currentDay.slice(0,7);
+  const mes=(typeof MESES_DATA!=='undefined'&&MESES_DATA[ym])||{};
+  const eurSaldo=daySaldo(d.eur);
+  const usdSaldo=daySaldo(d.usd);
+  const baseEur=mes.base_ajustada_eur!=null?mes.base_ajustada_eur:(mes.base_eur||0);
+  const baseUsd=mes.base_ajustada_usd!=null?mes.base_ajustada_usd:(mes.base_usd||0);
+  const metaEur=mes.meta_eur||0, metaUsd=mes.meta_usd||0;
+  const realEur=mes.realizado_eur||0, realUsd=mes.realizado_usd||0;
+  const equityEur=realEur+d.eur.lucro, equityUsd=realUsd+d.usd.lucro;
+  const pctEur=metaEur?(equityEur/metaEur*100):0;
+  const pctUsd=metaUsd?(equityUsd/metaUsd*100):0;
+  const fx=d.fx||0.92;
+  const aum=eurSaldo+usdSaldo*fx;
+  const mesLabel=MONTHS[parseInt(ym.slice(5,7),10)-1];
+
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const cls=(id,up)=>{const el=document.getElementById(id);if(el)el.className='fh-value '+(up?'up':'down');};
+
+  set('fh-cap-eur',fmtPt(eurSaldo)+' €'); cls('fh-cap-eur',eurSaldo>=baseEur);
+  set('fh-cap-eur-sub','base '+fmtPt(baseEur)+'€ · lucro real '+mesLabel+' '+fmtPtSigned(realEur)+'€');
+
+  set('fh-cap-usd',fmtPt(usdSaldo)+' $'); cls('fh-cap-usd',usdSaldo>=baseUsd);
+  set('fh-cap-usd-sub','base '+fmtPt(baseUsd)+'$ · lucro real '+mesLabel+' '+fmtPtSigned(realUsd)+'$');
+
+  set('fh-ret-eur',fmtPtSigned(pctEur,1)+'% meta'); cls('fh-ret-eur',pctEur>=0);
+  set('fh-ret-eur-sub','equity '+fmtPtSigned(equityEur)+'€ · realizado '+fmtPtSigned(realEur)+'€');
+
+  set('fh-ret-usd',fmtPtSigned(pctUsd,1)+'% meta'); cls('fh-ret-usd',pctUsd>=0);
+  set('fh-ret-usd-sub','equity '+fmtPtSigned(equityUsd)+'$ · realizado '+fmtPtSigned(realUsd)+'$');
+
+  set('fh-aum','≈ '+Math.round(aum)+' €');
+}
 
 /* ── DIAS ACTIVOS (dinâmico — conta todas as datas no TRADING_DATA) ── */
 const TOTAL_DIAS = Object.keys(TRADING_DATA).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)).length;
@@ -665,6 +713,14 @@ function buildDateTabs(){
     `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtLabel(d)}</button>`
   ).join('');
   document.getElementById('date-info').textContent=fmtLong(currentDay);
+  const picker=document.getElementById('date-picker');
+  if(picker && !picker.dataset.built){
+    picker.innerHTML=ALL_DATES.slice().reverse().map(d=>
+      `<option value="${d}">${fmtLong(d)}</option>`
+    ).join('');
+    picker.dataset.built='1';
+  }
+  if(picker) picker.value=currentDay;
 }
 
 /* ── RENDER KPIs ── */
@@ -841,16 +897,21 @@ function buildSparklines(){
 function exportExcel(){
   if(typeof XLSX==='undefined'){alert('XLSX library não carregada.');return;}
   const wb=XLSX.utils.book_new();
+  const expDay=DATA[currentDay];
+  const expFx=expDay.fx||0.92;
+  const expEurSaldo=daySaldo(expDay.eur), expUsdSaldo=daySaldo(expDay.usd);
+  const expAum=expEurSaldo+expUsdSaldo*expFx;
 
   // Aba 1: Resumo do fundo
   const resumo=[
     ['Triple Seven Capital — Fund Report','','',''],
     ['Data de exportação',new Date().toLocaleDateString('pt-PT'),'',''],
+    ['Sessão (dia seleccionado)',currentDay,'',''],
     ['','','',''],
-    ['CAPITAL ACTUAL','','',''],
-    ['Conta EUR (8MSN)','87.58 €','Caixa EUR','0.12 €'],
-    ['Conta USD (OMV)','259.99 USD','Caixa USD','95.22 USD'],
-    ['AUM Total ~EUR','≈ 325 €','',''],
+    ['CAPITAL NA SESSÃO','','',''],
+    ['Conta EUR (8MSN)',expEurSaldo.toFixed(2)+' €','Caixa EUR',(expDay.eur.caixa||0).toFixed(2)+' €'],
+    ['Conta USD (OMV)',expUsdSaldo.toFixed(2)+' USD','Caixa USD',(expDay.usd.caixa||0).toFixed(2)+' USD'],
+    ['AUM Total ~EUR','≈ '+Math.round(expAum)+' €','',''],
     ['','','',''],
     ['RETORNO DESDE INÍCIO (09 Abr 2025)','','',''],
     ['Retorno EUR','-12.5%','',''],
@@ -904,7 +965,8 @@ function exportExcel(){
 
 /* ── CONTROLS ── */
 function setDay(date){
-  currentDay=date;buildDateTabs();renderKPIs();renderTable();renderEventos();
+  currentDay=date;buildDateTabs();renderFundHeader();renderKPIs();renderTable();renderEventos();
+  DateSync.write(date);DateSync.wireNav(date);
 }
 function setAccount(a){
   currentAccount=a;
@@ -915,7 +977,8 @@ function setAccount(a){
 /* ── INIT ── */
 window.addEventListener('load',()=>{
   if(!ALL_DATES.length){document.getElementById('date-info').textContent='Sem dados.';return;}
-  buildDateTabs();buildSparklines();renderKPIs();renderTable();renderEventos();
+  buildDateTabs();buildSparklines();renderFundHeader();renderKPIs();renderTable();renderEventos();
+  DateSync.wireNav(currentDay);
 });
 document.querySelectorAll('.nav-item').forEach(el=>{
   el.addEventListener('click',()=>{
