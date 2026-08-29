@@ -130,6 +130,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .cl-no{background:var(--bg-04);color:var(--txt-3);border:1px solid var(--border);}
 .diario-entry-body{padding:14px 16px;}
 .diario-nota{font-size:12px;color:var(--txt-2);line-height:1.7;white-space:pre-wrap;font-family:var(--mono);}
+.date-bar{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 28px;gap:10px;}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.date-tab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-01);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -151,6 +159,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <a class="nav-item" href="nav.html">NAV</a>
   <a class="nav-item active" href="governanca.html">Governança</a>
   <a class="nav-item" href="trades.html">Trades</a>
+</div>
+
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
+  <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
 <div class="main">
@@ -288,7 +302,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 
 </div>
 
-<script src="data.js?v=1788008216873"></script>
+<script src="data.js?v=1788008636705"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 const $ = id => document.getElementById(id);
 const setText = (id,t) => { const e=$(id); if(e) e.textContent=t; };
@@ -306,132 +321,201 @@ function fmtDate(d){
   const dt=new Date(d+'T12:00:00Z');
   return {short: dt.getDate()+' '+mo[dt.getMonth()], dow: dw[dt.getDay()], full: dt.getDate()+' '+mo[dt.getMonth()]+' · '+dw[dt.getDay()]};
 }
+function fmtLong(ds){const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];const[y,m,d]=ds.split('-').map(Number);const dt=new Date(y,m-1,d);return days[dt.getDay()]+' · '+String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;}
 
 function todayKey(){
   const n=new Date();
   return [n.getFullYear(),String(n.getMonth()+1).padStart(2,'0'),String(n.getDate()).padStart(2,'0')].join('-');
 }
 
-// ── collect all events ──
-const ALL_D = Object.keys(TRADING_DATA).sort();
-const allEvents = [];
-ALL_D.forEach(d => {
-  (TRADING_DATA[d].eventos||[]).forEach(ev => {
-    allEvents.push({date:d, ...ev});
-  });
-});
+const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let currentDay = DateSync.read() || LATEST_DATE;
+if (ALL_D.indexOf(currentDay) === -1) currentDay = LATEST_DATE;
 
-// counts by tipo
-const counts = {entrada:0, saida:0, aporte:0, caixa:0};
-allEvents.forEach(ev => { if(counts[ev.tipo]!==undefined) counts[ev.tipo]++; });
-const total = Object.values(counts).reduce((a,b)=>a+b,0);
-
-// ── SECÇÍO 1: KPIs ──
-setText('kpi-total', total);
-setText('kpi-total-sub', ALL_D.length+' sessões · '+allEvents.length+' eventos');
-setText('kpi-entradas', counts.entrada);
-setText('kpi-entradas-sub', 'novas posições');
-setText('kpi-saidas', counts.saida);
-setText('kpi-saidas-sub', 'posições encerradas');
-setText('kpi-aportes', counts.aporte);
-setText('kpi-aportes-sub', 'reforços de capital');
-
-// ── SECÇÍO 2: Timeline (desc) ──
-const TIPO_ICON  = {entrada:'🟢', saida:'🔴', aporte:'💰', caixa:'📦'};
-const TIPO_BADGE = {
-  entrada: '<span class="badge badge-g">Entrada</span>',
-  saida:   '<span class="badge badge-r">Saída</span>',
-  aporte:  '<span class="badge badge-a">Aporte</span>',
-  caixa:   '<span class="badge badge-b">Caixa</span>',
-};
-const MKT_COLOR = {EUR:'var(--accent1)', USD:'var(--accent2)'};
-
-const evDesc = [...allEvents].reverse();
-setText('timeline-tag', evDesc.length+' eventos');
-
-const tlEl = $('timeline');
-if (!evDesc.length) {
-  tlEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem eventos registados</div>';
-} else {
-  tlEl.innerHTML = evDesc.map(ev => {
-    const fd = fmtDate(ev.date);
-    const mktBadge = ev.mkt ? `<span style="font-size:9px;color:${MKT_COLOR[ev.mkt]||'var(--txt-2)'};background:var(--bg-04);padding:1px 6px;border-radius:3px;">${ev.mkt}</span>` : '';
-    return `<div class="tl-item">
-      <div class="tl-icon">${TIPO_ICON[ev.tipo]||'•'}</div>
-      <div class="tl-body">
-        <div class="tl-head">
-          <span class="tl-date">${fd.full}</span>
-          ${ev.ativo ? `<span class="tl-ativo">${ev.ativo}</span>` : ''}
-          ${mktBadge}
-          ${TIPO_BADGE[ev.tipo]||''}
-        </div>
-        ${ev.nota ? `<div class="tl-nota">${ev.nota}</div>` : ''}
-        ${ev.valor ? `<div class="tl-nota" style="color:var(--amber);">Valor: +${ev.valor} $</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-// ── SECÇÍO 3: Stats ──
-function mktStats(tipo) {
-  const m = {EUR:0, USD:0};
-  allEvents.filter(e=>e.tipo===tipo).forEach(e => { if(e.mkt && m[e.mkt]!==undefined) m[e.mkt]++; });
-  return m;
-}
-
-function renderMktBars(id, tipo) {
-  const m = mktStats(tipo);
-  const max = Math.max(m.EUR, m.USD, 1);
-  setHTML(id, ['EUR','USD'].map(k => {
-    const pct = Math.round(m[k]/max*100);
-    const col = k==='EUR'?'var(--accent1)':'var(--accent2)';
-    return `<div class="stat-bar-wrap">
-      <div class="stat-bar-label"><span style="color:${col}">${k}</span><span>${m[k]}</span></div>
-      <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${col};"></div></div>
-    </div>`;
-  }).join(''));
-}
-renderMktBars('stat-entradas','entrada');
-renderMktBars('stat-saidas','saida');
-
-// motivos de saída
-const saidasComNota = allEvents.filter(e=>e.tipo==='saida' && e.nota);
-setText('motivos-tag', saidasComNota.length+' notas');
-const notasEl = $('saidas-notas');
-if (!saidasComNota.length) {
-  notasEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem notas de saída registadas</div>';
-} else {
-  notasEl.innerHTML = saidasComNota.map(ev => {
-    const fd = fmtDate(ev.date);
-    return `<div class="saida-item"><strong>${ev.ativo||'?'} · ${fd.short}</strong> — ${ev.nota}</div>`;
-  }).join('');
-}
-
-// aportes
-const aportesEvs = allEvents.filter(e => e.tipo==='aporte');
-// also scan usd.aporte field if not in eventos
-ALL_D.forEach(d => {
-  const day = TRADING_DATA[d];
-  if (day.usd && day.usd.aporte && !aportesEvs.find(a=>a.date===d)) {
-    aportesEvs.push({date:d, tipo:'aporte', valor:day.usd.aporte});
+function buildDateTabs(){
+  const c=document.getElementById('date-tabs-container');
+  c.innerHTML=ALL_D.slice(-7).map(d=>
+    `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtDate(d).short}</button>`
+  ).join('');
+  document.getElementById('date-info').textContent=fmtLong(currentDay);
+  const picker=document.getElementById('date-picker');
+  if(picker && !picker.dataset.built){
+    picker.innerHTML=ALL_D.slice().reverse().map(d=>`<option value="${d}">${fmtLong(d)}</option>`).join('');
+    picker.dataset.built='1';
   }
-});
-setText('aportes-tag', aportesEvs.length+' aportes');
-let cumAporte = 0;
-const aportesListEl = $('aportes-lista');
-if (!aportesEvs.length) {
-  aportesListEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem aportes registados</div>';
-} else {
-  aportesListEl.innerHTML = aportesEvs.map(ev => {
-    cumAporte += (ev.valor||0);
-    const fd = fmtDate(ev.date);
-    return `<div class="aporte-row">
-      <span style="color:var(--txt-2);font-size:10px;">${fd.full}</span>
-      <span style="color:var(--amber);">+${(ev.valor||0).toFixed(2)} $</span>
-      <span style="color:var(--txt-3);font-size:10px;">∑ ${cumAporte.toFixed(2)} $</span>
-    </div>`;
-  }).join('');
+  if(picker) picker.value=currentDay;
 }
+
+function render(day){
+  const ALL_UP_TO = ALL_D.filter(d => d <= day);
+
+  // ── collect events até à sessão seleccionada ──
+  const allEvents = [];
+  ALL_UP_TO.forEach(d => {
+    (TRADING_DATA[d].eventos||[]).forEach(ev => {
+      allEvents.push({date:d, ...ev});
+    });
+  });
+
+  setText('page-sub', day===LATEST_DATE
+    ? 'Triple Seven Capital · Registo de decisões e compliance'
+    : 'Triple Seven Capital · Registo de decisões até '+fmtDate(day).full+' (mais recente: '+fmtDate(LATEST_DATE).full+')');
+
+  // counts by tipo
+  const counts = {entrada:0, saida:0, aporte:0, caixa:0};
+  allEvents.forEach(ev => { if(counts[ev.tipo]!==undefined) counts[ev.tipo]++; });
+  const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+  // ── SECÇÃO 1: KPIs ──
+  setText('kpi-total', total);
+  setText('kpi-total-sub', ALL_UP_TO.length+' sessões · '+allEvents.length+' eventos');
+  setText('kpi-entradas', counts.entrada);
+  setText('kpi-entradas-sub', 'novas posições');
+  setText('kpi-saidas', counts.saida);
+  setText('kpi-saidas-sub', 'posições encerradas');
+  setText('kpi-aportes', counts.aporte);
+  setText('kpi-aportes-sub', 'reforços de capital');
+
+  // ── SECÇÃO 2: Timeline (desc) ──
+  const TIPO_ICON  = {entrada:'🟢', saida:'🔴', aporte:'💰', caixa:'📦'};
+  const TIPO_BADGE = {
+    entrada: '<span class="badge badge-g">Entrada</span>',
+    saida:   '<span class="badge badge-r">Saída</span>',
+    aporte:  '<span class="badge badge-a">Aporte</span>',
+    caixa:   '<span class="badge badge-b">Caixa</span>',
+  };
+  const MKT_COLOR = {EUR:'var(--accent1)', USD:'var(--accent2)'};
+
+  const evDesc = [...allEvents].reverse();
+  setText('timeline-tag', evDesc.length+' eventos');
+
+  const tlEl = $('timeline');
+  if (!evDesc.length) {
+    tlEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem eventos registados</div>';
+  } else {
+    tlEl.innerHTML = evDesc.map(ev => {
+      const fd = fmtDate(ev.date);
+      const mktBadge = ev.mkt ? `<span style="font-size:9px;color:${MKT_COLOR[ev.mkt]||'var(--txt-2)'};background:var(--bg-04);padding:1px 6px;border-radius:3px;">${ev.mkt}</span>` : '';
+      return `<div class="tl-item">
+        <div class="tl-icon">${TIPO_ICON[ev.tipo]||'•'}</div>
+        <div class="tl-body">
+          <div class="tl-head">
+            <span class="tl-date">${fd.full}</span>
+            ${ev.ativo ? `<span class="tl-ativo">${ev.ativo}</span>` : ''}
+            ${mktBadge}
+            ${TIPO_BADGE[ev.tipo]||''}
+          </div>
+          ${ev.nota ? `<div class="tl-nota">${ev.nota}</div>` : ''}
+          ${ev.valor ? `<div class="tl-nota" style="color:var(--amber);">Valor: +${ev.valor} $</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── SECÇÃO 3: Stats ──
+  function mktStats(tipo) {
+    const m = {EUR:0, USD:0};
+    allEvents.filter(e=>e.tipo===tipo).forEach(e => { if(e.mkt && m[e.mkt]!==undefined) m[e.mkt]++; });
+    return m;
+  }
+
+  function renderMktBars(id, tipo) {
+    const m = mktStats(tipo);
+    const max = Math.max(m.EUR, m.USD, 1);
+    setHTML(id, ['EUR','USD'].map(k => {
+      const pct = Math.round(m[k]/max*100);
+      const col = k==='EUR'?'var(--accent1)':'var(--accent2)';
+      return `<div class="stat-bar-wrap">
+        <div class="stat-bar-label"><span style="color:${col}">${k}</span><span>${m[k]}</span></div>
+        <div class="stat-bar-track"><div class="stat-bar-fill" style="width:${pct}%;background:${col};"></div></div>
+      </div>`;
+    }).join(''));
+  }
+  renderMktBars('stat-entradas','entrada');
+  renderMktBars('stat-saidas','saida');
+
+  // motivos de saída
+  const saidasComNota = allEvents.filter(e=>e.tipo==='saida' && e.nota);
+  setText('motivos-tag', saidasComNota.length+' notas');
+  const notasEl = $('saidas-notas');
+  if (!saidasComNota.length) {
+    notasEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem notas de saída registadas</div>';
+  } else {
+    notasEl.innerHTML = saidasComNota.map(ev => {
+      const fd = fmtDate(ev.date);
+      return `<div class="saida-item"><strong>${ev.ativo||'?'} · ${fd.short}</strong> — ${ev.nota}</div>`;
+    }).join('');
+  }
+
+  // aportes
+  const aportesEvs = allEvents.filter(e => e.tipo==='aporte');
+  // also scan usd.aporte field if not in eventos
+  ALL_UP_TO.forEach(d => {
+    const dayData = TRADING_DATA[d];
+    if (dayData.usd && dayData.usd.aporte && !aportesEvs.find(a=>a.date===d)) {
+      aportesEvs.push({date:d, tipo:'aporte', valor:dayData.usd.aporte});
+    }
+  });
+  setText('aportes-tag', aportesEvs.length+' aportes');
+  let cumAporte = 0;
+  const aportesListEl = $('aportes-lista');
+  if (!aportesEvs.length) {
+    aportesListEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;">Sem aportes registados</div>';
+  } else {
+    aportesListEl.innerHTML = aportesEvs.map(ev => {
+      cumAporte += (ev.valor||0);
+      const fd = fmtDate(ev.date);
+      return `<div class="aporte-row">
+        <span style="color:var(--txt-2);font-size:10px;">${fd.full}</span>
+        <span style="color:var(--amber);">+${(ev.valor||0).toFixed(2)} $</span>
+        <span style="color:var(--txt-3);font-size:10px;">∑ ${cumAporte.toFixed(2)} $</span>
+      </div>`;
+    }).join('');
+  }
+
+  // ── SECÇÃO 6: Histórico do Diário (até à sessão seleccionada) ──
+  const CL_LABELS = [
+    {k:'revisao', l:'Revisão'},
+    {k:'stoploss', l:'Stop-loss'},
+    {k:'eventos', l:'Eventos'},
+    {k:'push', l:'Push'},
+  ];
+  const diarioDays = ALL_UP_TO.filter(d => TRADING_DATA[d].diario).reverse();
+  const dhEl = $('diario-historico');
+  if (!diarioDays.length) {
+    dhEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem entradas no diário</div>';
+  } else {
+    dhEl.innerHTML = diarioDays.map(d => {
+      const diar = TRADING_DATA[d].diario;
+      const fd   = fmtDate(d);
+      const cl   = diar.checklist || {};
+      const clHtml = CL_LABELS.map(({k,l}) =>
+        `<span class="cl-tag ${cl[k] ? 'cl-ok' : 'cl-no'}">${cl[k] ? '✓' : '✗'} ${l}</span>`
+      ).join('');
+      return `<div class="diario-entry">
+        <div class="diario-entry-header">
+          <span class="diario-entry-date">${fd.full}</span>
+          <div class="diario-cl">${clHtml}</div>
+        </div>
+        <div class="diario-entry-body">
+          <div class="diario-nota">${(diar.nota||'—').replace(/</g,'&lt;')}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function setDay(date){
+  currentDay = date;
+  buildDateTabs();
+  render(currentDay);
+  DateSync.write(currentDay);
+  DateSync.wireNav(currentDay);
+}
+
+buildDateTabs();
+render(currentDay);
+DateSync.wireNav(currentDay);
 
 // ── SECÇÍO 4: Checklist ──
 const TODAY = todayKey();
@@ -556,38 +640,6 @@ $('btn-copy-prompt').addEventListener('click', () => {
     setTimeout(() => { $('btn-copy-prompt').textContent = 'Copiar'; }, 2000);
   });
 });
-
-// ── SECÇÍO 6: Histórico do Diário ──
-const CL_LABELS = [
-  {k:'revisao', l:'Revisão'},
-  {k:'stoploss', l:'Stop-loss'},
-  {k:'eventos', l:'Eventos'},
-  {k:'push', l:'Push'},
-];
-
-const diarioDays = ALL_D.filter(d => TRADING_DATA[d].diario).reverse();
-const dhEl = $('diario-historico');
-if (!diarioDays.length) {
-  dhEl.innerHTML = '<div style="color:var(--txt-3);font-size:11px;text-align:center;padding:20px;">Sem entradas no diário</div>';
-} else {
-  dhEl.innerHTML = diarioDays.map(d => {
-    const diar = TRADING_DATA[d].diario;
-    const fd   = fmtDate(d);
-    const cl   = diar.checklist || {};
-    const clHtml = CL_LABELS.map(({k,l}) =>
-      `<span class="cl-tag ${cl[k] ? 'cl-ok' : 'cl-no'}">${cl[k] ? '✓' : '✗'} ${l}</span>`
-    ).join('');
-    return `<div class="diario-entry">
-      <div class="diario-entry-header">
-        <span class="diario-entry-date">${fd.full}</span>
-        <div class="diario-cl">${clHtml}</div>
-      </div>
-      <div class="diario-entry-body">
-        <div class="diario-nota">${(diar.nota||'—').replace(/</g,'&lt;')}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
 </script>
 </body>
 </html>
