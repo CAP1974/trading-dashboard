@@ -7,7 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="data.js?v=1788007786518"></script>
+<script src="data.js?v=1788008216873"></script>
+<script src="date-sync.js?v=1"></script>
 <style>
 :root {
   --bg:       #060a0d;
@@ -323,6 +324,14 @@ body{
   .hero{padding:20px 18px;}
   .hero-metrics{grid-template-columns:repeat(2,1fr);}
 }
+.date-bar{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 28px;gap:10px;overflow-x:auto;}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.date-tab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-01);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -356,6 +365,12 @@ body{
   <a class="nav-item" href="governanca.html">Governança</a>
   <a class="nav-item active" href="trades.html">Trades</a>
 </nav>
+
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
+  <div class="date-info" id="date-info">A carregar...</div>
+</div>
 
 <!-- MAIN -->
 <div class="main">
@@ -533,12 +548,38 @@ body{
 (function(){
   'use strict';
 
-  const EUR_RATE = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
+  const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+  let currentDay = DateSync.read() || LATEST_DATE;
+  if (ALL_D.indexOf(currentDay) === -1) currentDay = LATEST_DATE;
+
+  function fmtDateShort(d){
+    const mo = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    const dt = new Date(d + 'T12:00:00Z');
+    return dt.getDate() + ' ' + mo[dt.getMonth()];
+  }
+  function fmtLong(ds){const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];const[y,m,d]=ds.split('-').map(Number);const dt=new Date(y,m-1,d);return days[dt.getDay()]+' · '+String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;}
+
+  function buildDateTabs(){
+    const c=document.getElementById('date-tabs-container');
+    c.innerHTML=ALL_D.slice(-7).map(d=>
+      `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtDateShort(d)}</button>`
+    ).join('');
+    document.getElementById('date-info').textContent=fmtLong(currentDay);
+    const picker=document.getElementById('date-picker');
+    if(picker && !picker.dataset.built){
+      picker.innerHTML=ALL_D.slice().reverse().map(d=>`<option value="${d}">${fmtLong(d)}</option>`).join('');
+      picker.dataset.built='1';
+    }
+    if(picker) picker.value=currentDay;
+  }
 
   // ── TRADES (vindos do TRADES_DATA gerado pelo _regen.js) ──
   // Filtramos apenas os que têm o campo ticker (formato novo)
-  const trades = (typeof TRADES_DATA !== 'undefined' ? TRADES_DATA : [])
+  const allTrades = (typeof TRADES_DATA !== 'undefined' ? TRADES_DATA : [])
     .filter(t => t.ticker);
+
+  let EUR_RATE = 0.92;
+  let trades = [];
 
   // Normaliza lucro em USD para comparações
   function lucroUsd(t) {
@@ -565,6 +606,12 @@ body{
     if (!s) return '';
     return 'setup-' + s.toLowerCase().replace(/\s+/g,'-');
   }
+
+  let equityChart = null, barChart = null;
+
+  function render(day) {
+  EUR_RATE = (TRADING_DATA[day] && TRADING_DATA[day].fx) || 0.92;
+  trades = allTrades.filter(t => !t.data_saida || t.data_saida <= day);
 
   // ── HERO METRICS ──
   const winners = trades.filter(t => t.lucro > 0);
@@ -600,9 +647,12 @@ body{
     const lastDate    = exitDates[exitDates.length - 1];
     const spanDays    = Math.round((new Date(lastDate) - new Date(firstDate)) / (1000*60*60*24)) + 1;
     document.getElementById('heroSub').innerHTML =
-      `Todas as posições fechadas desde o início da conta. Dados reais, sem filtros.<br>`+
+      `Todas as posições fechadas desde o início da conta até à sessão seleccionada. Dados reais, sem filtros.<br>`+
       `<span style="color:var(--accent1);font-weight:600;">${firstDate} → ${lastDate}</span>`+
       `<span style="color:var(--txt-3);"> · ${spanDays} dias de track record activo</span>`;
+  } else {
+    document.getElementById('heroSub').innerHTML =
+      `Ainda sem posições fechadas até à sessão seleccionada (${day}).`;
   }
 
   // ── KPIs ──
@@ -620,6 +670,8 @@ body{
     const d0 = trades.map(t=>t.data_saida).sort()[0];
     const d1 = trades.map(t=>t.data_saida).sort().pop();
     document.getElementById('kpiPeriodo').textContent = d0 + ' → ' + d1;
+  } else {
+    document.getElementById('kpiPeriodo').textContent = '—';
   }
 
   const kpiDefs = [
@@ -656,7 +708,8 @@ body{
     const grad = ctx.createLinearGradient(0,0,0,200);
     grad.addColorStop(0,'rgba(61,255,176,0.25)');
     grad.addColorStop(1,'rgba(61,255,176,0)');
-    new Chart(ctx,{
+    if (equityChart) equityChart.destroy();
+    equityChart = new Chart(ctx,{
       type:'line',
       data:{
         labels,
@@ -693,7 +746,8 @@ body{
     const colors = vals.map(v=>v>=0?'rgba(30,255,142,0.7)':'rgba(255,77,106,0.7)');
     const borderC= vals.map(v=>v>=0?'#1eff8e':'#ff4d6a');
     const ctx    = document.getElementById('barChart').getContext('2d');
-    new Chart(ctx,{
+    if (barChart) barChart.destroy();
+    barChart = new Chart(ctx,{
       type:'bar',
       data:{
         labels,
@@ -739,6 +793,10 @@ body{
       </div>`;
     }).join('');
   })();
+
+  renderTable();
+  renderSocialCards();
+  } // fim render()
 
   // ── TRADE TABLE ──
   let currentFilter = 'all';
@@ -837,10 +895,8 @@ body{
     renderTable();
   });
 
-  renderTable();
-
   // ── SOCIAL CARDS ──
-  (function(){
+  function renderSocialCards(){
     // Apenas winners e worst
     const featured = [...trades].sort((a,b) => lucroUsd(b) - lucroUsd(a));
     const grid = document.getElementById('socialGrid');
@@ -893,26 +949,26 @@ body{
         </div>
       </div>`;
     }).join('');
+  }
 
-    grid.addEventListener('click', e => {
-      const btn = e.target.closest('.sc-copy-btn');
-      if (!btn) return;
-      const text = decodeURIComponent(btn.dataset.post);
-      navigator.clipboard.writeText(text).then(()=>{
-        btn.textContent = '✓ Copiado';
-        btn.classList.add('copied');
-        setTimeout(()=>{ btn.textContent='Copiar post'; btn.classList.remove('copied'); }, 2000);
-      }).catch(()=>{
-        const ta = document.createElement('textarea');
-        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-        document.body.appendChild(ta); ta.select(); document.execCommand('copy');
-        document.body.removeChild(ta);
-        btn.textContent = '✓ Copiado';
-        btn.classList.add('copied');
-        setTimeout(()=>{ btn.textContent='Copiar post'; btn.classList.remove('copied'); }, 2000);
-      });
+  document.getElementById('socialGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.sc-copy-btn');
+    if (!btn) return;
+    const text = decodeURIComponent(btn.dataset.post);
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent='Copiar post'; btn.classList.remove('copied'); }, 2000);
+    }).catch(()=>{
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent='Copiar post'; btn.classList.remove('copied'); }, 2000);
     });
-  })();
+  });
 
   // ── EXPORT CSV ──
   document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
@@ -930,6 +986,18 @@ body{
     a.href = url; a.download = 'CTM_track_record.csv';
     a.click(); URL.revokeObjectURL(url);
   });
+
+  window.setDay = function(date){
+    currentDay = date;
+    buildDateTabs();
+    render(currentDay);
+    DateSync.write(currentDay);
+    DateSync.wireNav(currentDay);
+  };
+
+  buildDateTabs();
+  render(currentDay);
+  DateSync.wireNav(currentDay);
 
 })();
 </script>
