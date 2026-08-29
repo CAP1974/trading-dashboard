@@ -59,7 +59,9 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
       também, em separado, só para referência/exibição (ex: tabela XLSX) — NUNCA somar caixa
       a saldo outra vez (AUM, Capital EUR/USD, NAV). Bug cometido e corrigido em 2026-07-15:
       "correcao" da caixa tinha introduzido dupla contagem em index.html, no fecho de Junho/
-      base de Julho, e no nav.mjs.
+      base de Julho, e no nav.mjs. Reincidiu uma vez em modo manual (fh-aum de 21/08, corrigido
+      em 24/08) — desde 2026-08-28 o cálculo é automático (ver "NAVEGAÇÃO POR DATA"), o que
+      elimina este risco de recorrência.
 
 6c. NAV (quotas), opcional: node scripts/nav.mjs — recalcula o NAV unitizado (retorno oficial TWR).
     Usa `saldo` sozinho como capital total (NÃO somar caixa). Corre quando quiseres que a aba
@@ -68,16 +70,39 @@ PASSOS OBRIGATÓRIOS (SEMPRE TODOS):
       (usd.aportes / eur.transferencias, com data) — o NAV lê dali. Aportes a posições
       financiados pela caixa NÃO são fluxos externos.
 
-7. Actualiza index.html:
-   • Capital EUR / USD = saldo do dia (já é o capital total, NÃO somar caixa outra vez)
-   • Retorno EUR/USD % meta (= (REAL+LUCRO_ABT) / meta × 100)
-   • Equity sub (realizado + lucro aberto)
-   • AUM (saldo_EUR + saldo_USD × fx do dia; fallback 0.92)
+7. ~~Actualiza index.html manualmente~~ — OBSOLETO desde 2026-08-28 (ver secção
+   "NAVEGAÇÃO POR DATA" abaixo). O cabeçalho do fundo (Capital EUR/USD, Retorno % meta,
+   AUM) já não é texto fixo — é calculado em JS a partir de TRADING_DATA[dia]+MESES_DATA
+   assim que `node scripts/_regen.js` corre. Não editar index.html à mão para isto.
 
 8. Move para ./watched/processados/YYYY-MM-DD/:
    eur_DD_MM.png, usd_DD_MM.png, eventos_DD_MM.txt
 
 9. Commit único + push
+
+## NAVEGAÇÃO POR DATA (Opção B, implementada 2026-08-28)
+Todas as páginas excepto `historico.html` e `nav.html` (que são vistas por mês, não por
+dia) têm agora uma barra de data partilhada (pills dos últimos 7 dias + `<select>` com
+todas as sessões). Mecanismo:
+- `date-sync.js` (ficheiro partilhado, na raiz) lê/escreve `?d=YYYY-MM-DD` na URL e
+  reescreve os links `.nav-item` para propagar a data ao navegar entre páginas.
+- Cada página tem `let currentDay = DateSync.read() || LATEST_DATE` e uma função
+  `render(day)`/`setDay(date)` que recalcula tudo a partir de `TRADING_DATA[day]`.
+- Sem parâmetro na URL, o comportamento é idêntico ao de antes (mostra o dia mais
+  recente) — é uma funcionalidade aditiva, nada foi removido.
+- Tabelas e gráficos históricos (drawdown, evolução mensal, trajectória, track record)
+  cortam sempre em `ALL_UP_TO = ALL_D.filter(d => d <= day)` — navegar para trás nunca
+  mostra dados de dias/meses ainda não ocorridos nessa altura.
+- Excepção deliberada: em `governanca.html`, a Checklist Diária e as Notas do Dia
+  (Secções 4 e 5) continuam sempre ligadas a `LATEST_DATE`/hoje real — são ferramentas
+  de trabalho ao vivo (guardam em localStorage), não histórico.
+- Gráficos Chart.js em todas as páginas são destruídos (`chart.destroy()` ou
+  `Chart.getChart(id)?.destroy()`) antes de recriar, para suportar trocar de dia sem
+  acumular instâncias.
+- Ao editar qualquer uma destas páginas, lembrar de incluir `date-sync.js` e testar
+  `setDay()` para pelo menos 3 datas (mais antiga, intermédia, mais recente) antes de
+  publicar — o dia mais antigo de cada mercado costuma ter campos em falta (ex: `saldo`
+  não existe antes de 29/05) que podem rebentar cálculos que assumem sempre presentes.
 
 ## REGRAS CRÍTICAS
 - NUNCA ler o trading_data.json completo
