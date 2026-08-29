@@ -90,6 +90,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .meta-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,.22);border-radius:1px;}
 .metric-note{font-size:9px;color:var(--txt-3);margin-top:4px;letter-spacing:.04em;}
 .grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
+.date-bar{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 28px;gap:10px;}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.date-tab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-01);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -112,6 +120,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <a class="nav-item" href="nav.html">NAV</a>
   <a class="nav-item" href="governanca.html">Governança</a>
   <a class="nav-item" href="trades.html">Trades</a>
+</div>
+
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
+  <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
 <div class="main">
@@ -274,7 +288,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 
 </div>
 
-<script src="data.js?v=1788007199907"></script>
+<script src="data.js?v=1788007786518"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 const $ = id => document.getElementById(id);
 const setText = (id,t) => { const e=$(id); if(e) e.textContent=t; };
@@ -287,23 +302,9 @@ setInterval(()=>{
 
 // ── meses dinâmicos (juros compostos) ──
 const META_PCT = 10;
-const EUR_RATE = (typeof TRADING_DATA!=="undefined" && TRADING_DATA[LATEST_DATE] && TRADING_DATA[LATEST_DATE].fx) || 0.92; // fx do dia (fallback 0.92)
 const MO_PT_P  = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const MESES    = (typeof MESES_DATA !== 'undefined') ? MESES_DATA : {};
 const mesKeys  = Object.keys(MESES).sort();
-// mês activo = o que tem status 'EM CURSO' (juro composto já aberto), nao necessariamente o mes do ultimo dia de dados
-const mesEmCurso = mesKeys.find(k => MESES[k].status === 'EM CURSO');
-const curYM_m  = mesEmCurso || LATEST_DATE.slice(0,7);
-const mesKey   = MESES[curYM_m] ? curYM_m : (mesKeys.length ? mesKeys[mesKeys.length-1] : null);
-const mesData  = mesKey ? MESES[mesKey] : {};
-const CAP_EUR  = mesData.base_eur  || 79.39;
-const BASE_USD = mesData.base_usd  || 176.67;
-const META_EUR = mesData.meta_eur  || (CAP_EUR  * META_PCT / 100);
-const META_USD = mesData.meta_usd  || (BASE_USD * META_PCT / 100);
-// próxima actualização = 1º dia do mês seguinte
-const [_y, _m] = curYM_m.split('-').map(Number);
-const nextMo   = new Date(_y, _m, 1);
-const nextMoStr = '01 ' + MO_PT_P[nextMo.getMonth()] + ' ' + nextMo.getFullYear();
 
 const MO_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function fmtMo(ym){ const [y,m]=ym.split('-').map(Number); return MO_PT[m-1]+' '+y; }
@@ -311,25 +312,27 @@ function fmtDate(d){
   const [y,m,day]=d.split('-').map(Number);
   return String(day).padStart(2,'0')+' '+MO_PT[m-1];
 }
+function fmtLong(ds){const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];const[y,m,d]=ds.split('-').map(Number);const dt=new Date(y,m-1,d);return days[dt.getDay()]+' · '+String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;}
 function s(v,sym){ return (v>=0?'+':'')+v.toFixed(2)+(sym?' '+sym:''); }
 function cls(v){ return v>0?'up':v<0?'dn':'neu'; }
 function pctStr(v){ return (v>=0?'+':'')+v.toFixed(1)+'%'; }
 
-const ALL_D  = Object.keys(TRADING_DATA).sort();
-const LATEST = TRADING_DATA[LATEST_DATE];
-const curYM  = curYM_m;
+const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let currentDay = DateSync.read() || LATEST_DATE;
+if (ALL_D.indexOf(currentDay) === -1) currentDay = LATEST_DATE;
 
-// ── group days by month ──
+// ── group days by month (independente do dia seleccionado) ──
 const byMonth = {};
 ALL_D.forEach(d => {
   const ym = d.slice(0,7);
   if(!byMonth[ym]) byMonth[ym]=[];
   byMonth[ym].push(d);
 });
+const allMonthsFull = Object.keys(byMonth).sort();
 
-// ── build monthly stats ──
-function monthStats(ym) {
-  const days = byMonth[ym] || [];
+// ── stats de um mês, cortados no dia seleccionado (sem fugas do futuro) ──
+function monthStats(ym, cutoffDay) {
+  const days = (byMonth[ym] || []).filter(d => d <= cutoffDay);
   let realEur=0, realUsd=0;
   days.forEach(d => {
     (TRADING_DATA[d].posicoes_fechadas || []).forEach(p => {
@@ -337,16 +340,46 @@ function monthStats(ym) {
       else                 realUsd += p.lucro || 0;
     });
   });
-  // unrealized = latest day of month
   const lastDay = days[days.length-1];
-  const dayData = TRADING_DATA[lastDay];
+  const dayData = lastDay ? TRADING_DATA[lastDay] : null;
   const nrEur = dayData?.eur?.lucro || 0;
   const nrUsd = dayData?.usd?.lucro || 0;
   return { ym, realEur, realUsd, nrEur, nrUsd };
 }
 
-const allMonths = Object.keys(byMonth).sort().reverse();
-const curStats  = monthStats(curYM);
+let chartProgEur=null, chartProgUsd=null, chartAcum=null, chartDefice=null;
+
+function buildDateTabs(){
+  const c=document.getElementById('date-tabs-container');
+  c.innerHTML=ALL_D.slice(-7).map(d=>
+    `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtDate(d)}</button>`
+  ).join('');
+  document.getElementById('date-info').textContent=fmtLong(currentDay);
+  const picker=document.getElementById('date-picker');
+  if(picker && !picker.dataset.built){
+    picker.innerHTML=ALL_D.slice().reverse().map(d=>`<option value="${d}">${fmtLong(d)}</option>`).join('');
+    picker.dataset.built='1';
+  }
+  if(picker) picker.value=currentDay;
+}
+
+function render(day){
+  const LATEST   = TRADING_DATA[day];
+  const EUR_RATE = LATEST.fx || 0.92;
+  const curYM_m  = day.slice(0,7);
+  const mesKey   = MESES[curYM_m] ? curYM_m : (mesKeys.filter(k=>k<=curYM_m).pop() || (mesKeys.length ? mesKeys[0] : null));
+  const mesData  = mesKey ? MESES[mesKey] : {};
+  const CAP_EUR  = mesData.base_eur  || 79.39;
+  const BASE_USD = mesData.base_usd  || 176.67;
+  const META_EUR = mesData.meta_eur  || (CAP_EUR  * META_PCT / 100);
+  const META_USD = mesData.meta_usd  || (BASE_USD * META_PCT / 100);
+  const [_y, _m] = curYM_m.split('-').map(Number);
+  const nextMo   = new Date(_y, _m, 1);
+  const nextMoStr = '01 ' + MO_PT_P[nextMo.getMonth()] + ' ' + nextMo.getFullYear();
+
+  const curYM  = mesKey || curYM_m;
+  const allMonths = allMonthsFull.filter(ym => ym <= curYM_m).reverse();
+  const curStats  = monthStats(curYM, day);
 
 // ── valores do mês actual — calculados automaticamente ──
 // REAL    = soma posicoes_fechadas do mês (auto, via curStats)
@@ -500,12 +533,12 @@ $('kpi-grid').innerHTML = `
   <div class="kpi-mini">
     <div class="kpi-mini-label">Flutuante EUR</div>
     <div class="kpi-mini-value" style="color:var(--txt-2);">${LUCRO_ABT_EUR>=0?'+':''}${LUCRO_ABT_EUR.toFixed(2)}€</div>
-    <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
+    <div class="kpi-mini-sub">posições abertas · ${fmtDate(day)}</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Flutuante USD</div>
     <div class="kpi-mini-value" style="color:var(--txt-2);">${LUCRO_ABT_USD>=0?'+':''}${LUCRO_ABT_USD.toFixed(2)}$</div>
-    <div class="kpi-mini-sub">posições abertas · ${fmtDate(LATEST_DATE)}</div>
+    <div class="kpi-mini-sub">posições abertas · ${fmtDate(day)}</div>
   </div>
   <div class="kpi-mini">
     <div class="kpi-mini-label">Equity ~EUR</div>
@@ -579,7 +612,7 @@ const allPos = [
   ...(LATEST.usd?.positions||[]).map(p=>({...p,_sym:'$'}))
 ].sort((a,b)=>(b.lucro||0)-(a.lucro||0));
 
-setText('abertas-tag', allPos.length + ' posições · ' + fmtDate(LATEST_DATE));
+setText('abertas-tag', allPos.length + ' posições · ' + fmtDate(day));
 const mktColor = m => m==='EUR'?'var(--accent1)':'var(--accent2)';
 const trustBadge = t => t==='v'?'<span class="badge badge-g">Verde</span>':t==='a'?'<span class="badge badge-a">Amarelo</span>':'<span class="badge badge-r">Vermelho</span>';
 
@@ -591,12 +624,12 @@ $('abertas-tbody').innerHTML = allPos.length ? allPos.map(p=>`<tr>
   <td>${trustBadge(p.trust)}</td>
 </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--txt-3);padding:16px;">Sem posições</td></tr>';
 
-// ── SECÇÃO 5: histórico mensal (só 2026+) ──
+// ── SECÇÃO 5: histórico mensal (só 2026+, até ao mês seleccionado) ──
 const months2026 = allMonths.filter(ym => ym >= '2026');
 setText('hist-tag', months2026.length + ' meses');
 $('hist-tbody').innerHTML = months2026.map(ym => {
-  const st = monthStats(ym);
-  const lastD = (byMonth[ym]||[]).slice(-1)[0];
+  const st = monthStats(ym, day);
+  const lastD = (byMonth[ym]||[]).filter(d=>d<=day).slice(-1)[0];
   const nrE = TRADING_DATA[lastD]?.eur?.lucro || 0;
   const nrU = TRADING_DATA[lastD]?.usd?.lucro || 0;
   // usar constantes oficiais para o mês actual
@@ -622,8 +655,8 @@ $('hist-tbody').innerHTML = months2026.map(ym => {
   </tr>`;
 }).join('');
 
-// ── SECÇÃO 6: Gráficos + Trajectória (só >= 2026-04) ──
-const trajMeses = Object.keys(MESES).sort().filter(ym => ym >= '2026-04');
+// ── SECÇÃO 6: Gráficos + Trajectória (2026-04 até ao mês seleccionado) ──
+const trajMeses = Object.keys(MESES).sort().filter(ym => ym >= '2026-04' && ym <= curYM_m);
 setText('traj-tag', trajMeses.length + (trajMeses.length === 1 ? ' mês' : ' meses'));
 
 if (trajMeses.length) {
@@ -680,6 +713,8 @@ if (trajMeses.length) {
   // ── GRÁFICO 1a — Progresso EUR (horizontal stacked bar) ──
   function buildProgChart(canvasId, labels, realArr, flutuArr, faltaArr, metaArr, sym, mainColor, metaColor) {
     const positiveReal = realArr.map(v => Math.max(v, 0));
+    const prevChart = Chart.getChart(canvasId);
+    if (prevChart) prevChart.destroy();
     new Chart(document.getElementById(canvasId), {
       type: 'bar',
       data: {
@@ -765,6 +800,7 @@ if (trajMeses.length) {
                      : (mes.equity_usd != null ? mes.equity_usd : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]));
     return mes.meta_usd > 0 ? +(eq / mes.meta_usd * 100).toFixed(1) : 0;
   });
+  { const prevChart = Chart.getChart('chartAcum'); if (prevChart) prevChart.destroy(); }
   new Chart(document.getElementById('chartAcum'), {
     type: 'bar',
     data: {
@@ -841,6 +877,7 @@ if (trajMeses.length) {
                      : (mes.equity_usd != null ? mes.equity_usd : (mes.saldo_fim_usd != null ? mes.saldo_fim_usd - baseAjU : mRealU[i] + mFlutuU[i]));
     return +(eq - mes.meta_usd).toFixed(2);
   });
+  { const prevChart = Chart.getChart('chartDefice'); if (prevChart) prevChart.destroy(); }
   new Chart(document.getElementById('chartDefice'), {
     type: 'bar',
     data: {
@@ -969,7 +1006,20 @@ if (trajMeses.length) {
       &nbsp;·&nbsp; Desvio (real − meta): ${fA(dEur)} EUR · ${fA(dUsd)} USD
     </td>
   </tr>`;
+  }
 }
+
+function setDay(date){
+  currentDay = date;
+  buildDateTabs();
+  render(currentDay);
+  DateSync.write(currentDay);
+  DateSync.wireNav(currentDay);
+}
+
+buildDateTabs();
+render(currentDay);
+DateSync.wireNav(currentDay);
 </script>
 </body>
 </html>
