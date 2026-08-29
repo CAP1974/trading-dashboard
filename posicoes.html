@@ -71,6 +71,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .search-input{font-family:var(--mono);font-size:11px;padding:4px 10px;background:var(--bg-03);border:1px solid var(--border);border-radius:var(--radius);color:var(--txt);outline:none;width:140px;}
 .search-input:focus{border-color:rgba(61,255,176,.3);}
 .search-input::placeholder{color:var(--txt-3);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:4px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-03);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
 
 /* sort arrow */
 .sort-arrow{margin-left:4px;opacity:.4;}
@@ -116,6 +118,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
     <div class="filter-bar">
       <!-- Date tabs -->
       <div id="date-tabs" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+      <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
       <div class="filter-sep"></div>
       <!-- Conta -->
       <button class="fbtn active" data-grp="conta" data-val="all">Todas</button>
@@ -225,7 +228,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="data.js?v=1788006557108"></script>
+<script src="data.js?v=1788006765652"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 // ── helpers ──
 const $ = id => document.getElementById(id);
@@ -244,7 +248,9 @@ setInterval(() => {
 }, 1000);
 
 // ── state ──
-let selDate  = LATEST_DATE;
+const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let selDate  = DateSync.read() || LATEST_DATE;
+if (ALL_D.indexOf(selDate) === -1) selDate = LATEST_DATE;
 let selConta = 'all';
 let selTrust = 'all';
 let selSearch = '';
@@ -252,18 +258,26 @@ let sortCol  = 'valor';
 let sortDir  = -1; // -1 desc, 1 asc
 let top10Chart = null;
 
-const ALL_D = Object.keys(TRADING_DATA).sort();
+function setDay(d){
+  selDate = d;
+  render();
+  DateSync.write(selDate);
+  DateSync.wireNav(selDate);
+}
 
 // ── SECÇÃO 1: date tabs ──
 const dateTabsEl = $('date-tabs');
-DATA_DATES.forEach(d => {
+ALL_D.slice(-7).forEach(d => {
   const b = document.createElement('button');
   b.className = 'fbtn' + (d === selDate ? ' active' : '');
   b.textContent = fmtDate(d);
   b.dataset.date = d;
-  b.addEventListener('click', () => { selDate = d; render(); });
+  b.addEventListener('click', () => setDay(d));
   dateTabsEl.appendChild(b);
 });
+const datePickerEl = $('date-picker');
+datePickerEl.innerHTML = ALL_D.slice().reverse().map(d => `<option value="${d}">${fmtDate(d)} · ${d}</option>`).join('');
+datePickerEl.value = selDate;
 
 // filter buttons
 document.querySelectorAll('[data-grp]').forEach(btn => {
@@ -323,6 +337,7 @@ function render() {
   document.querySelectorAll('#date-tabs .fbtn').forEach(b => {
     b.classList.toggle('active', b.dataset.date === selDate);
   });
+  datePickerEl.value = selDate;
 
   let positions = getPositions(selDate);
 
@@ -441,32 +456,33 @@ function render() {
       }
     }
   });
-}
 
-// ── SECÇÃO 5: saídas ──
-const saidas = [];
-ALL_D.forEach(d => {
-  (TRADING_DATA[d].eventos || []).forEach(ev => {
-    if (ev.tipo === 'saida') saidas.push({ date: d, ...ev });
+  // ── SECÇÃO 5: saídas (até à sessão seleccionada) ──
+  const saidas = [];
+  ALL_D.filter(d => d <= selDate).forEach(d => {
+    (TRADING_DATA[d].eventos || []).forEach(ev => {
+      if (ev.tipo === 'saida') saidas.push({ date: d, ...ev });
+    });
   });
-});
 
-setText('saidas-tag', saidas.length + ' saídas');
-const saidasTbody = $('saidas-tbody');
-if (!saidas.length) {
-  saidasTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--txt-3);padding:20px;">Sem saídas registadas</td></tr>';
-} else {
-  const mktColor = m => m === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
-  saidasTbody.innerHTML = saidas.map(s => `<tr>
-    <td>${fmtDate(s.date)}</td>
-    <td style="font-weight:600;">${s.ativo||'—'}</td>
-    <td style="color:${mktColor(s.mkt)}">${s.mkt||'—'}</td>
-    <td style="color:var(--txt-2);font-size:10px;">${s.nota||'—'}</td>
-  </tr>`).join('');
+  setText('saidas-tag', saidas.length + ' saídas');
+  const saidasTbody = $('saidas-tbody');
+  if (!saidas.length) {
+    saidasTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--txt-3);padding:20px;">Sem saídas registadas</td></tr>';
+  } else {
+    const mktColor = m => m === 'EUR' ? 'var(--accent1)' : 'var(--accent2)';
+    saidasTbody.innerHTML = saidas.map(s => `<tr>
+      <td>${fmtDate(s.date)}</td>
+      <td style="font-weight:600;">${s.ativo||'—'}</td>
+      <td style="color:${mktColor(s.mkt)}">${s.mkt||'—'}</td>
+      <td style="color:var(--txt-2);font-size:10px;">${s.nota||'—'}</td>
+    </tr>`).join('');
+  }
 }
 
 // initial render
 render();
+DateSync.wireNav(selDate);
 </script>
 </body>
 </html>
