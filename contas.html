@@ -69,6 +69,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
 .chart-wrap{position:relative;width:100%;}
 .sparkline-wrap{position:relative;height:60px;margin:10px 0 6px;}
+.date-bar{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 28px;gap:10px;}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.date-tab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-01);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -91,6 +99,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <a class="nav-item" href="nav.html">NAV</a>
   <a class="nav-item" href="governanca.html">Governança</a>
   <a class="nav-item" href="trades.html">Trades</a>
+</div>
+
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
+  <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
 <div class="main">
@@ -256,7 +270,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 </div><!-- /main -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="data.js?v=1787915649838"></script>
+<script src="data.js?v=1788006557108"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 // ── CONSTANTES ──
 const CAP_EUR_INICIAL = 79.39;
@@ -268,6 +283,11 @@ function fmtDate(d) {
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const dt = new Date(d + 'T12:00:00Z');
   return dt.getDate() + ' ' + months[dt.getMonth()];
+}
+function fmtLong(d){
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const [y,m,dd]=d.split('-').map(Number); const dt=new Date(y,m-1,dd);
+  return days[dt.getDay()]+' · '+String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;
 }
 
 function setHTML(id, html) {
@@ -298,270 +318,258 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ── DADOS ──
-const ALL_D  = Object.keys(TRADING_DATA).sort();
-const LATEST = TRADING_DATA[LATEST_DATE];
-const last   = ALL_D[ALL_D.length - 1];
+const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let currentDay = DateSync.read() || LATEST_DATE;
+if (ALL_D.indexOf(currentDay) === -1) currentDay = LATEST_DATE;
 
-// ── SECÇÃO 1: KPIs ──
-const eurAUM = calcAUM(LATEST, 'eur');
-const usdAUM = calcAUM(LATEST, 'usd');
-const retEurPct = ((eurAUM - CAP_EUR_INICIAL) / CAP_EUR_INICIAL * 100).toFixed(1);
-const retUsdPct = ((usdAUM - BASE_USD) / BASE_USD * 100).toFixed(1);
+let sparkEurChart=null, sparkUsdChart=null, evolucaoChart=null;
 
-// AUM em EUR (convert USD at ~0.93)
-const EUR_RATE = 0.93;
-const aumTotalEur = (eurAUM + usdAUM * EUR_RATE).toFixed(0);
-
-const eurPos   = (LATEST.eur.positions || []).reduce((a,p) => a + (p.valor||0), 0);
-const eurCaixa = LATEST.eur.caixa || 0;
-const usdPos   = (LATEST.usd.positions || []).reduce((a,p) => a + (p.valor||0), 0);
-const usdCaixa = LATEST.usd.caixa || 0;
-
-// EUR KPI
-setText('kpi-saldo-eur', eurAUM.toFixed(2) + ' €');
-const eurRetSign = retEurPct >= 0 ? '+' : '';
-setText('kpi-saldo-eur-sub', `${eurRetSign}${retEurPct}% vs ${CAP_EUR_INICIAL.toFixed(2)}€ base`);
-document.getElementById('kpi-saldo-eur').className = 'kpi-mini-value ' + (retEurPct >= 0 ? 'up' : 'dn');
-
-// USD KPI
-setText('kpi-saldo-usd', usdAUM.toFixed(2) + ' $');
-const usdRetSign = retUsdPct >= 0 ? '+' : '';
-setText('kpi-saldo-usd-sub', `${usdRetSign}${retUsdPct}% vs ${BASE_USD.toFixed(2)}$ base`);
-document.getElementById('kpi-saldo-usd').className = 'kpi-mini-value ' + (retUsdPct >= 0 ? 'up' : 'dn');
-
-// AUM KPI
-setText('kpi-aum', '≈ ' + aumTotalEur + ' €');
-setText('kpi-aum-sub', `${eurAUM.toFixed(2)}€ + ${usdAUM.toFixed(2)}$ (×${EUR_RATE})`);
-
-// Dias
-setText('kpi-dias', ALL_D.length);
-setText('kpi-dias-sub', `${fmtDate(ALL_D[0])} → ${fmtDate(last)}`);
-
-// page sub
-setText('page-sub', `Triple Seven Capital · Actualizado ${fmtDate(LATEST_DATE)}`);
-
-// ── SECÇÃO 2: Detalhe EUR|USD ──
-setText('eur-date-tag', fmtDate(last));
-setText('usd-date-tag', fmtDate(last));
-
-// EUR stats
-setText('eur-saldo-actual', eurAUM.toFixed(2) + ' €');
-const eurRetStr = (retEurPct >= 0 ? '+' : '') + retEurPct + '%';
-const eurRetEl = document.getElementById('eur-retorno');
-if (eurRetEl) {
-  eurRetEl.textContent = `${eurRetStr}  (${CAP_EUR_INICIAL.toFixed(2)}€ → ${eurAUM.toFixed(2)}€)`;
-  eurRetEl.className = 'stat-val ' + (retEurPct >= 0 ? 'up' : 'dn');
+function buildDateTabs(){
+  const c=document.getElementById('date-tabs-container');
+  c.innerHTML=ALL_D.slice(-7).map(d=>
+    `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtDate(d)}</button>`
+  ).join('');
+  document.getElementById('date-info').textContent=fmtLong(currentDay);
+  const picker=document.getElementById('date-picker');
+  if(picker && !picker.dataset.built){
+    picker.innerHTML=ALL_D.slice().reverse().map(d=>`<option value="${d}">${fmtLong(d)}</option>`).join('');
+    picker.dataset.built='1';
+  }
+  if(picker) picker.value=currentDay;
 }
 
-let eurBest = -Infinity, eurWorst = Infinity;
-let eurBestDate = '', eurWorstDate = '';
-ALL_D.forEach(d => {
-  const lucro = TRADING_DATA[d].eur ? (TRADING_DATA[d].eur.lucro || 0) : 0;
-  if (lucro > eurBest)  { eurBest = lucro; eurBestDate = d; }
-  if (lucro < eurWorst) { eurWorst = lucro; eurWorstDate = d; }
-});
-setText('eur-best',  (eurBest >= 0 ? '+' : '') + eurBest.toFixed(2) + ' €  (' + fmtDate(eurBestDate) + ')');
-setText('eur-worst', (eurWorst >= 0 ? '+' : '') + eurWorst.toFixed(2) + ' €  (' + fmtDate(eurWorstDate) + ')');
-const ewEl = document.getElementById('eur-worst'); if(ewEl) ewEl.className = 'stat-val ' + (eurWorst >= 0 ? 'up' : 'dn');
-const ebEl = document.getElementById('eur-best');  if(ebEl) ebEl.className = 'stat-val ' + (eurBest  >= 0 ? 'up' : 'dn');
-setText('eur-pos-count', (LATEST.eur.positions || []).length);
+function render(day){
+  const VIEW = TRADING_DATA[day];
+  const last = day; // sessão seleccionada = fim do "as of"
+  const ALL_UP_TO = ALL_D.filter(d => d <= day);
 
-// USD aportes total
-let totalAportes = 0;
-ALL_D.forEach(d => {
-  const evs = TRADING_DATA[d].eventos || [];
-  evs.filter(ev => ev.tipo === 'aporte' || (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte))
-     .forEach(ev => { totalAportes += (ev.valor || 0); });
-  // also check usd.aporte field
-  if (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte) {
-    totalAportes += TRADING_DATA[d].usd.aporte;
+  // ── SECÇÃO 1: KPIs ──
+  const eurAUM = calcAUM(VIEW, 'eur');
+  const usdAUM = calcAUM(VIEW, 'usd');
+  const retEurPct = ((eurAUM - CAP_EUR_INICIAL) / CAP_EUR_INICIAL * 100).toFixed(1);
+  const retUsdPct = ((usdAUM - BASE_USD) / BASE_USD * 100).toFixed(1);
+
+  const EUR_RATE = VIEW.fx || 0.92;
+  const aumTotalEur = (eurAUM + usdAUM * EUR_RATE).toFixed(0);
+
+  // EUR KPI
+  setText('kpi-saldo-eur', eurAUM.toFixed(2) + ' €');
+  const eurRetSign = retEurPct >= 0 ? '+' : '';
+  setText('kpi-saldo-eur-sub', `${eurRetSign}${retEurPct}% vs ${CAP_EUR_INICIAL.toFixed(2)}€ base`);
+  document.getElementById('kpi-saldo-eur').className = 'kpi-mini-value ' + (retEurPct >= 0 ? 'up' : 'dn');
+
+  // USD KPI
+  setText('kpi-saldo-usd', usdAUM.toFixed(2) + ' $');
+  const usdRetSign = retUsdPct >= 0 ? '+' : '';
+  setText('kpi-saldo-usd-sub', `${usdRetSign}${retUsdPct}% vs ${BASE_USD.toFixed(2)}$ base`);
+  document.getElementById('kpi-saldo-usd').className = 'kpi-mini-value ' + (retUsdPct >= 0 ? 'up' : 'dn');
+
+  // AUM KPI
+  setText('kpi-aum', '≈ ' + aumTotalEur + ' €');
+  setText('kpi-aum-sub', `${eurAUM.toFixed(2)}€ + ${usdAUM.toFixed(2)}$ (×${EUR_RATE})`);
+
+  // Dias (até à sessão seleccionada)
+  setText('kpi-dias', ALL_UP_TO.length);
+  setText('kpi-dias-sub', `${fmtDate(ALL_D[0])} → ${fmtDate(last)}`);
+
+  // page sub
+  setText('page-sub', day===LATEST_DATE
+    ? `Triple Seven Capital · Actualizado ${fmtDate(LATEST_DATE)}`
+    : `Triple Seven Capital · A ver sessão de ${fmtDate(day)} (mais recente: ${fmtDate(LATEST_DATE)})`);
+
+  // ── SECÇÃO 2: Detalhe EUR|USD ──
+  setText('eur-date-tag', fmtDate(last));
+  setText('usd-date-tag', fmtDate(last));
+
+  setText('eur-saldo-actual', eurAUM.toFixed(2) + ' €');
+  const eurRetStr = (retEurPct >= 0 ? '+' : '') + retEurPct + '%';
+  const eurRetEl = document.getElementById('eur-retorno');
+  if (eurRetEl) {
+    eurRetEl.textContent = `${eurRetStr}  (${CAP_EUR_INICIAL.toFixed(2)}€ → ${eurAUM.toFixed(2)}€)`;
+    eurRetEl.className = 'stat-val ' + (retEurPct >= 0 ? 'up' : 'dn');
   }
-});
-// Use known value if no events found
-if (totalAportes === 0) totalAportes = 12.90;
-setText('usd-aportes', '+' + totalAportes.toFixed(2) + ' $');
 
-// USD stats
-setText('usd-saldo-actual', usdAUM.toFixed(2) + ' $');
-const usdRetStr = (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%';
-const usdRetEl = document.getElementById('usd-retorno');
-if (usdRetEl) {
-  usdRetEl.textContent = `${usdRetStr}  (${BASE_USD.toFixed(2)}$ → ${usdAUM.toFixed(2)}$)`;
-  usdRetEl.className = 'stat-val ' + (retUsdPct >= 0 ? 'up' : 'dn');
-}
+  let eurBest = -Infinity, eurWorst = Infinity;
+  let eurBestDate = '', eurWorstDate = '';
+  ALL_UP_TO.forEach(d => {
+    const lucro = TRADING_DATA[d].eur ? (TRADING_DATA[d].eur.lucro || 0) : 0;
+    if (lucro > eurBest)  { eurBest = lucro; eurBestDate = d; }
+    if (lucro < eurWorst) { eurWorst = lucro; eurWorstDate = d; }
+  });
+  setText('eur-best',  (eurBest >= 0 ? '+' : '') + eurBest.toFixed(2) + ' €  (' + fmtDate(eurBestDate) + ')');
+  setText('eur-worst', (eurWorst >= 0 ? '+' : '') + eurWorst.toFixed(2) + ' €  (' + fmtDate(eurWorstDate) + ')');
+  document.getElementById('eur-worst').className = 'stat-val ' + (eurWorst >= 0 ? 'up' : 'dn');
+  document.getElementById('eur-best').className  = 'stat-val ' + (eurBest  >= 0 ? 'up' : 'dn');
+  setText('eur-pos-count', (VIEW.eur.positions || []).length);
 
-let usdBest = -Infinity, usdWorst = Infinity;
-let usdBestDate = '', usdWorstDate = '';
-ALL_D.forEach(d => {
-  const lucro = TRADING_DATA[d].usd ? (TRADING_DATA[d].usd.lucro || 0) : 0;
-  if (lucro > usdBest)  { usdBest = lucro; usdBestDate = d; }
-  if (lucro < usdWorst) { usdWorst = lucro; usdWorstDate = d; }
-});
-setText('usd-best',  (usdBest >= 0 ? '+' : '') + usdBest.toFixed(2) + ' $  (' + fmtDate(usdBestDate) + ')');
-setText('usd-worst', (usdWorst >= 0 ? '+' : '') + usdWorst.toFixed(2) + ' $  (' + fmtDate(usdWorstDate) + ')');
-const uwEl = document.getElementById('usd-worst'); if(uwEl) uwEl.className = 'stat-val ' + (usdWorst >= 0 ? 'up' : 'dn');
-const ubEl = document.getElementById('usd-best');  if(ubEl) ubEl.className = 'stat-val ' + (usdBest  >= 0 ? 'up' : 'dn');
-setText('usd-pos-count', (LATEST.usd.positions || []).length);
-
-// ── SPARKLINES ──
-const SPARK_DATES = ALL_D.slice(-6);
-const eurSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'eur'));
-const usdSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'usd'));
-
-const sparkCfg = (data, color) => ({
-  type: 'line',
-  data: {
-    labels: SPARK_DATES.map(fmtDate),
-    datasets: [{
-      data,
-      borderColor: color,
-      borderWidth: 2,
-      pointRadius: 2,
-      pointBackgroundColor: color,
-      fill: true,
-      backgroundColor: color.replace(')', ',0.08)').replace('rgb(','rgba('),
-      tension: 0.3
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false }, tooltip: {
-      callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(2) }
-    }},
-    scales: {
-      x: { display: false },
-      y: { display: false }
-    }
-  }
-});
-
-new Chart(document.getElementById('sparkEur'), sparkCfg(eurSparkData, '#3dffb0'));
-new Chart(document.getElementById('sparkUsd'), sparkCfg(usdSparkData, '#00c8ff'));
-
-// ── SECÇÃO 3: Tabela de movimentos ──
-const movements = [];
-
-// Capital inicial EUR
-movements.push({ date: ALL_D[0], conta: 'EUR', tipo: 'inicial', valor: CAP_EUR_INICIAL, desc: 'Capital inicial EUR' });
-// Capital inicial USD
-movements.push({ date: ALL_D[0], conta: 'USD', tipo: 'inicial', valor: CAP_USD_INICIAL, desc: 'Capital inicial USD' });
-
-// Dynamic events from TRADING_DATA
-ALL_D.forEach(d => {
-  const day = TRADING_DATA[d];
-  // eventos array
-  (day.eventos || []).forEach(ev => {
-    if (ev.tipo === 'aporte') {
-      movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: ev.valor || 0, desc: ev.desc || 'Aporte USD' });
-    } else if (ev.tipo === 'caixa') {
-      const conta = ev.conta || (ev.moeda === 'EUR' ? 'EUR' : 'USD');
-      movements.push({ date: d, conta, tipo: 'caixa', valor: ev.valor || 0, desc: ev.desc || 'Movimento caixa' });
+  // USD aportes total (até à sessão)
+  let totalAportes = 0;
+  ALL_UP_TO.forEach(d => {
+    const evs = TRADING_DATA[d].eventos || [];
+    evs.filter(ev => ev.tipo === 'aporte' || (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte))
+       .forEach(ev => { totalAportes += (ev.valor || 0); });
+    if (TRADING_DATA[d].usd && TRADING_DATA[d].usd.aporte) {
+      totalAportes += TRADING_DATA[d].usd.aporte;
     }
   });
-  // usd.aporte field
-  if (day.usd && day.usd.aporte && !(day.eventos || []).some(e => e.tipo === 'aporte')) {
-    movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: day.usd.aporte, desc: 'Aporte USD' });
+  if (totalAportes === 0) totalAportes = 12.90;
+  setText('usd-aportes', '+' + totalAportes.toFixed(2) + ' $');
+
+  setText('usd-saldo-actual', usdAUM.toFixed(2) + ' $');
+  const usdRetStr = (retUsdPct >= 0 ? '+' : '') + retUsdPct + '%';
+  const usdRetEl = document.getElementById('usd-retorno');
+  if (usdRetEl) {
+    usdRetEl.textContent = `${usdRetStr}  (${BASE_USD.toFixed(2)}$ → ${usdAUM.toFixed(2)}$)`;
+    usdRetEl.className = 'stat-val ' + (retUsdPct >= 0 ? 'up' : 'dn');
   }
-  // caixa fields
-  if (day.eur && day.eur.caixa !== undefined && d === last) {
-    movements.push({ date: d, conta: 'EUR', tipo: 'caixa', valor: day.eur.caixa, desc: 'Caixa EUR actual' });
-  }
-  if (day.usd && day.usd.caixa !== undefined && d === last) {
-    movements.push({ date: d, conta: 'USD', tipo: 'caixa', valor: day.usd.caixa, desc: 'Caixa USD actual' });
-  }
-});
 
-const tipoBadge = {
-  'inicial': '<span class="badge badge-b">Inicial</span>',
-  'aporte':  '<span class="badge badge-g">Aporte</span>',
-  'caixa':   '<span class="badge badge-a">Caixa</span>',
-  'saida':   '<span class="badge badge-r">Saída</span>',
-};
-const contaColor = { 'EUR': 'var(--accent1)', 'USD': 'var(--accent2)' };
+  let usdBest = -Infinity, usdWorst = Infinity;
+  let usdBestDate = '', usdWorstDate = '';
+  ALL_UP_TO.forEach(d => {
+    const lucro = TRADING_DATA[d].usd ? (TRADING_DATA[d].usd.lucro || 0) : 0;
+    if (lucro > usdBest)  { usdBest = lucro; usdBestDate = d; }
+    if (lucro < usdWorst) { usdWorst = lucro; usdWorstDate = d; }
+  });
+  setText('usd-best',  (usdBest >= 0 ? '+' : '') + usdBest.toFixed(2) + ' $  (' + fmtDate(usdBestDate) + ')');
+  setText('usd-worst', (usdWorst >= 0 ? '+' : '') + usdWorst.toFixed(2) + ' $  (' + fmtDate(usdWorstDate) + ')');
+  document.getElementById('usd-worst').className = 'stat-val ' + (usdWorst >= 0 ? 'up' : 'dn');
+  document.getElementById('usd-best').className  = 'stat-val ' + (usdBest  >= 0 ? 'up' : 'dn');
+  setText('usd-pos-count', (VIEW.usd.positions || []).length);
 
-setText('mov-count-tag', movements.length + ' movimentos');
+  // ── SPARKLINES (6 sessões até à seleccionada) ──
+  const SPARK_DATES = ALL_UP_TO.slice(-6);
+  const eurSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'eur'));
+  const usdSparkData = SPARK_DATES.map(d => calcAUM(TRADING_DATA[d], 'usd'));
 
-const tbody = document.getElementById('mov-tbody');
-tbody.innerHTML = movements.map(mv => {
-  const sign = mv.tipo === 'inicial' || mv.tipo === 'aporte' ? '+' : '';
-  const sym  = mv.conta === 'EUR' ? '€' : '$';
-  const valStr = sign + mv.valor.toFixed(2) + ' ' + sym;
-  const badge = tipoBadge[mv.tipo] || `<span class="badge">${mv.tipo}</span>`;
-  return `<tr>
-    <td>${fmtDate(mv.date)}</td>
-    <td style="color:${contaColor[mv.conta]};font-weight:600;">${mv.conta}</td>
-    <td>${badge}</td>
-    <td class="r" style="color:${mv.tipo==='inicial'||mv.tipo==='aporte'?'var(--green)':'var(--amber)'};">${valStr}</td>
-    <td style="color:var(--txt-2);">${mv.desc}</td>
-  </tr>`;
-}).join('');
-
-// ── SECÇÃO 4: Evolução por sessão ──
-const evolLabels   = ALL_D.map(fmtDate);
-const evolEurData  = ALL_D.map(d => calcAUM(TRADING_DATA[d], 'eur'));
-const evolUsdData  = ALL_D.map(d => calcAUM(TRADING_DATA[d], 'usd'));
-
-setText('evolucao-tag', ALL_D.length + ' sessões');
-
-new Chart(document.getElementById('evolucaoChart'), {
-  type: 'bar',
-  data: {
-    labels: evolLabels,
-    datasets: [
-      {
-        label: 'EUR (€)',
-        data: evolEurData,
-        backgroundColor: 'rgba(61,255,176,0.25)',
-        borderColor: '#3dffb0',
-        borderWidth: 1.5,
-        borderRadius: 4,
-      },
-      {
-        label: 'USD ($)',
-        data: evolUsdData,
-        backgroundColor: 'rgba(0,200,255,0.20)',
-        borderColor: '#00c8ff',
-        borderWidth: 1.5,
-        borderRadius: 4,
-      }
-    ]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { mode: 'index', intersect: false },
-    plugins: {
-      legend: {
-        labels: { color: '#6b8aaa', font: { family: "'JetBrains Mono'" }, boxWidth: 12 }
-      },
-      tooltip: {
-        backgroundColor: '#0f1923',
-        borderColor: 'rgba(255,255,255,0.08)',
-        borderWidth: 1,
-        titleColor: '#ddeaf7',
-        bodyColor: '#6b8aaa',
-        callbacks: {
-          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}`
-        }
-      }
+  const sparkCfg = (data, color) => ({
+    type: 'line',
+    data: {
+      labels: SPARK_DATES.map(fmtDate),
+      datasets: [{
+        data,
+        borderColor: color,
+        borderWidth: 2,
+        pointRadius: 2,
+        pointBackgroundColor: color,
+        fill: true,
+        backgroundColor: color.replace(')', ',0.08)').replace('rgb(','rgba('),
+        tension: 0.3
+      }]
     },
-    scales: {
-      x: {
-        ticks: { color: '#334455', font: { family: "'JetBrains Mono'", size: 10 } },
-        grid:  { color: 'rgba(255,255,255,0.03)' }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: ctx => ' ' + ctx.parsed.y.toFixed(2) }
+      }},
+      scales: { x: { display: false }, y: { display: false } }
+    }
+  });
+
+  if(sparkEurChart) sparkEurChart.destroy();
+  if(sparkUsdChart) sparkUsdChart.destroy();
+  sparkEurChart = new Chart(document.getElementById('sparkEur'), sparkCfg(eurSparkData, '#3dffb0'));
+  sparkUsdChart = new Chart(document.getElementById('sparkUsd'), sparkCfg(usdSparkData, '#00c8ff'));
+
+  // ── SECÇÃO 3: Tabela de movimentos (até à sessão) ──
+  const movements = [];
+  movements.push({ date: ALL_D[0], conta: 'EUR', tipo: 'inicial', valor: CAP_EUR_INICIAL, desc: 'Capital inicial EUR' });
+  movements.push({ date: ALL_D[0], conta: 'USD', tipo: 'inicial', valor: CAP_USD_INICIAL, desc: 'Capital inicial USD' });
+
+  ALL_UP_TO.forEach(d => {
+    const dayData = TRADING_DATA[d];
+    (dayData.eventos || []).forEach(ev => {
+      if (ev.tipo === 'aporte') {
+        movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: ev.valor || 0, desc: ev.desc || 'Aporte USD' });
+      } else if (ev.tipo === 'caixa') {
+        const conta = ev.conta || (ev.moeda === 'EUR' ? 'EUR' : 'USD');
+        movements.push({ date: d, conta, tipo: 'caixa', valor: ev.valor || 0, desc: ev.desc || 'Movimento caixa' });
+      }
+    });
+    if (dayData.usd && dayData.usd.aporte && !(dayData.eventos || []).some(e => e.tipo === 'aporte')) {
+      movements.push({ date: d, conta: 'USD', tipo: 'aporte', valor: dayData.usd.aporte, desc: 'Aporte USD' });
+    }
+    if (dayData.eur && dayData.eur.caixa !== undefined && d === last) {
+      movements.push({ date: d, conta: 'EUR', tipo: 'caixa', valor: dayData.eur.caixa, desc: 'Caixa EUR na sessão' });
+    }
+    if (dayData.usd && dayData.usd.caixa !== undefined && d === last) {
+      movements.push({ date: d, conta: 'USD', tipo: 'caixa', valor: dayData.usd.caixa, desc: 'Caixa USD na sessão' });
+    }
+  });
+
+  const tipoBadge = {
+    'inicial': '<span class="badge badge-b">Inicial</span>',
+    'aporte':  '<span class="badge badge-g">Aporte</span>',
+    'caixa':   '<span class="badge badge-a">Caixa</span>',
+    'saida':   '<span class="badge badge-r">Saída</span>',
+  };
+  const contaColor = { 'EUR': 'var(--accent1)', 'USD': 'var(--accent2)' };
+
+  setText('mov-count-tag', movements.length + ' movimentos');
+
+  const tbody = document.getElementById('mov-tbody');
+  tbody.innerHTML = movements.map(mv => {
+    const sign = mv.tipo === 'inicial' || mv.tipo === 'aporte' ? '+' : '';
+    const sym  = mv.conta === 'EUR' ? '€' : '$';
+    const valStr = sign + mv.valor.toFixed(2) + ' ' + sym;
+    const badge = tipoBadge[mv.tipo] || `<span class="badge">${mv.tipo}</span>`;
+    return `<tr>
+      <td>${fmtDate(mv.date)}</td>
+      <td style="color:${contaColor[mv.conta]};font-weight:600;">${mv.conta}</td>
+      <td>${badge}</td>
+      <td class="r" style="color:${mv.tipo==='inicial'||mv.tipo==='aporte'?'var(--green)':'var(--amber)'};">${valStr}</td>
+      <td style="color:var(--txt-2);">${mv.desc}</td>
+    </tr>`;
+  }).join('');
+
+  // ── SECÇÃO 4: Evolução por sessão (até à seleccionada) ──
+  const evolLabels   = ALL_UP_TO.map(fmtDate);
+  const evolEurData  = ALL_UP_TO.map(d => calcAUM(TRADING_DATA[d], 'eur'));
+  const evolUsdData  = ALL_UP_TO.map(d => calcAUM(TRADING_DATA[d], 'usd'));
+
+  setText('evolucao-tag', ALL_UP_TO.length + ' sessões');
+
+  if(evolucaoChart) evolucaoChart.destroy();
+  evolucaoChart = new Chart(document.getElementById('evolucaoChart'), {
+    type: 'bar',
+    data: {
+      labels: evolLabels,
+      datasets: [
+        { label: 'EUR (€)', data: evolEurData, backgroundColor: 'rgba(61,255,176,0.25)', borderColor: '#3dffb0', borderWidth: 1.5, borderRadius: 4 },
+        { label: 'USD ($)', data: evolUsdData, backgroundColor: 'rgba(0,200,255,0.20)', borderColor: '#00c8ff', borderWidth: 1.5, borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#6b8aaa', font: { family: "'JetBrains Mono'" }, boxWidth: 12 } },
+        tooltip: {
+          backgroundColor: '#0f1923', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+          titleColor: '#ddeaf7', bodyColor: '#6b8aaa',
+          callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}` }
+        }
       },
-      y: {
-        ticks: {
-          color: '#334455',
-          font: { family: "'JetBrains Mono'", size: 10 },
-          callback: v => v.toFixed(0)
-        },
-        grid: { color: 'rgba(255,255,255,0.04)' }
+      scales: {
+        x: { ticks: { color: '#334455', font: { family: "'JetBrains Mono'", size: 10 } }, grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { ticks: { color: '#334455', font: { family: "'JetBrains Mono'", size: 10 }, callback: v => v.toFixed(0) }, grid: { color: 'rgba(255,255,255,0.04)' } }
       }
     }
-  }
-});
+  });
+}
+
+function setDay(date){
+  currentDay = date;
+  buildDateTabs();
+  render(currentDay);
+  DateSync.write(currentDay);
+  DateSync.wireNav(currentDay);
+}
+
+buildDateTabs();
+render(currentDay);
+DateSync.wireNav(currentDay);
 </script>
 </body>
 </html>
