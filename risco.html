@@ -76,6 +76,14 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 .risk-bar-label{display:flex;justify-content:space-between;font-size:10px;color:var(--txt-2);margin-bottom:4px;}
 .risk-bar-track{background:var(--bg-04);border-radius:3px;height:6px;overflow:hidden;}
 .risk-bar-fill{height:100%;border-radius:3px;transition:width .4s;}
+.date-bar{background:var(--bg-01);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:8px 28px;gap:10px;}
+.date-tabs{display:flex;gap:4px;flex-wrap:wrap;}
+.date-tab{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:transparent;color:var(--txt-3);transition:all .15s;}
+.date-tab.active{background:rgba(61,255,176,.08);border-color:rgba(61,255,176,.3);color:var(--accent1);}
+.date-tab:hover:not(.active){border-color:var(--border-hi);color:var(--txt-2);}
+.date-picker{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;background:var(--bg-01);color:var(--txt-3);}
+.date-picker:hover{border-color:var(--border-hi);color:var(--txt-2);}
+.date-info{font-size:10px;color:var(--txt-3);letter-spacing:.04em;}
 </style>
 </head>
 <body>
@@ -97,6 +105,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
   <a class="nav-item" href="performance.html">Performance</a>
   <a class="nav-item" href="governanca.html">Governança</a>
   <a class="nav-item" href="trades.html">Trades</a>
+</div>
+
+<div class="date-bar">
+  <div class="date-tabs" id="date-tabs-container"></div>
+  <select class="date-picker" id="date-picker" onchange="setDay(this.value)"></select>
+  <div class="date-info" id="date-info">A carregar...</div>
 </div>
 
 <div class="main">
@@ -211,207 +225,248 @@ body{background:var(--bg);color:var(--txt);font-family:var(--mono);font-size:12p
 
 </div>
 
-<script src="data.js?v=1788006765652"></script>
+<script src="data.js?v=1788007199907"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="date-sync.js?v=1"></script>
 <script>
 // ── Dados base — 100% de data.js ────────────────────────────────────────────
-const ALL_D   = Object.keys(TRADING_DATA).sort();
-const LATEST  = TRADING_DATA[LATEST_DATE];
-const allPos  = [...LATEST.eur.positions, ...LATEST.usd.positions];
-const eurPos  = LATEST.eur.positions;
-const usdPos  = LATEST.usd.positions;
+const ALL_D = Object.keys(TRADING_DATA).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort();
+let currentDay = DateSync.read() || LATEST_DATE;
+if (ALL_D.indexOf(currentDay) === -1) currentDay = LATEST_DATE;
 
 const MONTHS_PT = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function fmtDate(ds){const[y,m,d]=ds.split('-').map(Number);return String(d).padStart(2,'0')+' '+MONTHS_PT[m-1]+' '+y;}
+function fmtShort(ds){const[y,m,d]=ds.split('-').map(Number);return String(d).padStart(2,'0')+' '+MONTHS_PT[m-1];}
+function fmtLong(ds){const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];const[y,m,d]=ds.split('-').map(Number);const dt=new Date(y,m-1,d);return days[dt.getDay()]+' · '+String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+'/'+y;}
 function fmt(v,dec=2){return(v>0?'+':'')+v.toFixed(dec);}
 const set     = (id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
 const setHTML = (id,v)=>{const el=document.getElementById(id);if(el)el.innerHTML=v;};
 
-// ── Page sub & card tag ──────────────────────────────────────────────────────
-set('risco-page-sub','Triple Seven Capital · Análise baseada nos dados de '+fmtDate(LATEST_DATE));
-set('risco-date-tag', fmtDate(LATEST_DATE));
+let concEurChart=null, concUsdChart=null, trustChart=null, mktChart=null, drawdownChart=null;
 
-// ── KPIs exposição ───────────────────────────────────────────────────────────
-const eurExpo = eurPos.reduce((a,p)=>a+p.valor,0);
-const usdExpo = usdPos.reduce((a,p)=>a+p.valor,0);
-set('kpi-exp-eur', eurExpo.toFixed(2)+' €');
-set('kpi-exp-eur-sub', eurPos.length+' posições activas');
-set('kpi-exp-usd', usdExpo.toFixed(2)+' $');
-set('kpi-exp-usd-sub', usdPos.length+' posições activas');
-
-// ── Drawdown máximo ──────────────────────────────────────────────────────────
-let maxDD_EUR=0,ddEurD1='',ddEurD2='';
-let maxDD_USD=0,ddUsdD1='',ddUsdD2='';
-for(let i=1;i<ALL_D.length;i++){
-  const d=ALL_D[i],p=ALL_D[i-1];
-  const de=TRADING_DATA[d].eur.lucro-TRADING_DATA[p].eur.lucro;
-  const du=TRADING_DATA[d].usd.lucro-TRADING_DATA[p].usd.lucro;
-  if(de<maxDD_EUR){maxDD_EUR=de;ddEurD1=p;ddEurD2=d;}
-  if(du<maxDD_USD){maxDD_USD=du;ddUsdD1=p;ddUsdD2=d;}
-}
-const ddEurEl=document.getElementById('kpi-dd-eur');
-if(ddEurEl){ddEurEl.textContent=maxDD_EUR.toFixed(2)+' €';ddEurEl.className='kpi-mini-value '+(maxDD_EUR>=0?'up':'dn');}
-set('kpi-dd-eur-sub', ddEurD2 ? fmtDate(ddEurD2)+' vs '+fmtDate(ddEurD1) : '—');
-const ddUsdEl=document.getElementById('kpi-dd-usd');
-if(ddUsdEl){ddUsdEl.textContent=maxDD_USD.toFixed(2)+' $';ddUsdEl.className='kpi-mini-value '+(maxDD_USD>=0?'up':'dn');}
-set('kpi-dd-usd-sub', ddUsdD2 ? fmtDate(ddUsdD2)+' vs '+fmtDate(ddUsdD1) : '—');
-
-// ── Limites dinâmicos ────────────────────────────────────────────────────────
-function riskBar(label,val,limit,suffix=''){
-  const pct=Math.min(val/limit*100,100);
-  const color=pct>80?'var(--red)':pct>60?'var(--amber)':'var(--green)';
-  const style=pct>80?'color:var(--red)':pct>60?'color:var(--amber)':'color:var(--green)';
-  return`<div class="risk-bar-wrap"><div class="risk-bar-label"><span>${label}</span><span style="${style}">${val.toFixed(1)}${suffix} / ${limit}${suffix}</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${pct.toFixed(1)}%;background:${color};"></div></div></div>`;
-}
-// [Fable] metricas de stop REAIS (antes: 'Stop-loss activos N/N' hardcoded)
-const stopsDecl=allPos.filter(p=>p.stop!=null&&p.stop>0).length;
-const stopViol=allPos.filter(p=>(p.pct||0)<=-10);
-const eurNeg=eurPos.filter(p=>p.pct<0).length;
-const usdNeg=usdPos.filter(p=>p.pct<0).length;
-const eurNegPct=eurPos.length?Math.round(eurNeg/eurPos.length*100):0;
-const usdNegPct=usdPos.length?Math.round(usdNeg/usdPos.length*100):0;
-const eurMaxConc=eurPos.length?Math.max(...eurPos.map(p=>p.valor))/eurExpo*100:0;
-const usdMaxConc=usdPos.length?Math.max(...usdPos.map(p=>p.valor))/usdExpo*100:0;
-const worstEurRisk=eurPos.length?Math.abs(Math.min(...eurPos.map(p=>p.pct),0)):0;
-const worstUsdRisk=usdPos.length?Math.abs(Math.min(...usdPos.map(p=>p.pct),0)):0;
-function calcRegime(mkt){
-  if(ALL_D.length<3)return'N/A';
-  const v=ALL_D.slice(-3).map(d=>TRADING_DATA[d][mkt].lucro);
-  if(v[2]>v[1]&&v[1]>v[0])return'TREND ↑';
-  if(v[2]<v[1]&&v[1]<v[0])return'QUEDA ↓';
-  return'MIX';
-}
-const regEur=calcRegime('eur'),regUsd=calcRegime('usd');
-const rEurColor=regEur.includes('↑')?'var(--green)':regEur.includes('↓')?'var(--red)':'var(--amber)';
-const rUsdColor=regUsd.includes('↑')?'var(--green)':regUsd.includes('↓')?'var(--red)':'var(--amber)';
-setHTML('limites-container',`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
-  <div>
-    ${riskBar('Risco por posição EUR',worstEurRisk,10,'%')}
-    ${riskBar('Concentração máx. EUR',eurMaxConc,50,'%')}
-    ${riskBar('Posições negativas EUR',eurNegPct,50,'%')}
-  </div>
-  <div>
-    ${riskBar('Risco por posição USD',worstUsdRisk,10,'%')}
-    ${riskBar('Concentração máx. USD',usdMaxConc,50,'%')}
-    ${riskBar('Posições negativas USD',usdNegPct,50,'%')}
-  </div>
-  <div>
-    <div class="stat-row"><span class="stat-key">Regime EUR</span><span class="stat-val" style="color:${rEurColor};">${regEur}</span></div>
-    <div class="stat-row"><span class="stat-key">Regime USD</span><span class="stat-val" style="color:${rUsdColor};">${regUsd}</span></div>
-    <div class="stat-row"><span class="stat-key">Stops declarados</span><span class="stat-val ${stopsDecl===allPos.length?'up':'dn'}">${stopsDecl} / ${allPos.length}</span></div>
-    <div class="stat-row"><span class="stat-key">Stop duro (−10%) violado</span><span class="stat-val ${stopViol.length?'dn':'up'}">${stopViol.length?stopViol.length+' ⚠':'0 ✓'}</span></div>
-    <div class="stat-row"><span class="stat-key">Alavancagem</span><span class="stat-val up">0×</span></div>
-    <div class="stat-row"><span class="stat-key">Compliance</span><span class="stat-val ${stopViol.length||usdMaxConc>25||eurMaxConc>50?'dn':'up'}">${stopViol.length||usdMaxConc>25||eurMaxConc>50?'✗ Não conforme':'✓ Conforme'}</span></div>
-  </div>
-</div>${stopViol.length?`<div style="margin-top:10px;padding:9px 14px;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:12px;"><b>⚠ STOP DURO −10% violado:</b> ${stopViol.map(p=>p.name+' ('+(p.pct||0).toFixed(1)+'%)').join(' · ')} — regra do protocolo desde 16/06: sair ou justificar como exceção marcada.</div>`:''}`);
-
-/* ── Concentração EUR ── */
-const eurVals=eurPos.map(p=>p.valor);
-const eurTotal=eurVals.reduce((a,b)=>a+b,0);
-new Chart(document.getElementById('concEurChart').getContext('2d'),{
-  type:'doughnut',
-  data:{labels:eurPos.map(p=>p.name),datasets:[{data:eurVals,
-    backgroundColor:['#1eff8e','#00c8ff','#ffb340','#ff4d6a','#4da6ff','#a78bfa','#fb923c'],
-    borderColor:'#0f1923',borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
-    plugins:{legend:{position:'right',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}},
-      tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed.toFixed(2)+'€ ('+Math.round(ctx.parsed/eurTotal*100)+'%)'}}}}
-});
-
-/* ── Concentração USD ── */
-const usdVals=usdPos.map(p=>p.valor);
-const usdTotal=usdVals.reduce((a,b)=>a+b,0);
-new Chart(document.getElementById('concUsdChart').getContext('2d'),{
-  type:'doughnut',
-  data:{labels:usdPos.map(p=>p.name),datasets:[{data:usdVals,
-    backgroundColor:['#00c8ff','#1eff8e','#ff4d6a','#ffb340','#4da6ff','#a78bfa','#fb923c'],
-    borderColor:'#0f1923',borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
-    plugins:{legend:{position:'right',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}},
-      tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed.toFixed(2)+'$ ('+Math.round(ctx.parsed/usdTotal*100)+'%)'}}}}
-});
-
-/* ── Trust Chart ── */
-const trustCount={v:0,a:0,r:0};
-allPos.forEach(p=>trustCount[p.trust]++);
-new Chart(document.getElementById('trustChart').getContext('2d'),{
-  type:'doughnut',
-  data:{labels:['Verde','Amarelo','Vermelho'],datasets:[{
-    data:[trustCount.v,trustCount.a,trustCount.r],
-    backgroundColor:['rgba(30,255,142,0.7)','rgba(255,179,64,0.7)','rgba(255,77,106,0.7)'],
-    borderColor:'#0f1923',borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-    plugins:{legend:{position:'bottom',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}}}}
-});
-
-/* ── Mercado Chart ── */
-const eurTotalVal=eurPos.reduce((a,p)=>a+p.valor,0);
-const usdTotalVal=usdPos.reduce((a,p)=>a+p.valor,0);
-new Chart(document.getElementById('mktChart').getContext('2d'),{
-  type:'doughnut',
-  data:{labels:['EUR (€)','USD ($)'],datasets:[{
-    data:[eurTotalVal,usdTotalVal*((TRADING_DATA[LATEST_DATE]&&TRADING_DATA[LATEST_DATE].fx)||0.92)],
-    backgroundColor:['rgba(30,255,142,0.7)','rgba(0,200,255,0.7)'],
-    borderColor:'#0f1923',borderWidth:2}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-    plugins:{legend:{position:'bottom',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}}}}
-});
-
-/* ── Trust P&L ── */
-const trustPL={v:{pl:0,n:0},a:{pl:0,n:0},r:{pl:0,n:0}};
-allPos.forEach(p=>{trustPL[p.trust].pl+=p.lucro;trustPL[p.trust].n++;});
-document.getElementById('trust-perf-body').innerHTML=[
-  ['Verde','v','up'],['Amarelo','a','neu'],['Vermelho','r','dn']
-].map(([lbl,k,cls])=>
-  `<div class="stat-row"><span class="stat-key">${lbl} (${trustPL[k].n} pos.)</span><span class="stat-val ${cls}">${fmt(trustPL[k].pl)} mix</span></div>`
-).join('')+
-`<div style="margin-top:12px;font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em;">Risco médio por trust</div>
-<div class="stat-row"><span class="stat-key">Verde · média</span><span class="stat-val up">${trustPL.v.n?fmt(trustPL.v.pl/trustPL.v.n)+'%':'—'}</span></div>
-<div class="stat-row"><span class="stat-key">Amarelo · média</span><span class="stat-val neu">${trustPL.a.n?fmt(trustPL.a.pl/trustPL.a.n)+'%':'—'}</span></div>
-<div class="stat-row"><span class="stat-key">Vermelho · média</span><span class="stat-val dn">${trustPL.r.n?fmt(trustPL.r.pl/trustPL.r.n)+'%':'—'}</span></div>`;
-
-/* ── Tabela risco ── */
-const riskLevels=p=>{
-  if(p.pct<=-5)return'<span class="badge badge-r">Alto</span>';
-  if(p.pct<=-2)return'<span class="badge badge-a">Médio</span>';
-  return'<span class="badge badge-g">Baixo</span>';
-};
-document.getElementById('risk-tbody').innerHTML=allPos
-  .sort((a,b)=>a.pct-b.pct)
-  .map(p=>{
-    const pc=p.pct>=0?'up':'dn', lc=p.lucro>=0?'up':'dn';
-    const dh=p.delta?`<span class="${p.delta.pct>=0?'up':'dn'}" style="font-size:10px;">${p.delta.pct>=0?'▲':'▼'} ${Math.abs(p.delta.pct).toFixed(2)}%</span>`:'—';
-    return`<tr>
-      <td style="color:var(--accent2);font-weight:500;">${p.name}</td>
-      <td><span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${p.mkt}</span></td>
-      <td class="r ${pc}">${fmt(p.pct)}%</td>
-      <td class="r ${lc}">${fmt(p.lucro)}</td>
-      <td class="r" style="color:var(--txt-2);">${p.valor.toFixed(2)}</td>
-      <td>${p.trust==='v'?'<span class="badge badge-g">Verde</span>':p.trust==='a'?'<span class="badge badge-a">Amarelo</span>':'<span class="badge badge-r">Vermelho</span>'}</td>
-      <td>${riskLevels(p)}</td>
-      <td>${dh}</td>
-    </tr>`;
-  }).join('');
-
-/* ── Drawdown Chart ── */
-const DATES=ALL_D;
-const labels=DATES.map(d=>{const[y,m,dd]=d.split('-');return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0');});
-const eurDD=[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].eur.lucro-TRADING_DATA[DATES[i]].eur.lucro).toFixed(2)))];
-const usdDD=[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].usd.lucro-TRADING_DATA[DATES[i]].usd.lucro).toFixed(2)))];
-new Chart(document.getElementById('drawdownChart').getContext('2d'),{
-  type:'bar',
-  data:{labels,datasets:[
-    {label:'Δ EUR',data:eurDD,backgroundColor:eurDD.map(v=>v>=0?'rgba(30,255,142,0.5)':'rgba(255,77,106,0.5)'),borderColor:eurDD.map(v=>v>=0?'#1eff8e':'#ff4d6a'),borderWidth:1.5,borderRadius:3},
-    {label:'Δ USD',data:usdDD,backgroundColor:usdDD.map(v=>v>=0?'rgba(0,200,255,0.4)':'rgba(255,77,106,0.4)'),borderColor:usdDD.map(v=>v>=0?'#00c8ff':'#ff4d6a'),borderWidth:1.5,borderRadius:3}
-  ]},
-  options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{labels:{color:'#6b8aaa',font:{size:11}}}},
-    scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10}}},
-      y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10},callback:v=>fmt(v)}}
-    }
+function buildDateTabs(){
+  const c=document.getElementById('date-tabs-container');
+  c.innerHTML=ALL_D.slice(-7).map(d=>
+    `<button class="date-tab${d===currentDay?' active':''}" onclick="setDay('${d}')">${fmtShort(d)}</button>`
+  ).join('');
+  document.getElementById('date-info').textContent=fmtLong(currentDay);
+  const picker=document.getElementById('date-picker');
+  if(picker && !picker.dataset.built){
+    picker.innerHTML=ALL_D.slice().reverse().map(d=>`<option value="${d}">${fmtLong(d)}</option>`).join('');
+    picker.dataset.built='1';
   }
-});
+  if(picker) picker.value=currentDay;
+}
+
+function render(day){
+  const VIEW = TRADING_DATA[day];
+  const allPos = [...VIEW.eur.positions, ...VIEW.usd.positions];
+  const eurPos = VIEW.eur.positions;
+  const usdPos = VIEW.usd.positions;
+  const ALL_UP_TO = ALL_D.filter(d => d <= day);
+
+  // ── Page sub & card tag ──
+  set('risco-page-sub','Triple Seven Capital · Análise baseada nos dados de '+fmtDate(day));
+  set('risco-date-tag', fmtDate(day));
+
+  // ── KPIs exposição ──
+  const eurExpo = eurPos.reduce((a,p)=>a+p.valor,0);
+  const usdExpo = usdPos.reduce((a,p)=>a+p.valor,0);
+  set('kpi-exp-eur', eurExpo.toFixed(2)+' €');
+  set('kpi-exp-eur-sub', eurPos.length+' posições activas');
+  set('kpi-exp-usd', usdExpo.toFixed(2)+' $');
+  set('kpi-exp-usd-sub', usdPos.length+' posições activas');
+
+  // ── Drawdown máximo (até à sessão) ──
+  let maxDD_EUR=0,ddEurD1='',ddEurD2='';
+  let maxDD_USD=0,ddUsdD1='',ddUsdD2='';
+  for(let i=1;i<ALL_UP_TO.length;i++){
+    const d=ALL_UP_TO[i],p=ALL_UP_TO[i-1];
+    const de=TRADING_DATA[d].eur.lucro-TRADING_DATA[p].eur.lucro;
+    const du=TRADING_DATA[d].usd.lucro-TRADING_DATA[p].usd.lucro;
+    if(de<maxDD_EUR){maxDD_EUR=de;ddEurD1=p;ddEurD2=d;}
+    if(du<maxDD_USD){maxDD_USD=du;ddUsdD1=p;ddUsdD2=d;}
+  }
+  const ddEurEl=document.getElementById('kpi-dd-eur');
+  if(ddEurEl){ddEurEl.textContent=maxDD_EUR.toFixed(2)+' €';ddEurEl.className='kpi-mini-value '+(maxDD_EUR>=0?'up':'dn');}
+  set('kpi-dd-eur-sub', ddEurD2 ? fmtDate(ddEurD2)+' vs '+fmtDate(ddEurD1) : '—');
+  const ddUsdEl=document.getElementById('kpi-dd-usd');
+  if(ddUsdEl){ddUsdEl.textContent=maxDD_USD.toFixed(2)+' $';ddUsdEl.className='kpi-mini-value '+(maxDD_USD>=0?'up':'dn');}
+  set('kpi-dd-usd-sub', ddUsdD2 ? fmtDate(ddUsdD2)+' vs '+fmtDate(ddUsdD1) : '—');
+
+  // ── Limites dinâmicos ──
+  function riskBar(label,val,limit,suffix=''){
+    const pct=Math.min(val/limit*100,100);
+    const color=pct>80?'var(--red)':pct>60?'var(--amber)':'var(--green)';
+    const style=pct>80?'color:var(--red)':pct>60?'color:var(--amber)':'color:var(--green)';
+    return`<div class="risk-bar-wrap"><div class="risk-bar-label"><span>${label}</span><span style="${style}">${val.toFixed(1)}${suffix} / ${limit}${suffix}</span></div><div class="risk-bar-track"><div class="risk-bar-fill" style="width:${pct.toFixed(1)}%;background:${color};"></div></div></div>`;
+  }
+  const stopsDecl=allPos.filter(p=>p.stop!=null&&p.stop>0).length;
+  const stopViol=allPos.filter(p=>(p.pct||0)<=-10);
+  const eurNeg=eurPos.filter(p=>p.pct<0).length;
+  const usdNeg=usdPos.filter(p=>p.pct<0).length;
+  const eurNegPct=eurPos.length?Math.round(eurNeg/eurPos.length*100):0;
+  const usdNegPct=usdPos.length?Math.round(usdNeg/usdPos.length*100):0;
+  const eurMaxConc=eurPos.length?Math.max(...eurPos.map(p=>p.valor))/eurExpo*100:0;
+  const usdMaxConc=usdPos.length?Math.max(...usdPos.map(p=>p.valor))/usdExpo*100:0;
+  const worstEurRisk=eurPos.length?Math.abs(Math.min(...eurPos.map(p=>p.pct),0)):0;
+  const worstUsdRisk=usdPos.length?Math.abs(Math.min(...usdPos.map(p=>p.pct),0)):0;
+  function calcRegime(mkt){
+    if(ALL_UP_TO.length<3)return'N/A';
+    const v=ALL_UP_TO.slice(-3).map(d=>TRADING_DATA[d][mkt].lucro);
+    if(v[2]>v[1]&&v[1]>v[0])return'TREND ↑';
+    if(v[2]<v[1]&&v[1]<v[0])return'QUEDA ↓';
+    return'MIX';
+  }
+  const regEur=calcRegime('eur'),regUsd=calcRegime('usd');
+  const rEurColor=regEur.includes('↑')?'var(--green)':regEur.includes('↓')?'var(--red)':'var(--amber)';
+  const rUsdColor=regUsd.includes('↑')?'var(--green)':regUsd.includes('↓')?'var(--red)':'var(--amber)';
+  setHTML('limites-container',`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+    <div>
+      ${riskBar('Risco por posição EUR',worstEurRisk,10,'%')}
+      ${riskBar('Concentração máx. EUR',eurMaxConc,50,'%')}
+      ${riskBar('Posições negativas EUR',eurNegPct,50,'%')}
+    </div>
+    <div>
+      ${riskBar('Risco por posição USD',worstUsdRisk,10,'%')}
+      ${riskBar('Concentração máx. USD',usdMaxConc,50,'%')}
+      ${riskBar('Posições negativas USD',usdNegPct,50,'%')}
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">Regime EUR</span><span class="stat-val" style="color:${rEurColor};">${regEur}</span></div>
+      <div class="stat-row"><span class="stat-key">Regime USD</span><span class="stat-val" style="color:${rUsdColor};">${regUsd}</span></div>
+      <div class="stat-row"><span class="stat-key">Stops declarados</span><span class="stat-val ${stopsDecl===allPos.length?'up':'dn'}">${stopsDecl} / ${allPos.length}</span></div>
+      <div class="stat-row"><span class="stat-key">Stop duro (−10%) violado</span><span class="stat-val ${stopViol.length?'dn':'up'}">${stopViol.length?stopViol.length+' ⚠':'0 ✓'}</span></div>
+      <div class="stat-row"><span class="stat-key">Alavancagem</span><span class="stat-val up">0×</span></div>
+      <div class="stat-row"><span class="stat-key">Compliance</span><span class="stat-val ${stopViol.length||usdMaxConc>25||eurMaxConc>50?'dn':'up'}">${stopViol.length||usdMaxConc>25||eurMaxConc>50?'✗ Não conforme':'✓ Conforme'}</span></div>
+    </div>
+  </div>${stopViol.length?`<div style="margin-top:10px;padding:9px 14px;border:1px solid var(--red);border-radius:8px;color:var(--red);font-size:12px;"><b>⚠ STOP DURO −10% violado:</b> ${stopViol.map(p=>p.name+' ('+(p.pct||0).toFixed(1)+'%)').join(' · ')} — regra do protocolo desde 16/06: sair ou justificar como exceção marcada.</div>`:''}`);
+
+  /* ── Concentração EUR ── */
+  const eurVals=eurPos.map(p=>p.valor);
+  const eurTotal=eurVals.reduce((a,b)=>a+b,0);
+  if(concEurChart) concEurChart.destroy();
+  concEurChart = new Chart(document.getElementById('concEurChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:eurPos.map(p=>p.name),datasets:[{data:eurVals,
+      backgroundColor:['#1eff8e','#00c8ff','#ffb340','#ff4d6a','#4da6ff','#a78bfa','#fb923c'],
+      borderColor:'#0f1923',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+      plugins:{legend:{position:'right',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}},
+        tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed.toFixed(2)+'€ ('+Math.round(ctx.parsed/eurTotal*100)+'%)'}}}}
+  });
+
+  /* ── Concentração USD ── */
+  const usdVals=usdPos.map(p=>p.valor);
+  const usdTotal=usdVals.reduce((a,b)=>a+b,0);
+  if(concUsdChart) concUsdChart.destroy();
+  concUsdChart = new Chart(document.getElementById('concUsdChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:usdPos.map(p=>p.name),datasets:[{data:usdVals,
+      backgroundColor:['#00c8ff','#1eff8e','#ff4d6a','#ffb340','#4da6ff','#a78bfa','#fb923c'],
+      borderColor:'#0f1923',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',
+      plugins:{legend:{position:'right',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}},
+        tooltip:{callbacks:{label:ctx=>ctx.label+': '+ctx.parsed.toFixed(2)+'$ ('+Math.round(ctx.parsed/usdTotal*100)+'%)'}}}}
+  });
+
+  /* ── Trust Chart ── */
+  const trustCount={v:0,a:0,r:0};
+  allPos.forEach(p=>trustCount[p.trust]++);
+  if(trustChart) trustChart.destroy();
+  trustChart = new Chart(document.getElementById('trustChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:['Verde','Amarelo','Vermelho'],datasets:[{
+      data:[trustCount.v,trustCount.a,trustCount.r],
+      backgroundColor:['rgba(30,255,142,0.7)','rgba(255,179,64,0.7)','rgba(255,77,106,0.7)'],
+      borderColor:'#0f1923',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{position:'bottom',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}}}}
+  });
+
+  /* ── Mercado Chart ── */
+  const eurTotalVal=eurPos.reduce((a,p)=>a+p.valor,0);
+  const usdTotalVal=usdPos.reduce((a,p)=>a+p.valor,0);
+  if(mktChart) mktChart.destroy();
+  mktChart = new Chart(document.getElementById('mktChart').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:['EUR (€)','USD ($)'],datasets:[{
+      data:[eurTotalVal,usdTotalVal*(VIEW.fx||0.92)],
+      backgroundColor:['rgba(30,255,142,0.7)','rgba(0,200,255,0.7)'],
+      borderColor:'#0f1923',borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{position:'bottom',labels:{color:'#6b8aaa',font:{size:10},boxWidth:10}}}}
+  });
+
+  /* ── Trust P&L ── */
+  const trustPL={v:{pl:0,n:0},a:{pl:0,n:0},r:{pl:0,n:0}};
+  allPos.forEach(p=>{trustPL[p.trust].pl+=p.lucro;trustPL[p.trust].n++;});
+  document.getElementById('trust-perf-body').innerHTML=[
+    ['Verde','v','up'],['Amarelo','a','neu'],['Vermelho','r','dn']
+  ].map(([lbl,k,cls])=>
+    `<div class="stat-row"><span class="stat-key">${lbl} (${trustPL[k].n} pos.)</span><span class="stat-val ${cls}">${fmt(trustPL[k].pl)} mix</span></div>`
+  ).join('')+
+  `<div style="margin-top:12px;font-size:9px;color:var(--txt-3);text-transform:uppercase;letter-spacing:.08em;">Risco médio por trust</div>
+  <div class="stat-row"><span class="stat-key">Verde · média</span><span class="stat-val up">${trustPL.v.n?fmt(trustPL.v.pl/trustPL.v.n)+'%':'—'}</span></div>
+  <div class="stat-row"><span class="stat-key">Amarelo · média</span><span class="stat-val neu">${trustPL.a.n?fmt(trustPL.a.pl/trustPL.a.n)+'%':'—'}</span></div>
+  <div class="stat-row"><span class="stat-key">Vermelho · média</span><span class="stat-val dn">${trustPL.r.n?fmt(trustPL.r.pl/trustPL.r.n)+'%':'—'}</span></div>`;
+
+  /* ── Tabela risco ── */
+  const riskLevels=p=>{
+    if(p.pct<=-5)return'<span class="badge badge-r">Alto</span>';
+    if(p.pct<=-2)return'<span class="badge badge-a">Médio</span>';
+    return'<span class="badge badge-g">Baixo</span>';
+  };
+  document.getElementById('risk-tbody').innerHTML=allPos
+    .sort((a,b)=>a.pct-b.pct)
+    .map(p=>{
+      const pc=p.pct>=0?'up':'dn', lc=p.lucro>=0?'up':'dn';
+      const dh=p.delta?`<span class="${p.delta.pct>=0?'up':'dn'}" style="font-size:10px;">${p.delta.pct>=0?'▲':'▼'} ${Math.abs(p.delta.pct).toFixed(2)}%</span>`:'—';
+      return`<tr>
+        <td style="color:var(--accent2);font-weight:500;">${p.name}</td>
+        <td><span style="font-size:9px;color:var(--txt-3);background:var(--bg-04);padding:1px 5px;border-radius:2px;">${p.mkt}</span></td>
+        <td class="r ${pc}">${fmt(p.pct)}%</td>
+        <td class="r ${lc}">${fmt(p.lucro)}</td>
+        <td class="r" style="color:var(--txt-2);">${p.valor.toFixed(2)}</td>
+        <td>${p.trust==='v'?'<span class="badge badge-g">Verde</span>':p.trust==='a'?'<span class="badge badge-a">Amarelo</span>':'<span class="badge badge-r">Vermelho</span>'}</td>
+        <td>${riskLevels(p)}</td>
+        <td>${dh}</td>
+      </tr>`;
+    }).join('');
+
+  /* ── Drawdown Chart (até à sessão) ── */
+  const DATES=ALL_UP_TO;
+  const labels=DATES.map(d=>{const[y,m,dd]=d.split('-');return String(dd).padStart(2,'0')+'/'+String(m).padStart(2,'0');});
+  const eurDD=DATES.length?[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].eur.lucro-TRADING_DATA[DATES[i]].eur.lucro).toFixed(2)))]:[];
+  const usdDD=DATES.length?[0,...DATES.slice(1).map((d,i)=>parseFloat((TRADING_DATA[d].usd.lucro-TRADING_DATA[DATES[i]].usd.lucro).toFixed(2)))]:[];
+  if(drawdownChart) drawdownChart.destroy();
+  drawdownChart = new Chart(document.getElementById('drawdownChart').getContext('2d'),{
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Δ EUR',data:eurDD,backgroundColor:eurDD.map(v=>v>=0?'rgba(30,255,142,0.5)':'rgba(255,77,106,0.5)'),borderColor:eurDD.map(v=>v>=0?'#1eff8e':'#ff4d6a'),borderWidth:1.5,borderRadius:3},
+      {label:'Δ USD',data:usdDD,backgroundColor:usdDD.map(v=>v>=0?'rgba(0,200,255,0.4)':'rgba(255,77,106,0.4)'),borderColor:usdDD.map(v=>v>=0?'#00c8ff':'#ff4d6a'),borderWidth:1.5,borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#6b8aaa',font:{size:11}}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10}}},
+        y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#6b8aaa',font:{size:10},callback:v=>fmt(v)}}
+      }
+    }
+  });
+}
+
+function setDay(date){
+  currentDay = date;
+  buildDateTabs();
+  render(currentDay);
+  DateSync.write(currentDay);
+  DateSync.wireNav(currentDay);
+}
+
+buildDateTabs();
+render(currentDay);
+DateSync.wireNav(currentDay);
 </script>
 
 <script>
