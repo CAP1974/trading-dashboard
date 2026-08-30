@@ -13863,7 +13863,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-27",
+    "gerado": "2026-08-30",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14142,6 +14142,10 @@
       [
         "2026-08-27",
         91.69
+      ],
+      [
+        "2026-08-28",
+        92.41
       ]
     ],
     "usd": [
@@ -14416,6 +14420,10 @@
       [
         "2026-08-27",
         88.25
+      ],
+      [
+        "2026-08-28",
+        87.91
       ]
     ],
     "twr_mensal": {
@@ -14432,8 +14440,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -2.6,
-        "usd": 3.8
+        "eur": -1.9,
+        "usd": 3.4
       }
     }
   },
@@ -19394,6 +19402,126 @@
       {
         "tipo": "diario",
         "nota": "Sem trades. Caixa inalterada (EUR 0.12 / USD 95.22). Preco de abertura confirmado no screenshot para todas as posicoes, incluindo Cerebras 245.75 (media ponderada do aporte de 25/08). EUR negativo por BAE -8.72%. SpaceX -21.97% e Cerebras -24.08% continuam pesados."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-28": {
+    "eur": {
+      "saldo": 88.27,
+      "caixa": 0.12,
+      "lucro": -1.18,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 453.2,
+          "lucro": 1.36,
+          "pct": 3.09,
+          "trust": "v",
+          "valor": 45.32,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 302.95,
+          "lucro": -0.1,
+          "pct": -0.42,
+          "trust": "v",
+          "valor": 23.94,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 20.31,
+          "lucro": -2.44,
+          "pct": -11.44,
+          "trust": "r",
+          "valor": 18.89,
+          "delta": null,
+          "stop": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 258.99,
+      "caixa": 95.22,
+      "lucro": -11.6,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 513.5,
+          "lucro": 1.45,
+          "pct": 4.94,
+          "trust": "v",
+          "valor": 30.82,
+          "delta": null
+        },
+        {
+          "name": "Bio-Rad",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 378.71,
+          "atual": 387.56,
+          "lucro": 0.89,
+          "pct": 2.35,
+          "trust": "v",
+          "valor": 38.76,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 432.34,
+          "lucro": -0.32,
+          "pct": -0.61,
+          "trust": "v",
+          "valor": 51.88,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 141.46,
+          "lucro": -6.27,
+          "pct": -21.7,
+          "trust": "r",
+          "valor": 22.63,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 178.8,
+          "lucro": -7.35,
+          "pct": -27.19,
+          "trust": "r",
+          "valor": 19.68,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades. Caixa inalterada (EUR 0.12 / USD 95.22). ALERTA: BAE Systems atingiu -11.44%, violando o STOP DURO (-10%) pela primeira vez - avaliar saida ou justificar como excecao. SpaceX -21.70% e Cerebras -27.19% continuam em excecao historica marcada. EUR positivo em Allianz +3.09%."
       }
     ],
     "posicoes_fechadas": []
