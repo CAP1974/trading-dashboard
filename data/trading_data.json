@@ -13863,7 +13863,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-30",
+    "gerado": "2026-08-31",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14146,6 +14146,10 @@
       [
         "2026-08-28",
         92.41
+      ],
+      [
+        "2026-08-31",
+        91.38
       ]
     ],
     "usd": [
@@ -14424,6 +14428,10 @@
       [
         "2026-08-28",
         87.91
+      ],
+      [
+        "2026-08-31",
+        87.74
       ]
     ],
     "twr_mensal": {
@@ -14440,8 +14448,8 @@
         "usd": -12.7
       },
       "2026-08": {
-        "eur": -1.9,
-        "usd": 3.4
+        "eur": -3,
+        "usd": 3.2
       }
     }
   },
@@ -19522,6 +19530,144 @@
       {
         "tipo": "diario",
         "nota": "Sem trades. Caixa inalterada (EUR 0.12 / USD 95.22). ALERTA: BAE Systems atingiu -11.44%, violando o STOP DURO (-10%) pela primeira vez - avaliar saida ou justificar como excecao. SpaceX -21.70% e Cerebras -27.19% continuam em excecao historica marcada. EUR positivo em Allianz +3.09%."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-08-31": {
+    "eur": {
+      "saldo": 87.28,
+      "caixa": 0.12,
+      "lucro": -2.17,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 449,
+          "lucro": 0.94,
+          "pct": 2.14,
+          "trust": "v",
+          "valor": 44.9,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 296.1,
+          "lucro": -0.64,
+          "pct": -2.66,
+          "trust": "v",
+          "valor": 23.4,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 20.31,
+          "lucro": -2.47,
+          "pct": -11.58,
+          "trust": "r",
+          "valor": 18.86,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 258.51,
+      "caixa": 37.88,
+      "lucro": -12.08,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 507.32,
+          "lucro": 1.07,
+          "pct": 3.64,
+          "trust": "v",
+          "valor": 30.44,
+          "delta": null
+        },
+        {
+          "name": "Bio-Rad",
+          "mkt": "USD",
+          "vol": 0.1,
+          "abertura": 378.71,
+          "atual": 384.23,
+          "lucro": 0.55,
+          "pct": 1.45,
+          "trust": "v",
+          "valor": 38.42,
+          "delta": null
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 285.46,
+          "lucro": -0.25,
+          "pct": -0.44,
+          "trust": "v",
+          "valor": 57.09,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 429.64,
+          "lucro": -0.64,
+          "pct": -1.23,
+          "trust": "r",
+          "valor": 51.56,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 143.66,
+          "lucro": -5.91,
+          "pct": -20.45,
+          "trust": "r",
+          "valor": 22.99,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 182.92,
+          "lucro": -6.9,
+          "pct": -25.53,
+          "trust": "r",
+          "valor": 20.13,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "entrada",
+        "ticker": "CME",
+        "ativo": "Cme",
+        "mkt": "USD",
+        "nota": "ENTRADA CME 0.2 @ 286.71"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Nova entrada CME. Caixa USD confere: 95.22-0.2*286.71=37.88. BAE Systems continua a violar STOP DURO (-11.58%, sem accao desde 28/08). SpaceX -20.45% e Cerebras -25.53% em excecao historica. EUR positivo em Allianz +2.14%."
       }
     ],
     "posicoes_fechadas": []
