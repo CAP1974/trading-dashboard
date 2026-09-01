@@ -153,7 +153,7 @@
     },
     "2026-08": {
       "inicio": "2026-08-01",
-      "status": "EM CURSO",
+      "status": "FECHADO",
       "base_eur": 69.87,
       "base_usd": 250.4,
       "base_ajustada_eur": 69.87,
@@ -164,6 +164,26 @@
       "ajustes_usd": 0,
       "realizado_eur": -0.55,
       "realizado_usd": 4.41,
+      "flutuante_fim_eur": -2.17,
+      "flutuante_fim_usd": -12.08,
+      "saldo_fim_eur": 87.28,
+      "saldo_fim_usd": 258.51,
+      "equity_eur": -2.72,
+      "equity_usd": -7.67
+    },
+    "2026-09": {
+      "inicio": "2026-09-01",
+      "status": "EM CURSO",
+      "base_eur": 87.28,
+      "base_usd": 258.51,
+      "base_ajustada_eur": 87.28,
+      "base_ajustada_usd": 258.51,
+      "meta_eur": 8.728,
+      "meta_usd": 25.851,
+      "ajustes_eur": 0,
+      "ajustes_usd": 0,
+      "realizado_eur": 0,
+      "realizado_usd": 0.19,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13863,7 +13883,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-08-31",
+    "gerado": "2026-09-01",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14150,6 +14170,10 @@
       [
         "2026-08-31",
         91.38
+      ],
+      [
+        "2026-09-01",
+        90.71
       ]
     ],
     "usd": [
@@ -14432,6 +14456,10 @@
       [
         "2026-08-31",
         87.74
+      ],
+      [
+        "2026-09-01",
+        87.43
       ]
     ],
     "twr_mensal": {
@@ -14450,6 +14478,10 @@
       "2026-08": {
         "eur": -3,
         "usd": 3.2
+      },
+      "2026-09": {
+        "eur": -0.7,
+        "usd": -0.4
       }
     }
   },
@@ -19671,5 +19703,150 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-09-01": {
+    "eur": {
+      "saldo": 86.64,
+      "caixa": 0.12,
+      "lucro": -2.81,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 450.1,
+          "lucro": 1.05,
+          "pct": 2.39,
+          "trust": "v",
+          "valor": 45.01,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 288.4,
+          "lucro": -1.26,
+          "pct": -5.24,
+          "trust": "r",
+          "valor": 22.78,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 20.18,
+          "lucro": -2.6,
+          "pct": -12.19,
+          "trust": "r",
+          "valor": 18.73,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 257.6,
+      "caixa": 76,
+      "lucro": -13.24,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 500.98,
+          "lucro": 0.69,
+          "pct": 2.35,
+          "trust": "v",
+          "valor": 30.06,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 437.97,
+          "lucro": 0.36,
+          "pct": 0.69,
+          "trust": "v",
+          "valor": 52.56,
+          "delta": null
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 286.25,
+          "lucro": -0.09,
+          "pct": -0.16,
+          "trust": "v",
+          "valor": 57.25,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 142.19,
+          "lucro": -6.15,
+          "pct": -21.28,
+          "trust": "r",
+          "valor": 22.75,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 172.52,
+          "lucro": -8.05,
+          "pct": -29.78,
+          "trust": "r",
+          "valor": 18.98,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "BIO",
+        "ativo": "Bio-Rad",
+        "mkt": "USD",
+        "nota": "SAIDA BIO +0.19$ -- saida:380.63 entrada:378.71 vol:0.1 -- Divergencia de Fluxo"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Fecho de Agosto (equity EUR -2.72 / -38.9% meta; equity USD -7.67 / -30.6% meta) e inicio de Setembro (base EUR 87.28 / base USD 258.51). Saida Bio-Rad com pequeno lucro (+0.19$, divergencia de fluxo). ALERTA: BAE Systems piora para -12.19%, 5o dia consecutivo a violar o STOP DURO sem accao."
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "nome": "Bio-Rad",
+        "ticker": "BIO",
+        "mkt": "USD",
+        "lucro": 0.19,
+        "lucro_pct": 0.51,
+        "tipo": "lucro",
+        "data_entrada": "2026-08-21",
+        "data_saida": "2026-09-01",
+        "dias_holding": 11,
+        "preco_entrada": 378.71,
+        "preco_saida": 380.63,
+        "volume": 0.1,
+        "setup": "Divergencia de Fluxo",
+        "nota_entrada": "VCP",
+        "nota_saida": "Divergencia de Fluxo",
+        "rating": 1
+      }
+    ]
   }
 }
