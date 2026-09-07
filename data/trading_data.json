@@ -13883,7 +13883,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-05",
+    "gerado": "2026-09-07",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14186,6 +14186,10 @@
       [
         "2026-09-04",
         90.02
+      ],
+      [
+        "2026-09-07",
+        90.26
       ]
     ],
     "usd": [
@@ -14484,6 +14488,10 @@
       [
         "2026-09-04",
         88.72
+      ],
+      [
+        "2026-09-07",
+        88.72
       ]
     ],
     "twr_mensal": {
@@ -14504,7 +14512,7 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -1.5,
+        "eur": -1.2,
         "usd": 1.1
       }
     }
@@ -20226,6 +20234,125 @@
       {
         "tipo": "diario",
         "nota": "Sem trades. Caixa inalterada. ALERTA: BAE Systems -15.14%, 8o dia consecutivo em STOP DURO sem accao."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-07": {
+    "eur": {
+      "saldo": 86.21,
+      "caixa": 0.12,
+      "lucro": -3.24,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 446.8,
+          "lucro": 0.72,
+          "pct": 1.64,
+          "trust": "v",
+          "valor": 44.68,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 295.8,
+          "lucro": -0.67,
+          "pct": -2.79,
+          "trust": "r",
+          "valor": 23.37,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 19.465,
+          "lucro": -3.29,
+          "pct": -15.42,
+          "trust": "r",
+          "valor": 18.04,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 261.4,
+      "caixa": 76,
+      "lucro": -9.44,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 499.65,
+          "lucro": 0.61,
+          "pct": 2.08,
+          "trust": "v",
+          "valor": 29.98,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 437.09,
+          "lucro": 0.25,
+          "pct": 0.48,
+          "trust": "v",
+          "valor": 52.45,
+          "delta": null
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 281.27,
+          "lucro": -1.09,
+          "pct": -1.9,
+          "trust": "r",
+          "valor": 56.25,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 209.66,
+          "lucro": -3.98,
+          "pct": -14.72,
+          "trust": "r",
+          "valor": 23.05,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 147.93,
+          "lucro": -5.23,
+          "pct": -18.1,
+          "trust": "r",
+          "valor": 23.67,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Feriado nos EUA (mercado USD fechado, sem alteracoes). Sem trades EUR. ALERTA: BAE Systems -15.42%, 9o dia consecutivo em STOP DURO sem accao."
       }
     ],
     "posicoes_fechadas": []
