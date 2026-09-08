@@ -13883,7 +13883,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-07",
+    "gerado": "2026-09-08",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14190,6 +14190,10 @@
       [
         "2026-09-07",
         90.26
+      ],
+      [
+        "2026-09-08",
+        89.99
       ]
     ],
     "usd": [
@@ -14492,6 +14496,10 @@
       [
         "2026-09-07",
         88.72
+      ],
+      [
+        "2026-09-08",
+        86.51
       ]
     ],
     "twr_mensal": {
@@ -14512,8 +14520,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -1.2,
-        "usd": 1.1
+        "eur": -1.5,
+        "usd": -1.4
       }
     }
   },
@@ -20353,6 +20361,125 @@
       {
         "tipo": "diario",
         "nota": "Feriado nos EUA (mercado USD fechado, sem alteracoes). Sem trades EUR. ALERTA: BAE Systems -15.42%, 9o dia consecutivo em STOP DURO sem accao."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-08": {
+    "eur": {
+      "saldo": 85.95,
+      "caixa": 0.12,
+      "lucro": -3.5,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 442.1,
+          "lucro": 0.25,
+          "pct": 0.57,
+          "trust": "v",
+          "valor": 44.21,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 298.45,
+          "lucro": -0.46,
+          "pct": -1.91,
+          "trust": "v",
+          "valor": 23.58,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 19.455,
+          "lucro": -3.29,
+          "pct": -15.42,
+          "trust": "r",
+          "valor": 18.04,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 254.87,
+      "caixa": 76,
+      "lucro": -15.97,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 493.76,
+          "lucro": 0.25,
+          "pct": 0.85,
+          "trust": "v",
+          "valor": 29.62,
+          "delta": null
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 278.14,
+          "lucro": -1.71,
+          "pct": -2.98,
+          "trust": "r",
+          "valor": 55.63,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 393.18,
+          "lucro": -5.02,
+          "pct": -9.62,
+          "trust": "r",
+          "valor": 47.18,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 153.45,
+          "lucro": -4.35,
+          "pct": -15.05,
+          "trust": "r",
+          "valor": 24.55,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.11,
+          "abertura": 245.75,
+          "atual": 199.06,
+          "lucro": -5.14,
+          "pct": -19.02,
+          "trust": "r",
+          "valor": 21.89,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": "Sem trades. Caixa inalterada. ALERTA: BAE Systems -15.42%, 10o dia consecutivo em STOP DURO sem accao. Amgen aproxima-se do STOP DURO (-9.62%, ainda nao violado)."
       }
     ],
     "posicoes_fechadas": []
