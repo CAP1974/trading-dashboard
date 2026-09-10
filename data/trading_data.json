@@ -13883,7 +13883,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-09",
+    "gerado": "2026-09-10",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14198,6 +14198,10 @@
       [
         "2026-09-09",
         88.04
+      ],
+      [
+        "2026-09-10",
+        88.65
       ]
     ],
     "usd": [
@@ -14508,6 +14512,10 @@
       [
         "2026-09-09",
         85.66
+      ],
+      [
+        "2026-09-10",
+        85.17
       ]
     ],
     "twr_mensal": {
@@ -14528,8 +14536,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -3.7,
-        "usd": -2.4
+        "eur": -3,
+        "usd": -2.9
       }
     }
   },
@@ -20607,6 +20615,132 @@
       {
         "tipo": "diario",
         "nota": "Sem trades. Caixa inalterada. ALERTA: BAE Systems piora para -17.58%, 11o dia consecutivo em STOP DURO sem accao. NOVA VIOLACAO: Amgen atinge -10.15%, cruzando o STOP DURO por primeira vez. Duas posicoes agora em violacao activa."
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-10": {
+    "eur": {
+      "saldo": 84.67,
+      "caixa": 0.12,
+      "lucro": -4.78,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 440.2,
+          "lucro": 0.06,
+          "pct": 0.14,
+          "trust": "v",
+          "valor": 44.02,
+          "delta": null
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 287.75,
+          "lucro": -1.3,
+          "pct": -5.41,
+          "trust": "r",
+          "valor": 22.74,
+          "delta": null
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 0.8,
+          "abertura": 22.65,
+          "atual": 19.205,
+          "lucro": -3.54,
+          "pct": -16.6,
+          "trust": "r",
+          "valor": 17.79,
+          "delta": null
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 250.93,
+      "caixa": 72.17,
+      "lucro": -19.93,
+      "positions": [
+        {
+          "name": "Microsoft",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 489.51,
+          "atual": 492.51,
+          "lucro": 0.19,
+          "pct": 0.65,
+          "trust": "v",
+          "valor": 29.56,
+          "delta": null
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 273.92,
+          "lucro": -2.56,
+          "pct": -4.46,
+          "trust": "r",
+          "valor": 54.78,
+          "delta": null
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 382.31,
+          "lucro": -6.32,
+          "pct": -12.11,
+          "trust": "r",
+          "valor": 45.88,
+          "delta": null
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.16,
+          "abertura": 180.6,
+          "atual": 148.25,
+          "lucro": -5.18,
+          "pct": -17.92,
+          "trust": "r",
+          "valor": 23.72,
+          "delta": null
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 237.55,
+          "atual": 190.83,
+          "lucro": -6.06,
+          "pct": -19.62,
+          "trust": "r",
+          "valor": 24.82,
+          "delta": null
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "aporte",
+        "ticker": "CRBS",
+        "ativo": "Cerebras Systems",
+        "mkt": "USD",
+        "nota": "APORTE CRBS +0.02 @ 192.49 -- vol total 0.13 preco medio 237.55"
+      },
+      {
+        "tipo": "diario",
+        "nota": "Aporte Cerebras para melhorar preco medio. Caixa USD confere: 76.00-3.85=72.15 vs 72.17 informado. ALERTA: BAE Systems -16.60%, 12o dia consecutivo em STOP DURO sem accao. Amgen -12.11%, 2o dia em violacao."
       }
     ],
     "posicoes_fechadas": []
