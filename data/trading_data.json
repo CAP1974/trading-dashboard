@@ -12,6 +12,11 @@
           "data": "2026-08-12",
           "valor": 20,
           "nota": "Deposito Carlos - financiou entrada BAE Systems"
+        },
+        {
+          "data": "2026-09-16",
+          "valor": 20,
+          "nota": "deposito externo"
         }
       ],
       "capital_ajustado": 58.41
@@ -183,7 +188,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 0,
-      "realizado_usd": 0.19,
+      "realizado_usd": 0.44,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13883,7 +13888,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-15",
+    "gerado": "2026-09-16",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14214,6 +14219,10 @@
       [
         "2026-09-15",
         88.72
+      ],
+      [
+        "2026-09-16",
+        89.85
       ]
     ],
     "usd": [
@@ -14540,6 +14549,10 @@
       [
         "2026-09-15",
         84.3
+      ],
+      [
+        "2026-09-16",
+        84.98
       ]
     ],
     "twr_mensal": {
@@ -14560,8 +14573,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -2.9,
-        "usd": -3.9
+        "eur": -1.7,
+        "usd": -3.1
       }
     }
   },
@@ -21132,5 +21145,158 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-09-16": {
+    "eur": {
+      "saldo": 105.82,
+      "caixa": 8.23,
+      "lucro": -3.63,
+      "positions": [
+        {
+          "ticker": "ALV",
+          "nome": "Allianz",
+          "vol": 0.1,
+          "entrada": 439.6,
+          "atual": 448.8,
+          "lucro": 0.92,
+          "pct": 2.09,
+          "stop": 395.64
+        },
+        {
+          "ticker": "BA.",
+          "nome": "Bae Systems",
+          "vol": 1.3,
+          "entrada": 21.738,
+          "atual": 20.32,
+          "lucro": -2.59,
+          "pct": -7.8,
+          "stop": 19.564
+        },
+        {
+          "ticker": "SU",
+          "nome": "Schneider",
+          "vol": 0.079,
+          "entrada": 304.39,
+          "atual": 279.45,
+          "lucro": -1.96,
+          "pct": -8.15,
+          "stop": 273.95
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 250.37,
+      "caixa": 89.83,
+      "lucro": -20.95,
+      "positions": [
+        {
+          "ticker": "CME",
+          "nome": "CME",
+          "vol": 0.2,
+          "entrada": 286.71,
+          "atual": 272.43,
+          "lucro": -2.85,
+          "pct": -4.97,
+          "stop": 258.04
+        },
+        {
+          "ticker": "SPCX",
+          "nome": "SpaceX",
+          "vol": 0.24,
+          "entrada": 171.1,
+          "atual": 150.79,
+          "lucro": -4.88,
+          "pct": -11.88,
+          "stop": 153.99
+        },
+        {
+          "ticker": "AMGN",
+          "nome": "Amgen",
+          "vol": 0.12,
+          "entrada": 434.99,
+          "atual": 376.39,
+          "lucro": -7.03,
+          "pct": -13.47,
+          "stop": 391.49
+        },
+        {
+          "ticker": "CBRS",
+          "nome": "Cerebras Systems",
+          "vol": 0.13,
+          "entrada": 237.55,
+          "atual": 189.84,
+          "lucro": -6.19,
+          "pct": -20.05,
+          "stop": 213.8
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "aporte",
+        "conta": "eur",
+        "ticker": "BA.",
+        "nome": "Bae Systems",
+        "preco": 20.28,
+        "vol": 0.5,
+        "nota": "melhorar preço medio"
+      },
+      {
+        "tipo": "saida",
+        "conta": "usd",
+        "ticker": "MSFT",
+        "nome": "Microsoft",
+        "lucro": 0.38,
+        "saida": 493.61,
+        "entrada": 481.05,
+        "vol": 0.03,
+        "setup": "Lateralização",
+        "nota": ""
+      },
+      {
+        "tipo": "saida",
+        "conta": "usd",
+        "ticker": "MSFT",
+        "nome": "Microsoft",
+        "lucro": -0.13,
+        "saida": 493.61,
+        "entrada": 497.97,
+        "vol": 0.03,
+        "setup": "Lateralização",
+        "nota": ""
+      },
+      {
+        "tipo": "diario",
+        "nota": ""
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "MSFT",
+        "nome": "Microsoft",
+        "conta": "usd",
+        "lucro": 0.38,
+        "saida": 493.61,
+        "entrada": 481.05,
+        "vol": 0.03,
+        "setup": "Lateralização",
+        "nota": "",
+        "data": "2026-09-16",
+        "rating": 0
+      },
+      {
+        "ticker": "MSFT",
+        "nome": "Microsoft",
+        "conta": "usd",
+        "lucro": -0.13,
+        "saida": 493.61,
+        "entrada": 497.97,
+        "vol": 0.03,
+        "setup": "Lateralização",
+        "nota": "",
+        "data": "2026-09-16",
+        "rating": 0
+      }
+    ]
   }
 }
