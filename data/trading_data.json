@@ -13888,7 +13888,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-21",
+    "gerado": "2026-09-22",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14235,6 +14235,10 @@
       [
         "2026-09-21",
         90.68
+      ],
+      [
+        "2026-09-22",
+        88.92
       ]
     ],
     "usd": [
@@ -14577,6 +14581,10 @@
       [
         "2026-09-21",
         87.48
+      ],
+      [
+        "2026-09-22",
+        87.9
       ]
     ],
     "twr_mensal": {
@@ -14597,8 +14605,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -0.8,
-        "usd": -0.3
+        "eur": -2.7,
+        "usd": 0.2
       }
     }
   },
@@ -21783,6 +21791,146 @@
           "pct": -12.44,
           "trust": "r",
           "valor": 27.04,
+          "delta": null,
+          "stop": 213.8
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "diario",
+        "nota": ""
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-22": {
+    "eur": {
+      "saldo": 104.72,
+      "caixa": 8.23,
+      "lucro": -4.73,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.1,
+          "abertura": 439.6,
+          "atual": 430.1,
+          "lucro": -0.95,
+          "pct": -2.16,
+          "trust": "r",
+          "valor": 43.01,
+          "delta": null,
+          "stop": 395.64
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 295.55,
+          "lucro": -0.69,
+          "pct": -2.87,
+          "trust": "r",
+          "valor": 23.35,
+          "delta": null,
+          "stop": 273.95
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 1.3,
+          "abertura": 21.738,
+          "atual": 19.975,
+          "lucro": -3.09,
+          "pct": -9.3,
+          "trust": "r",
+          "valor": 30.13,
+          "delta": null,
+          "stop": 19.564
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 258.98,
+      "caixa": 33.03,
+      "lucro": -12.34,
+      "positions": [
+        {
+          "name": "Zscaler",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 194.2,
+          "atual": 209.55,
+          "lucro": 3.09,
+          "pct": 7.96,
+          "trust": "v",
+          "valor": 41.91,
+          "delta": null,
+          "stop": 174.78
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 409.98,
+          "lucro": -3,
+          "pct": -5.75,
+          "trust": "r",
+          "valor": 49.2,
+          "delta": null,
+          "stop": 391.49
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 267.08,
+          "lucro": -3.92,
+          "pct": -6.84,
+          "trust": "r",
+          "valor": 53.42,
+          "delta": null,
+          "stop": 258.04
+        },
+        {
+          "name": "PayPay",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 17.98,
+          "atual": 16.74,
+          "lucro": -1.24,
+          "pct": -6.9,
+          "trust": "r",
+          "valor": 16.74,
+          "delta": null,
+          "stop": 16.18
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.24,
+          "abertura": 171.1,
+          "atual": 154.67,
+          "lucro": -3.95,
+          "pct": -9.62,
+          "trust": "r",
+          "valor": 37.12,
+          "delta": null,
+          "stop": 153.99
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 237.55,
+          "atual": 212,
+          "lucro": -3.32,
+          "pct": -10.75,
+          "trust": "r",
+          "valor": 27.56,
           "delta": null,
           "stop": 213.8
         }
