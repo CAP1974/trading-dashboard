@@ -13888,7 +13888,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-22",
+    "gerado": "2026-09-23",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14239,6 +14239,10 @@
       [
         "2026-09-22",
         88.92
+      ],
+      [
+        "2026-09-23",
+        87.06
       ]
     ],
     "usd": [
@@ -14585,6 +14589,10 @@
       [
         "2026-09-22",
         87.9
+      ],
+      [
+        "2026-09-23",
+        87.32
       ]
     ],
     "twr_mensal": {
@@ -14605,8 +14613,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -2.7,
-        "usd": 0.2
+        "eur": -4.7,
+        "usd": -0.5
       }
     }
   },
@@ -21937,6 +21945,153 @@
       ]
     },
     "eventos": [
+      {
+        "tipo": "diario",
+        "nota": ""
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-23": {
+    "eur": {
+      "saldo": 102.53,
+      "caixa": 0.08,
+      "lucro": -6.92,
+      "positions": [
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 292.8,
+          "lucro": -0.91,
+          "pct": -3.79,
+          "trust": "r",
+          "valor": 23.13,
+          "delta": null,
+          "stop": 273.95
+        },
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.119,
+          "abertura": 437.94,
+          "atual": 410,
+          "lucro": -3.32,
+          "pct": -6.37,
+          "trust": "r",
+          "valor": 48.79,
+          "delta": null,
+          "stop": 395.64
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 1.3,
+          "abertura": 21.738,
+          "atual": 20.29,
+          "lucro": -2.69,
+          "pct": -8.1,
+          "trust": "r",
+          "valor": 30.53,
+          "delta": null,
+          "stop": 19.564
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 257.26,
+      "caixa": 33.03,
+      "lucro": -14.06,
+      "positions": [
+        {
+          "name": "Zscaler",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 194.2,
+          "atual": 213.67,
+          "lucro": 3.91,
+          "pct": 10.07,
+          "trust": "v",
+          "valor": 42.73,
+          "delta": null,
+          "stop": 174.78
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 270.77,
+          "lucro": -3.19,
+          "pct": -5.56,
+          "trust": "r",
+          "valor": 54.15,
+          "delta": null,
+          "stop": 258.04
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 405.74,
+          "lucro": -3.51,
+          "pct": -6.72,
+          "trust": "r",
+          "valor": 48.69,
+          "delta": null,
+          "stop": 391.49
+        },
+        {
+          "name": "PayPay",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 17.98,
+          "atual": 16.43,
+          "lucro": -1.55,
+          "pct": -8.62,
+          "trust": "r",
+          "valor": 16.43,
+          "delta": null,
+          "stop": 16.18
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.24,
+          "abertura": 171.1,
+          "atual": 148.29,
+          "lucro": -5.49,
+          "pct": -13.37,
+          "trust": "r",
+          "valor": 35.58,
+          "delta": null,
+          "stop": 153.99
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 237.55,
+          "atual": 204.94,
+          "lucro": -4.23,
+          "pct": -13.7,
+          "trust": "r",
+          "valor": 26.65,
+          "delta": null,
+          "stop": 213.8
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "aporte",
+        "ticker": "ALV",
+        "ativo": "Allianz",
+        "mkt": "EUR",
+        "nota": "APORTE ALV +0.019 @ 429.20 -- vol total 0.119 preco medio 437.94 (melhorar preco medio)"
+      },
       {
         "tipo": "diario",
         "nota": ""
