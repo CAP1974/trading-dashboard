@@ -188,7 +188,7 @@
       "ajustes_eur": 0,
       "ajustes_usd": 0,
       "realizado_eur": 0,
-      "realizado_usd": 0.44,
+      "realizado_usd": 0.47,
       "flutuante_fim_eur": null,
       "flutuante_fim_usd": null,
       "saldo_fim_eur": null,
@@ -13888,7 +13888,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-24",
+    "gerado": "2026-09-26",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14247,6 +14247,10 @@
       [
         "2026-09-24",
         87.27
+      ],
+      [
+        "2026-09-25",
+        87.58
       ]
     ],
     "usd": [
@@ -14601,6 +14605,10 @@
       [
         "2026-09-24",
         87.19
+      ],
+      [
+        "2026-09-25",
+        85.72
       ]
     ],
     "twr_mensal": {
@@ -14621,8 +14629,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -4.5,
-        "usd": -0.6
+        "eur": -4.2,
+        "usd": -2.3
       }
     }
   },
@@ -22246,5 +22254,159 @@
       }
     ],
     "posicoes_fechadas": []
+  },
+  "2026-09-25": {
+    "eur": {
+      "saldo": 103.15,
+      "caixa": 0.08,
+      "lucro": -6.3,
+      "positions": [
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.119,
+          "abertura": 437.94,
+          "atual": 423.8,
+          "lucro": -1.68,
+          "pct": -3.22,
+          "trust": "r",
+          "valor": 50.43,
+          "delta": null,
+          "stop": 395.64
+        },
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 290.8,
+          "lucro": -1.06,
+          "pct": -4.41,
+          "trust": "r",
+          "valor": 22.98,
+          "delta": null,
+          "stop": 273.95
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 1.3,
+          "abertura": 21.738,
+          "atual": 19.725,
+          "lucro": -3.56,
+          "pct": -10.72,
+          "trust": "r",
+          "valor": 29.66,
+          "delta": null,
+          "stop": 19.564
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 252.56,
+      "caixa": 72.06,
+      "lucro": -18.97,
+      "positions": [
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 414.45,
+          "lucro": -2.47,
+          "pct": -4.73,
+          "trust": "r",
+          "valor": 49.73,
+          "delta": null,
+          "stop": 391.49
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 264.37,
+          "lucro": -4.47,
+          "pct": -7.8,
+          "trust": "r",
+          "valor": 52.87,
+          "delta": null,
+          "stop": 258.04
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 237.55,
+          "atual": 206.64,
+          "lucro": -4.03,
+          "pct": -13.05,
+          "trust": "r",
+          "valor": 26.85,
+          "delta": null,
+          "stop": 213.8
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.24,
+          "abertura": 171.1,
+          "atual": 148.63,
+          "lucro": -5.4,
+          "pct": -13.15,
+          "trust": "r",
+          "valor": 35.67,
+          "delta": null,
+          "stop": 153.99
+        },
+        {
+          "name": "PayPay",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 17.98,
+          "atual": 15.38,
+          "lucro": -2.6,
+          "pct": -14.46,
+          "trust": "r",
+          "valor": 15.38,
+          "delta": null,
+          "stop": 16.18
+        }
+      ]
+    },
+    "eventos": [
+      {
+        "tipo": "saida",
+        "ticker": "ZS",
+        "ativo": "Zscaler",
+        "mkt": "USD",
+        "nota": "SAIDA ZS 0.2 @ 194.25 (entrada 194.12) +0.03$ -- evento risk"
+      },
+      {
+        "tipo": "diario",
+        "nota": ""
+      }
+    ],
+    "posicoes_fechadas": [
+      {
+        "ticker": "ZS",
+        "nome": "Zscaler",
+        "mkt": "USD",
+        "lucro": 0.03,
+        "lucro_pct": 0.08,
+        "tipo": "lucro",
+        "data_entrada": "2026-09-17",
+        "data_saida": "2026-09-25",
+        "preco_entrada": 194.12,
+        "preco_saida": 194.25,
+        "volume": 0.2,
+        "dias_holding": 8,
+        "setup": "Evento Risk",
+        "nota_entrada": "Stage 2 4/6",
+        "nota_saida": "evento risk",
+        "imagem_setup": null,
+        "rating": 1
+      }
+    ]
   }
 }
