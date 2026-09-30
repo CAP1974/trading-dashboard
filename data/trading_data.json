@@ -13888,7 +13888,7 @@
     }
   },
   "nav": {
-    "gerado": "2026-09-29",
+    "gerado": "2026-09-30",
     "metodo": "unitizacao (TWR)",
     "inicio_serie": "2026-05-26 (primeiro dia com saldo diario)",
     "eur": [
@@ -14259,6 +14259,10 @@
       [
         "2026-09-29",
         87.45
+      ],
+      [
+        "2026-09-30",
+        86.78
       ]
     ],
     "usd": [
@@ -14625,6 +14629,10 @@
       [
         "2026-09-29",
         85.69
+      ],
+      [
+        "2026-09-30",
+        84.81
       ]
     ],
     "twr_mensal": {
@@ -14645,8 +14653,8 @@
         "usd": 3.2
       },
       "2026-09": {
-        "eur": -4.3,
-        "usd": -2.3
+        "eur": -5,
+        "usd": -3.3
       }
     }
   },
@@ -22718,6 +22726,159 @@
         "setup": "WMS90",
         "nota": "Retoma"
       },
+      {
+        "tipo": "diario",
+        "nota": ""
+      }
+    ],
+    "posicoes_fechadas": []
+  },
+  "2026-09-30": {
+    "eur": {
+      "saldo": 102.2,
+      "caixa": 0.08,
+      "lucro": -7.25,
+      "positions": [
+        {
+          "name": "Schneider",
+          "mkt": "EUR",
+          "vol": 0.079,
+          "abertura": 304.39,
+          "atual": 291.3,
+          "lucro": -1.03,
+          "pct": -4.28,
+          "trust": "r",
+          "valor": 23.01,
+          "delta": null,
+          "stop": 273.95
+        },
+        {
+          "name": "Allianz",
+          "mkt": "EUR",
+          "vol": 0.119,
+          "abertura": 437.94,
+          "atual": 415.3,
+          "lucro": -2.69,
+          "pct": -5.16,
+          "trust": "r",
+          "valor": 49.42,
+          "delta": null,
+          "stop": 395.64
+        },
+        {
+          "name": "BAE Systems",
+          "mkt": "EUR",
+          "vol": 1.3,
+          "abertura": 21.738,
+          "atual": 19.61,
+          "lucro": -3.53,
+          "pct": -10.63,
+          "trust": "r",
+          "valor": 29.69,
+          "delta": null,
+          "stop": 19.564
+        }
+      ]
+    },
+    "usd": {
+      "saldo": 249.86,
+      "caixa": 7.72,
+      "lucro": -21.67,
+      "positions": [
+        {
+          "name": "Zscaler",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 198.14,
+          "atual": 199.24,
+          "lucro": 0.22,
+          "pct": 0.56,
+          "trust": "v",
+          "valor": 39.85,
+          "delta": null,
+          "stop": 178.33
+        },
+        {
+          "name": "Intuitive",
+          "mkt": "USD",
+          "vol": 0.06,
+          "abertura": 411.76,
+          "atual": 406.65,
+          "lucro": -0.31,
+          "pct": -1.25,
+          "trust": "r",
+          "valor": 24.4,
+          "delta": null,
+          "stop": 370.58
+        },
+        {
+          "name": "Amgen",
+          "mkt": "USD",
+          "vol": 0.12,
+          "abertura": 434.99,
+          "atual": 421.48,
+          "lucro": -1.62,
+          "pct": -3.1,
+          "trust": "r",
+          "valor": 50.58,
+          "delta": null,
+          "stop": 391.49
+        },
+        {
+          "name": "CME",
+          "mkt": "USD",
+          "vol": 0.2,
+          "abertura": 286.71,
+          "atual": 261.93,
+          "lucro": -4.95,
+          "pct": -8.63,
+          "trust": "r",
+          "valor": 52.39,
+          "delta": null,
+          "stop": 258.04
+        },
+        {
+          "name": "SpaceX",
+          "mkt": "USD",
+          "vol": 0.24,
+          "abertura": 171.1,
+          "atual": 150.78,
+          "lucro": -4.88,
+          "pct": -11.88,
+          "trust": "r",
+          "valor": 36.19,
+          "delta": null,
+          "stop": 153.99
+        },
+        {
+          "name": "PayPay",
+          "mkt": "USD",
+          "vol": 1,
+          "abertura": 17.98,
+          "atual": 15.64,
+          "lucro": -2.34,
+          "pct": -13.01,
+          "trust": "r",
+          "valor": 15.64,
+          "delta": null,
+          "stop": 16.18
+        },
+        {
+          "name": "Cerebras Systems",
+          "mkt": "USD",
+          "vol": 0.13,
+          "abertura": 237.55,
+          "atual": 177.72,
+          "lucro": -7.79,
+          "pct": -25.23,
+          "trust": "r",
+          "valor": 23.09,
+          "delta": null,
+          "stop": 213.8
+        }
+      ]
+    },
+    "eventos": [
       {
         "tipo": "diario",
         "nota": ""
